@@ -4,14 +4,15 @@
    <link rel="stylesheet" href="css/estils.css">      (des de l'arrel) */
 
 :root {
-  --mari: #122542;
-  --teal: #0c6e73;
-  --ambre: #c9821f;
-  --tinta: #1b2430;
-  --tinta-suau: #57626c;
-  --fons: #f5f6f8;
+  /* Nova paleta de colors: Informàtica i Morats */
+  --mari: #1e112c;          /* Morat fosc profund (Cyberpunk/Terminal nocturn) */
+  --teal: #6f2dbd;          /* Morat vibrant elèctric */
+  --ambre: #b5179e;         /* Rosa magenta / lila digital */
+  --tinta: #241435;         /* Text gairebé negre amb matís morat */
+  --tinta-suau: #6a5d77;    /* Text secundari lila grisenc */
+  --fons: #f7f4faff;        /* Fons de la web amb un toc de lila molt suau */
   --blanc: #ffffff;
-  --vora: #dde2e7;
+  --vora: #e2daeb;          /* Vores amb matís lila */
   --radi: 12px;
 }
 
@@ -36,6 +37,7 @@ a:hover { text-decoration: underline; }
 
 /* ---------- Capçalera / hero (present a totes les pàgines) ---------- */
 .hero {
+  /* Gradient degradat d'estil informàtic/tecnològic nocturn */
   background: linear-gradient(125deg, var(--mari) 0%, var(--teal) 55%, var(--ambre) 100%);
   padding-bottom: 60px;
   color: var(--blanc);
@@ -78,6 +80,17 @@ a:hover { text-decoration: underline; }
   color: #fff;
 }
 
+/* Detall informàtic: afegeix un cursor parpellejant de consola al final del títol principal */
+.hero-titol h1::after {
+  content: " _";
+  animation: parpelleig 1s infinite;
+}
+
+@keyframes parpelleig {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
 .hero-titol p.subtitol {
   margin: 0;
   opacity: 0.92;
@@ -90,7 +103,7 @@ main { padding-bottom: 50px; }
 .panell {
   background: var(--blanc);
   border-radius: var(--radi);
-  box-shadow: 0 12px 32px rgba(18, 37, 66, 0.16);
+  box-shadow: 0 12px 32px rgba(30, 17, 44, 0.12);
   margin-top: -42px;
   padding: 32px 34px;
   position: relative;
@@ -116,7 +129,7 @@ main { padding-bottom: 50px; }
   text-align: left;
 }
 .fitxa-alumne p { margin: 3px 0; }
-.fitxa-alumne strong { color: var(--mari); }
+.fitxa-alumne strong { color: var(--teal); }
 
 .boto {
   display: inline-block;
@@ -127,6 +140,7 @@ main { padding-bottom: 50px; }
   font-weight: 600;
   text-decoration: none !important;
   margin-top: 8px;
+  transition: background 0.2s;
 }
 .boto:hover { background: var(--mari); }
 
@@ -147,7 +161,7 @@ main { padding-bottom: 50px; }
   transition: box-shadow 0.15s, transform 0.15s;
 }
 .targeta:hover {
-  box-shadow: 0 4px 14px rgba(12, 110, 115, 0.18);
+  box-shadow: 0 4px 14px rgba(111, 45, 189, 0.18);
   transform: translateY(-2px);
   text-decoration: none;
 }
@@ -164,14 +178,22 @@ main { padding-bottom: 50px; }
 .targeta h3 { margin: 0 0 4px; color: var(--tinta); font-size: 1.05rem; }
 .targeta p { margin: 0; color: var(--tinta-suau); font-size: 0.9rem; }
 
-h1, h2 { color: var(--mari); }
+h1, h2 { color: var(--teal); }
 
 .consell {
   color: var(--tinta-suau);
   font-size: 0.9rem;
   margin-top: 18px;
 }
-.consell code { background: var(--fons); padding: 1px 5px; border-radius: 4px; }
+
+/* Detall informàtic: Codi estilitzat com una mini consola de programació */
+.consell code, code { 
+  background: #1e112c; 
+  color: #a2d2ff;
+  font-family: "Courier New", Courier, monospace;
+  padding: 2px 6px; 
+  border-radius: 4px; 
+}
 
 /* ---------- Taula d'apartats (índex intern d'un sprint, amb ancoratges) ---------- */
 .taula-apartats {
@@ -240,6 +262,6 @@ footer.peu .autoria strong { color: var(--tinta); }
   text-align: left;
   background: var(--fons);
 }
-.bloc-llicencia h3 { margin: 0 0 8px; font-size: 1rem; color: var(--mari); }
+.bloc-llicencia h3 { margin: 0 0 8px; font-size: 1rem; color: var(--teal); }
 .bloc-llicencia p { margin: 6px 0; font-size: 0.92rem; }
 .bloc-llicencia .badge-cc { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
