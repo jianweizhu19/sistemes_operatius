@@ -1,89 +1,185 @@
-/* Full de estils comu per a tot el lloc.
+/* Full d'estils comú per a tot el lloc.
    Enllaça-la sempre igual:
    <link rel="stylesheet" href="../css/estils.css">  (des d'una carpeta de sprint)
    <link rel="stylesheet" href="css/estils.css">      (des de l'arrel) */
 
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600;700;800&display=swap');
+
 :root {
-  /* Nova paleta de colors: Informàtica i Morats */
-  --mari: #1e112c;          /* Morat fosc profund (Cyberpunk/Terminal nocturn) */
+  /* Paleta base conservada (Lila / Informàtica) */
+  --mari: #1e112c;          /* Morat fosc profund (Terminal nocturn) */
   --teal: #6f2dbd;          /* Morat vibrant elèctric */
   --ambre: #b5179e;         /* Rosa magenta / lila digital */
-  --tinta: #241435;         /* Text gairebé negre amb matís morat */
-  --tinta-suau: #6a5d77;    /* Text secundari lila grisenc */
-  --fons: #f7f4faff;        /* Fons de la web amb un toc de lila molt suau */
+  --tinta: #241435;         /* Text principal */
+  --tinta-suau: #6a5d77;    /* Text secundari */
+  --fons: #f7f4fa;          /* Fons molt net amb toc lila */
   --blanc: #ffffff;
-  --vora: #e2daeb;          /* Vores amb matís lila */
-  --radi: 12px;
+  --vora: #e2daeb;          /* Vores */
+  --radi: 16px;
+  
+  /* Nous efectes afegits */
+  --accent-neon: #a2d2ff;
+  --brillantor-neon: 0 0 20px rgba(181, 23, 158, 0.45);
+  --vidre-bg: rgba(255, 255, 255, 0.85);
 }
 
-* { box-sizing: border-box; }
+* { 
+  box-sizing: border-box; 
+}
 
 body {
   margin: 0;
-  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   color: var(--tinta);
-  background: var(--fons);
-  line-height: 1.55;
+  background-color: var(--fons);
+  /* Fons amb trama quadriculada de circuit / matriu tecnològica */
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(111, 45, 189, 0.06) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(181, 23, 158, 0.05) 0px, transparent 50%),
+    linear-gradient(to right, rgba(226, 218, 235, 0.35) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(226, 218, 235, 0.35) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 28px 28px, 28px 28px;
+  line-height: 1.6;
 }
 
-a { color: var(--teal); text-decoration: none; }
-a:hover { text-decoration: underline; }
+a { 
+  color: var(--teal); 
+  text-decoration: none; 
+  transition: all 0.2s ease;
+}
+a:hover { 
+  color: var(--ambre);
+  text-decoration: none; 
+}
 
 .contenidor {
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-/* ---------- Capçalera / hero (present a totes les pàgines) ---------- */
+/* ---------- Capçalera / Hero ---------- */
 .hero {
-  /* Gradient degradat d'estil informàtic/tecnològic nocturn */
-  background: linear-gradient(125deg, var(--mari) 0%, var(--teal) 55%, var(--ambre) 100%);
-  padding-bottom: 60px;
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(181, 23, 158, 0.3) 0%, transparent 40%),
+    linear-gradient(135deg, var(--mari) 0%, #30174b 50%, var(--teal) 100%);
+  padding-bottom: 75px;
   color: var(--blanc);
+  position: relative;
+  overflow: hidden;
+  border-bottom: 2px solid rgba(181, 23, 158, 0.3);
 }
 
+/* Decoració de fons d'estil binari al Hero */
+.hero::before {
+  content: "01101010 01111010 01001111 01010011";
+  position: absolute;
+  font-family: 'Fira Code', monospace;
+  font-size: 4rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.025);
+  top: 10px;
+  left: 5%;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* Barra superior d'estil sistema operatiu / terminal */
 .hero-nav {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  align-items: center;
+  gap: 12px;
   flex-wrap: wrap;
-  padding: 18px 20px 0;
+  padding: 20px 20px 0;
+  position: relative;
+  z-index: 2;
 }
 
 .hero-nav a {
   color: rgba(255, 255, 255, 0.95);
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  padding: 7px 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 18px;
   border-radius: 999px;
   font-size: 0.85rem;
-  text-decoration: none;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
 }
-.hero-nav a:hover { background: rgba(255, 255, 255, 0.24); text-decoration: none; }
 
+.hero-nav a:hover { 
+  background: rgba(255, 255, 255, 0.22); 
+  border-color: var(--accent-neon);
+  box-shadow: 0 0 12px rgba(162, 210, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+/* ---------- El teu Logo Personal: JZ / Jianwei Zhu ---------- */
+.logo-jianwei {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(30, 17, 44, 0.6);
+  border: 1px solid rgba(181, 23, 158, 0.6);
+  box-shadow: var(--brillantor-neon);
+  padding: 6px 14px;
+  border-radius: 12px;
+  font-family: 'Fira Code', monospace;
+  margin-bottom: 12px;
+  backdrop-filter: blur(6px);
+}
+
+.logo-badge {
+  background: linear-gradient(135deg, var(--ambre), var(--teal));
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.9rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.05em;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.logo-text {
+  font-size: 0.95rem;
+  color: #f7f4fa;
+  font-weight: 600;
+}
+
+.logo-text span {
+  color: var(--accent-neon);
+}
+
+/* ---------- Textos Hero ---------- */
 .hero-titol {
   text-align: center;
-  padding: 30px 20px 0;
+  padding: 24px 20px 0;
+  position: relative;
+  z-index: 2;
 }
 
 .hero-titol .miguetes {
   font-size: 0.85rem;
   opacity: 0.85;
   margin: 0 0 10px;
+  font-family: 'Fira Code', monospace;
 }
-.hero-titol .miguetes a { color: #fff; text-decoration: underline; }
+.hero-titol .miguetes a { color: var(--accent-neon); }
 
 .hero-titol h1 {
-  margin: 0 0 8px;
-  font-size: 2.1rem;
-  color: #fff;
+  margin: 0 0 10px;
+  font-size: 2.3rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
 }
 
-/* Detall informàtic: afegeix un cursor parpellejant de consola al final del títol principal */
+/* Cursor interactiu de consola */
 .hero-titol h1::after {
   content: " _";
-  animation: parpelleig 1s infinite;
+  color: var(--accent-neon);
+  animation: parpelleig 0.9s infinite cubic-bezier(1, 0, 0, 1);
 }
 
 @keyframes parpelleig {
@@ -92,176 +188,196 @@ a:hover { text-decoration: underline; }
 }
 
 .hero-titol p.subtitol {
-  margin: 0;
-  opacity: 0.92;
+  margin: 0 auto;
+  max-width: 600px;
+  opacity: 0.95;
   font-size: 1.05rem;
+  font-weight: 400;
 }
 
-/* ---------- Panell blanc flotant que xafa el hero ---------- */
-main { padding-bottom: 50px; }
+/* ---------- Finestra de sistema / Panell Principal ---------- */
+main { padding-bottom: 60px; }
 
 .panell {
   background: var(--blanc);
-  border-radius: var(--radi);
-  box-shadow: 0 12px 32px rgba(30, 17, 44, 0.12);
-  margin-top: -42px;
-  padding: 32px 34px;
-  position: relative;
-  z-index: 1;
-}
-
-/* ---------- Portada ---------- */
-.portada-hero { text-align: center; }
-.portada-hero img.imatge-portada {
-  max-width: 300px;
-  width: 100%;
-  height: auto;
-  margin-bottom: 22px;
-}
-
-.fitxa-alumne {
-  display: inline-block;
-  background: var(--fons);
   border: 1px solid var(--vora);
   border-radius: var(--radi);
-  padding: 14px 22px;
-  margin: 20px 0;
-  text-align: left;
+  box-shadow: 0 16px 36px rgba(30, 17, 44, 0.08), 0 2px 6px rgba(30, 17, 44, 0.03);
+  margin-top: -46px;
+  padding: 34px 38px;
+  position: relative;
+  z-index: 3;
 }
-.fitxa-alumne p { margin: 3px 0; }
-.fitxa-alumne strong { color: var(--teal); }
 
-.boto {
+/* Barra superior simulada de finestra de sistema operatiu (Mac/Linux/Windows) */
+.panell::before {
+  content: "";
+  display: block;
+  height: 12px;
+  width: 52px;
+  background: radial-gradient(circle, #ff5f56 5px, transparent 6px) 0 0,
+              radial-gradient(circle, #ffbd2e 5px, transparent 6px) 18px 0,
+              radial-gradient(circle, #27c93f 5px, transparent 6px) 36px 0;
+  background-repeat: no-repeat;
+  margin-bottom: 24px;
+  opacity: 0.85;
+}
+
+/* ---------- Fitxa Alumne (estil Terminal interactiva) ---------- */
+.fitxa-alumne {
   display: inline-block;
-  background: var(--teal);
-  color: var(--blanc) !important;
-  padding: 12px 26px;
+  background: #190c26;
+  color: #e5daf3;
+  border: 1px solid rgba(181, 23, 158, 0.4);
   border-radius: var(--radi);
-  font-weight: 600;
-  text-decoration: none !important;
-  margin-top: 8px;
-  transition: background 0.2s;
+  padding: 16px 24px;
+  margin: 22px 0;
+  text-align: left;
+  box-shadow: 0 8px 24px rgba(30, 17, 44, 0.2);
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9rem;
 }
-.boto:hover { background: var(--mari); }
 
-/* ---------- Graella de targetes (sprints / apartats) ---------- */
+.fitxa-alumne p { margin: 6px 0; }
+.fitxa-alumne strong { color: var(--accent-neon); }
+
+/* ---------- Botons llamatius ---------- */
+.boto {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--teal) 0%, var(--ambre) 100%);
+  color: var(--blanc) !important;
+  padding: 12px 28px;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none !important;
+  margin-top: 10px;
+  box-shadow: 0 4px 16px rgba(111, 45, 189, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.boto:hover { 
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(181, 23, 158, 0.45);
+}
+
+/* ---------- Graella de Targetes (Sprints / Mòduls) ---------- */
 .rejilla-targetes {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  margin: 24px 0 6px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+  margin: 28px 0 10px;
 }
 
 .targeta {
-  display: block;
-  background: var(--fons);
+  display: flex;
+  flex-direction: column;
+  background: var(--blanc);
   border: 1px solid var(--vora);
   border-radius: var(--radi);
-  padding: 18px 20px;
-  transition: box-shadow 0.15s, transform 0.15s;
+  padding: 22px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+/* Línia superior de neó en passar el ratolí */
+.targeta::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--teal), var(--ambre));
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
 .targeta:hover {
-  box-shadow: 0 4px 14px rgba(111, 45, 189, 0.18);
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  border-color: rgba(111, 45, 189, 0.4);
+  box-shadow: 0 10px 24px rgba(111, 45, 189, 0.12);
   text-decoration: none;
 }
+
+.targeta:hover::before { opacity: 1; }
+
 .targeta .numero {
-  display: inline-block;
-  background: var(--teal);
-  color: var(--blanc);
+  align-self: flex-start;
+  background: rgba(111, 45, 189, 0.1);
+  color: var(--teal);
+  font-family: 'Fira Code', monospace;
   font-size: 0.75rem;
   font-weight: 700;
-  padding: 2px 9px;
-  border-radius: 999px;
-  margin-bottom: 8px;
-}
-.targeta h3 { margin: 0 0 4px; color: var(--tinta); font-size: 1.05rem; }
-.targeta p { margin: 0; color: var(--tinta-suau); font-size: 0.9rem; }
-
-h1, h2 { color: var(--teal); }
-
-.consell {
-  color: var(--tinta-suau);
-  font-size: 0.9rem;
-  margin-top: 18px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(111, 45, 189, 0.2);
+  margin-bottom: 12px;
 }
 
-/* Detall informàtic: Codi estilitzat com una mini consola de programació */
+.targeta h3 { 
+  margin: 0 0 6px; 
+  color: var(--tinta); 
+  font-size: 1.15rem; 
+  font-weight: 700;
+}
+
+.targeta p { 
+  margin: 0; 
+  color: var(--tinta-suau); 
+  font-size: 0.92rem; 
+}
+
+/* ---------- Codis i Mini Consola ---------- */
 .consell code, code { 
-  background: #1e112c; 
-  color: #a2d2ff;
-  font-family: "Courier New", Courier, monospace;
-  padding: 2px 6px; 
-  border-radius: 4px; 
+  background: #160d21; 
+  color: #64dfdf;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.88em;
+  padding: 3px 8px; 
+  border-radius: 6px; 
+  border: 1px solid rgba(111, 45, 189, 0.3);
 }
 
-/* ---------- Taula d'apartats (índex intern d'un sprint, amb ancoratges) ---------- */
+/* ---------- Taula d'apartats ---------- */
 .taula-apartats {
   width: 100%;
-  border-collapse: collapse;
-  margin: 6px 0 8px;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 16px 0 20px;
+  border: 1px solid var(--vora);
+  border-radius: 12px;
+  overflow: hidden;
 }
+
 .taula-apartats th, .taula-apartats td {
   text-align: left;
-  padding: 10px 12px;
+  padding: 12px 16px;
   border-bottom: 1px solid var(--vora);
 }
+
 .taula-apartats th {
-  font-size: 0.72rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--tinta-suau);
+  background: rgba(111, 45, 189, 0.04);
+  font-family: 'Fira Code', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: var(--teal);
 }
-.taula-apartats td:first-child, .taula-apartats th:first-child { width: 46px; color: var(--tinta-suau); }
-.taula-apartats tr:hover td { background: var(--fons); }
-.taula-apartats a { font-weight: 600; }
 
-/* ---------- Contingut d'un apartat, dins de la mateixa pàgina ---------- */
-.apartat {
-  scroll-margin-top: 20px;
-  padding-top: 26px;
-  margin-top: 26px;
-  border-top: 1px solid var(--vora);
-}
-.apartat h2 { margin-top: 0; }
-.apartat img {
-  max-width: 100%;
-  border-radius: var(--radi);
-  border: 1px solid var(--vora);
-  margin: 14px 0;
-}
-.apartat ul { padding-left: 22px; }
-.apartat li { margin: 4px 0; }
-.tornar-index { font-size: 0.85rem; }
+.taula-apartats tr:last-child td { border-bottom: none; }
+.taula-apartats tr:hover td { background: rgba(111, 45, 189, 0.03); }
 
-/* ---------- Peu de pàgina: llicència i autoria (fix a totes les pàgines) ---------- */
+/* ---------- Peu de pàgina ---------- */
 footer.peu {
   text-align: center;
   color: var(--tinta-suau);
-  font-size: 0.85rem;
-  padding: 30px 20px 46px;
+  font-size: 0.88rem;
+  padding: 40px 20px 50px;
 }
-.peu-llicencia {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin: 0 0 8px;
-}
-.peu-llicencia img { display: block; }
-footer.peu .autoria { margin: 0; }
-footer.peu .autoria strong { color: var(--tinta); }
 
-/* ---------- Bloc de llicència a la portada ---------- */
-.bloc-llicencia {
-  border: 1px solid var(--vora);
-  border-radius: var(--radi);
-  padding: 18px 20px;
-  margin-top: 22px;
-  text-align: left;
-  background: var(--fons);
+footer.peu .autoria strong { 
+  color: var(--teal); 
+  font-family: 'Fira Code', monospace;
 }
-.bloc-llicencia h3 { margin: 0 0 8px; font-size: 1rem; color: var(--teal); }
-.bloc-llicencia p { margin: 6px 0; font-size: 0.92rem; }
-.bloc-llicencia .badge-cc { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
