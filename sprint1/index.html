@@ -42,17 +42,26 @@
 
     <article class="apartat" id="apartat1">
       <h2>1. Instal·lació del sistema operatiu</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Un cop arrencat
-         el suport d'instal·lació, cal seguir l'assistent i triar les opcions de
-         particionat abans de continuar. <strong>Aquest pas és irreversible</strong>,
-         així que revisa bé el disc de destinació.</p>
+      <h4>Pinning Packets</h4>
+      <p>He utilitzat la comanda apt-cache policy redis-server per a veure que el candidat actual és el 5:7.0.15-1ubuntu0.24.04.4
+
+
+Llavors per a canviar el seu candidat he creat un fitxer redis-server-pin.pref dins de la carpeta que ordena les preferencies i poso preferent un altra versio del redis-server al 1build2 i un pin prioritari superior a les altres versions</p>
+      <img src="../Pinning Packet 1.png" alt="Captura 1">
+
+      <p> Llavors per a canviar el seu candidat he creat un fitxer redis-server-pin.pref dins de la carpeta que ordena les preferencies i poso preferent un altra versio del redis-server al 1build2 i un pin prioritari superior a les altres versions </p>
+      <img src="../Pinning Packet 2.png alt="Captura 2">
+
+      <p>Guardem els canvis del fitxer i ara tornem a executar el apt-cache policy redis-server i es pot veure que s’ha canviat la preferencia de la versio del redis-server. </p>
+      <img src="../Pinning Packet 3.png alt="Captura 3">
+      
       <ul>
         <li>Arrencar des del USB o la imatge ISO.</li>
         <li>Triar l'idioma i la distribució de teclat.</li>
         <li>Configurar el particionat del disc.</li>
         <li>Esperar que finalitzi la còpia d'arxius i reiniciar.</li>
       </ul>
-      <img src="../Pinning Packet 1.png" alt="Exemple de captura de pantalla de l'assistent d'instal·lació">
+      
       <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
          Un cop reiniciat el sistema, comprova que arrenca correctament i que
          reconeix tot el maquinari abans de continuar amb el següent apartat.</p>
