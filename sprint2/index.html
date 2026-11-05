@@ -60,4 +60,41 @@
         <li><strong>Bloc:</strong> Unitat mínima d'emmagatzematge a <strong>nivell lògic</strong>. El sistema operatiu treballa a nivell de bloc i la seva mida sí que es pot canviar en formatar.</li>
         <li><strong>Fragmentació:</strong>
           <ul>
-            <li><strong>Interna:</strong> Quan l'espai d
+            <li><strong>Interna:</strong> Quan l'espai d'un bloc no s'aprofita completament pel fitxer.</li>
+            <li><strong>Externa:</strong> Fitxers dispersos pel disc; es soluciona passant les zones ocupades juntes i l'espai lliure a continuació per augmentar la velocitat de lectura.</li>
+          </ul>
+        </li>
+        <li><strong>Formats segons el sistema:</strong>
+          <ul>
+            <li><strong>Windows:</strong> Històricament <code>FAT</code> / <code>FAT32</code>, i actualment <code>NTFS</code>.</li>
+            <li><strong>Ubuntu:</strong> Format habitualment en <code>ext4</code>.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h4>Tipus de formateig</h4>
+      <ul>
+        <li><strong>Baix nivell:</strong> Defineix físicament pistes, sectors i cilindres. No es poden recuperar fitxers un cop fet.</li>
+        <li><strong>Mig nivell:</strong> Crea l'estructura de particions (<code>MBR</code> o <code>GPT</code>).</li>
+        <li><strong>Alt nivell:</strong> Aplica el sistema de fitxers (<code>NTFS</code>, <code>ext4</code>, <code>FAT32</code>). Esborra l'índex de gestió, de manera que les dades es poden recuperar si no s'han sobreescrit.</li>
+      </ul>
+
+      <h4>------------------------------------------------------------------------------------------------------------</h4>
+
+      <p class="tornar-index"><a href="#index-apartats">↑ Tornar a l'índex</a></p>
+    </article>
+  </section>
+</main>
+
+<footer class="peu">
+  <p class="peu-llicencia">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ca" target="_blank" rel="license noopener">
+      <img src="https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png" alt="Llicència Creative Commons Reconeixement-NoComercial-CompartirIgual 4.0" width="88" height="31">
+    </a>
+    <span>Contingut sota llicència <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ca" target="_blank" rel="license noopener">CC BY-NC-SA 4.0</a></span>
+  </p>
+  <p class="autoria">Autor/a: <strong>Nom Cognom1 Cognom2</strong> · Pràctica 0 · Sistemes Operatius (ISOPJ1)</p>
+</footer>
+
+</body>
+</html>
