@@ -31,6 +31,7 @@
       <tbody>
         <tr><td>1</td><td><a href="#apartat1">Gestors de paquets</a></td></tr>
         <tr><td>2</td><td><a href="#apartat2">Permisos i propietaris d'arxius</a></td></tr>
+        <tr><td>3</td><td><a href="#apartat3">Sistemes de fitxers i particions</a></td></tr>
       </tbody>
     </table>
 
@@ -47,6 +48,7 @@
       </ul>
       <p class="tornar-index"><a href="#index-apartats">↑ Tornar a l'índex</a></p>
     </article>
+
     <article class="apartat" id="apartat2">
       <h2>2. Permisos i propietaris d'arxius</h2>
       <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
@@ -56,6 +58,41 @@
       <img src="../img/exemple.svg" alt="Exemple de captura de pantalla dels permisos d'un arxiu">
       <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
          dolore eu fugiat nulla pariatur.</p>
+      <p class="tornar-index"><a href="#index-apartats">↑ Tornar a l'índex</a></p>
+    </article>
+
+    <article class="apartat" id="apartat3">
+      <h2>3. Sistemes de fitxers i particions</h2>
+
+      <h3>Estructura d'un disc</h3>
+      <ul>
+        <li><strong>Estructura física:</strong> La composició material del disc (pistes, sectors i cilindres).</li>
+        <li><strong>Estructura lògica:</strong> L'organització mitjançant taules de particions (formats <strong>MBR</strong> i <strong>GPT</strong>).</li>
+      </ul>
+
+      <h3>Estructura de la informació</h3>
+      <ul>
+        <li><strong>Partició (Físic):</strong> Divisió de l'espai d'un disc dur físic.</li>
+        <li><strong>Volum (Lògic):</strong> Espai d'emmagatzematge que el sistema operatiu gestiona i utilitza per desar fitxers.</li>
+      </ul>
+
+      <h3>Sistemes de fitxers</h3>
+      <p>El sistema de fitxers s'aplica damunt d'una partició quan la creem i la formatem.</p>
+      <ul>
+        <li><strong>Mida del sector:</strong> Unitat mínima on es guarda la informació a nivell físic. Un cop establerta pel fabricant, <strong>no es pot canviar</strong>.</li>
+        <li><strong>Bloc:</strong> Unitat mínima on es guarda la informació a nivell lògic. El sistema operatiu treballa a nivell de bloc i la seva mida <strong>es pot canviar en formatejar</strong>.</li>
+        <li><strong>Fragmentació interna:</strong> Espai desaprofitat dins d'un mateix bloc quan el fitxer no l'ocupa completament.</li>
+        <li><strong>Fragmentació externa:</strong> Desorganització del disc; la desfragmentació passa tot l'espai ocupat a l'esquerra i tot el lliure a la dreta per augmentar la velocitat de lectura.</li>
+        <li><strong>Formats segons SO:</strong> En Windows s'utilitzava FAT/FAT32 i actualment NTFS; en Ubuntu (Linux) s'utilitza ext4.</li>
+      </ul>
+
+      <h3>Tipus de formateig</h3>
+      <ul>
+        <li><strong>Baix nivell:</strong> Defineix físicament pistes, sectors i cilindres. No es poden recuperar els fitxers després d'aquest procés.</li>
+        <li><strong>Mig nivell:</strong> Crea l'estructura de particions (MBR o GPT).</li>
+        <li><strong>Alt nivell:</strong> Aplica el sistema de fitxers (NTFS, ext4, FAT32). Esborra els índexs del sistema de fitxers, per la qual cosa les dades es poden recuperar si no s'han sobreescrit.</li>
+      </ul>
+
       <p class="tornar-index"><a href="#index-apartats">↑ Tornar a l'índex</a></p>
     </article>
   </section>
