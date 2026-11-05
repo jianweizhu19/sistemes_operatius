@@ -35,42 +35,29 @@
 
     <article class="apartat" id="apartat1">
       <h2>1. Sistemes de fitxers i particions</h2>
-      <h4>Estructura d'un disc</h4>
-      <p><strong>Estructura física d’un disc:</strong> Definició de la part física del disc dur (plats, capçals, pistes, sectors i cilindres).</p>
-      <p><strong>Estructura lògica d’un disc:</strong> Organització de l'espai mitjançant formats de particions <strong>MBR</strong> i <strong>GPT</strong>.</p>
+
+      <h4>Estructura del disc</h4>
+      <ul>
+        <li><strong>Estructura física d'un disc:</strong> Definició de la part física del maquinari (capçals, pistes, cilindres i sectors).</li>
+        <li><strong>Estructura lògica d'un disc:</strong> Com s'organitza l'espai mitjançant taules de particions:
+          <ul>
+            <li><code>MBR</code> (Master Boot Record): Esquema clàssic.</li>
+            <li><code>GPT</code> (GUID Partition Table): Esquema modern.</li>
+          </ul>
+        </li>
+      </ul>
 
       <h4>Estructura de la informació</h4>
-      <p><strong>Diferència entre partició i volum:</strong> La partició és la divisió física de l'espai del disc dur, mentre que el volum és l'espai lògic que el sistema operatiu gestiona i utilitza per emmagatzemar dades.</p>
+      <ul>
+        <li><strong>Partició (Físic):</strong> Divisió de l'espai cru sobre el disc físic.</li>
+        <li><strong>Volum (Lògic):</strong> Espai accessible i gestionat pel sistema operatiu per emmagatzemar dades.</li>
+      </ul>
 
       <h4>Sistemes de fitxers</h4>
-      <p>El sistema de fitxers es col·loca damunt d’una partició quan l'hem creat i la formatem.</p>
-      <p><strong>Mida del sector:</strong> Unitat mínima on es guarda en el disc dur a nivell físic. Un cop establert pel fabricant, no es pot canviar.</p>
-      <p><strong>Bloc:</strong> Unitat mínima on es guarda en el disc dur a nivell lògic. El sistema operatiu treballa a nivell de bloc i es pot canviar la seva mida en una formatació.</p>
-      <p><strong>Fragmentació interna:</strong> Quan l’espai es desaprofita dins del bloc perquè el fitxer no l'omple del tot.</p>
-      <p><strong>Fragmentació externa:</strong> Passar tot l’ocupat a l’esquerra i tot el lliure a la dreta per anar més ràpid (desfragmentar).</p>
-      <p><strong>Formats per SO:</strong> En Windows s'utilitzava FAT/FAT32 i actualment NTFS. En Ubuntu s'utilitza ext4.</p>
-
-      <h4>Tipus de formateig</h4>
-      <p><strong>Baix nivell:</strong> Defineix pistes, sectors i cilindres físics al disc. No es poden recuperar els fitxers després d’aquest tipus de formatar.</p>
-      <p><strong>Mig nivell:</strong> Crea l'estructura de les particions (MBR o GPT).</p>
-      <p><strong>Alt nivell:</strong> Aplica el sistema de fitxers (ext4, NTFS, FAT32). El que fa és esborrar l'índex del sistema de fitxers, així que es poden recuperar els fitxers si no s'han sobreescrit.</p>
-
-      <h4>------------------------------------------------------------------------------------------------------------</h4>
-
-      <p class="tornar-index"><a href="#index-apartats">↑ Tornar a l'índex</a></p>
-    </article>
-  </section>
-</main>
-
-<footer class="peu">
-  <p class="peu-llicencia">
-    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ca" target="_blank" rel="license noopener">
-      <img src="https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png" alt="Llicència Creative Commons Reconeixement-NoComercial-CompartirIgual 4.0" width="88" height="31">
-    </a>
-    <span>Contingut sota llicència <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ca" target="_blank" rel="license noopener">CC BY-NC-SA 4.0</a></span>
-  </p>
-  <p class="autoria">Autor/a: <strong>Nom Cognom1 Cognom2</strong> · Pràctica 0 · Sistemes Operatius (ISOPJ1)</p>
-</footer>
-
-</body>
-</html>
+      <p>El sistema de fitxers es col·loca damunt d'una partició quan es crea i se li dona format.</p>
+      <ul>
+        <li><strong>Mida del sector:</strong> Unitat mínima d'emmagatzematge en el disc dur a <strong>nivell físic</strong>. Ve definida de fàbrica i no es pot canviar.</li>
+        <li><strong>Bloc:</strong> Unitat mínima d'emmagatzematge a <strong>nivell lògic</strong>. El sistema operatiu treballa a nivell de bloc i la seva mida sí que es pot canviar en formatar.</li>
+        <li><strong>Fragmentació:</strong>
+          <ul>
+            <li><strong>Interna:</strong> Quan l'espai d
