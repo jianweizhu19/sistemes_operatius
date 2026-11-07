@@ -368,9 +368,9 @@
 
       <figure class="bloc-imatge">
         <figcaption><strong>Figura 5.17 (Nivell 6 - Captura 3):</strong> Desbloqueig del compte amb <code>passwd -u</code> i inici de sessió d'èxit.</figcaption>
-        <p><strong>Comandes executades:</strong> <code>sudo passwd -u marc</code> i <code>su - marc</code></p>
-        <p><strong>Descripció:</strong> Executem <code>sudo passwd -u marc</code> per treure el bloqueig de la contrasenya d'en Marc i comprovem que ara ja pot tornar a iniciar sessió normalment.</p>
-        <img src="../Captura7_2gdu.png" alt="Desbloqueig de compte amb passwd -u i inici de sessió d'èxit">
+        <p><strong>Comandes executades:</strong> <code>sudo passwd -u marc</code>, <code>sudo passwd -S marc</code> i <code>su - marc</code></p>
+        <p><strong>Descripció:</strong> Executem <code>sudo passwd -u marc</code> per treure el bloqueig de la contrasenya d'en Marc, verifiquem l'estat amb <code>passwd -S</code> i comprovem que ara ja pot tornar a iniciar sessió normalment.</p>
+        <img src="../Captura7_3.png" alt="Desbloqueig de compte amb passwd -u i inici de sessió d'èxit">
       </figure>
 
       <!-- NIVELL 7: NOVA NORMA DE NOMS -->
@@ -378,22 +378,14 @@
         <figcaption><strong>Figura 5.18 (Nivell 7 - Captura 1):</strong> Canvi de nom d'usuari mantenint l'UID.</figcaption>
         <p><strong>Comandes executades:</strong> <code>sudo usermod -l nvidal nuria</code>, <code>id nvidal</code> i <code>grep nvidal /etc/passwd</code></p>
         <p><strong>Descripció:</strong> Executem <code>usermod -l nvidal nuria</code> per canviar el nom d'usuari de <code>nuria</code> a <code>nvidal</code> i verifiquem amb <code>id</code> i <code>/etc/passwd</code> que manté el mateix UID (1001).</p>
-        <img src="../Captura7_3.png" alt="Modificació de nom d'usuari amb usermod -l">
+        <img src="../Captura8gdu.png" alt="Modificació de nom d'usuari amb usermod -l">
       </figure>
 
       <figure class="bloc-imatge">
         <figcaption><strong>Figura 5.19 (Nivell 7 - Captura 2):</strong> Canvi de nom de grup i trasllat de la carpeta personal.</figcaption>
-        <p><strong>Comandes executades:</strong> <code>sudo groupmod -n nvidal nuria</code> i <code>sudo usermod -d /home/nvidal -m nvidal</code></p>
-        <p><strong>Descripció:</strong> Executem <code>groupmod -n</code> per canviar el nom del seu grup personal i <code>usermod -d -m</code> per traslladar la seva carpeta personal a <code>/home/nvidal</code>.</p>
-        <img src="../Captura8gdu.png" alt="Migració de carpeta personal i verificació del nou nom d'usuari">
-      </figure>
-
-      <!-- NIVELL 8: FI DE LES PRÀCTIQUES -->
-      <figure class="bloc-imatge">
-        <figcaption><strong>Figura 5.20 (Nivell 8 - Captura 1):</strong> Supressió d'usuari sense eliminar la carpeta personal.</figcaption>
-        <p><strong>Comandes executades:</strong> <code>sudo userdel laia</code> i <code>ls -l /home</code></p>
-        <p><strong>Descripció:</strong> Executem <code>userdel laia</code> sense el flag <code>-r</code> per donar de baixa la usuària i comprovem que la seva carpeta es queda a <code>/home</code> mostrant l'UID numèric orfe (1004).</p>
-        <img src="../Captura8_2gdu.png" alt="Esborrat d'usuari sense -r i presència de directori orfe amb UID numèric">
+        <p><strong>Comandes executades:</strong> <code>sudo groupmod -n nvidal nuria</code>, <code>sudo usermod -d /home/nvidal -m nvidal</code>, <code>ls -l /home/nvidal</code> i <code>su - nvidal</code></p>
+        <p><strong>Descripció:</strong> Executem <code>groupmod -n</code> per canviar el nom del seu grup personal, <code>usermod -d -m</code> per traslladar la seva carpeta personal a <code>/home/nvidal</code> i comprovem que pot iniciar sessió correctament.</p>
+        <img src="../Captura8_2gdu.png" alt="Migració de carpeta personal i verificació del nou nom d'usuari">
       </figure>
 
       <h4>------------------------------------------------------------------------------------------------------------</h4>
