@@ -104,155 +104,163 @@
     <article class="apartat" id="apartat3">
       <h2>3. Gestió de processos</h2>
 
+      <!-- NIVELL 0: PREPARAR EL CAS (CAPTURA 1) -->
       <figure class="bloc-imatge">
         <img src="../Captura1gdp.png" alt="Assignació de permisos d'execució amb chmod i verificació amb ls -l">
         <figcaption>
-          <strong>Figura 3.1:</strong> Assignació de permisos d'execució als scripts.
+          <strong>Figura 3.1 (Nivell 0 - Captura 1a):</strong> Permisos d'execució dels scripts de la missió.
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comandes executades:</strong> <code>chmod +x backup_nocturn espia descarrega.sh sospitosos.sh</code> i <code>ls -l</code></p>
-          <p><strong>Descripció:</strong> S'atorguen permisos d'execució (<code>+x</code>) als scripts ubicats al directori de treball. Mitjançant <code>ls -l</code> es comprova que la màscara de permisos ha canviat a <code>-rwxrwxr-x</code>.</p>
+          <p><strong>Descripció:</strong> Després de crear els cinc scripts de la missió (<code>minador</code>, <code>backup_nocturn</code>, <code>espia</code>, <code>descarrega.sh</code> i <code>sospitosos.sh</code>), s'atorguen permisos d'execució (<code>+x</code>). Mitjançant <code>ls -l</code> es comprova que la màscara de permisos té activat el bit d'execució (<code>-rwxrwxr-x</code>) a tots els fitxers.</p>
         </div>
       </figure>
 
       <figure class="bloc-imatge">
         <img src="../Captura1_2gdp.png" alt="Execució del script sospitosos.sh a la terminal">
         <figcaption>
-          <strong>Figura 3.2:</strong> Posada en marxa dels processos de prova.
+          <strong>Figura 3.2 (Nivell 0 - Captura 1b):</strong> Inicialització dels processos de sabotatge.
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comanda executada:</strong> <code>./sospitosos.sh</code></p>
-          <p><strong>Descripció:</strong> Execució del script d'inicialització encarregat de llançar en segon pla els processos que simularan la càrrega de treball al servidor.</p>
+          <p><strong>Descripció:</strong> Execució del script d'inici de la missió encarregat de llançar en segon pla els dos processos <code>minador</code>, el procés <code>backup_nocturn</code> i el procés <code>espia</code>. La terminal confirma la posada en marxa amb el missatge «Fet. El servidor comença a anar lent...».</p>
         </div>
       </figure>
 
+      <!-- NIVELL 1: RECONEIXEMENT (CAPTURA 2) -->
       <figure class="bloc-imatge">
         <img src="../Captura2pdg.png" alt="Visualització de l'arbre de processos amb pstree -p">
         <figcaption>
-          <strong>Figura 3.3:</strong> Inspecció de l'arbre de processos de l'usuari.
+          <strong>Figura 3.3 (Nivell 1 - Captura 2a):</strong> Inspecció de l'arbre de processos de l'usuari.
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comanda executada:</strong> <code>pstree -p $USER</code></p>
-          <p><strong>Descripció:</strong> Visualització de la jerarquia completa de processos pertanyents a l'usuari actual, mostrant els seus respectius PIDs (Process Identifiers).</p>
+          <p><strong>Descripció:</strong> Visualització de la jerarquia de processos de l'usuari. Com que el script <code>sospitosos.sh</code> ja ha finalitzat la seva execució, els processos fills han quedat orfes i han estat adoptats pel procés arrel d'usuari <code>systemd</code>.</p>
         </div>
       </figure>
 
       <figure class="bloc-imatge">
         <img src="../Captura2_2pdg.png" alt="Detall dels processos minador identificats a la sortida de pstree">
         <figcaption>
-          <strong>Figura 3.4:</strong> Identificació dels processos fills de càrrega de CPU.
+          <strong>Figura 3.4 (Nivell 1 - Captura 2b):</strong> Identificació dels PIDs dels processos sospitosos.
         </figcaption>
         <div class="documentacio-imatge">
-          <p><strong>Descripció:</strong> Ampliació de la sortida de <code>pstree</code> on s'aprecien específicament els dos processos <code>minador</code> actius amb els PIDs 6315 i 6316.</p>
+          <p><strong>Descripció:</strong> Detall de la sortida de <code>pstree</code> on s'aprecien específicament els dos processos <code>minador</code> (PIDs 6315 i 6316) funcionant de manera independent.</p>
         </div>
       </figure>
 
+      <!-- NIVELL 2: QUI CONSUMEIX MÉS? (CAPTURA 3) -->
       <figure class="bloc-imatge">
         <img src="../Captura3gdp.png" alt="Monitorització de recursos del sistema mitjançant top">
         <figcaption>
-          <strong>Figura 3.5:</strong> Anàlisi de consum de recursos en temps real amb <code>top</code>.
+          <strong>Figura 3.5 (Nivell 2 - Captura 3):</strong> Monitorització de recursos en temps real amb <code>top</code>.
         </figcaption>
         <div class="documentacio-imatge">
-          <p><strong>Comanda executada:</strong> <code>top</code></p>
-          <p><strong>Descripció:</strong> Es detecta que els dos processos <code>minador</code> (PIDs 6316 i 6315) estan monopolitzant la CPU amb un consum del 50,5% i 49,2% respectivament en estat d'execució (<code>R</code>).</p>
+          <p><strong>Comanda executada:</strong> <code>top</code> (ordenat per ús de CPU prement la tecla <code>P</code>).</p>
+          <p><strong>Descripció:</strong> Anàlisi de consum de la CPU. Es detecta que els dos processos <code>minador</code> (PIDs 6316 i 6315) estan monopolitzant la CPU 0, repartint-se aproximadament un 50% de recursos cadascun en estat d'execució activa (<code>R</code>).</p>
         </div>
       </figure>
 
+      <!-- NIVELL 3: INTERROGATORI AMB PS (CAPTURA 4) -->
       <figure class="bloc-imatge">
         <img src="../Captura4.gdp.png" alt="Filtratge de PIDs i taula d'estat de processos amb pgrep i ps">
         <figcaption>
-          <strong>Figura 3.6:</strong> Cerca de PIDs i identificació del procés pare.
+          <strong>Figura 3.6 (Nivell 3 - Captura 4):</strong> Cerca de PIDs i verificació del PPID pare.
         </figcaption>
         <div class="documentacio-imatge">
-          <p><strong>Comandes executades:</strong> <code>pgrep -l 'minador|espia|backup'</code>, <code>ps -o pid,ppid,user,stat,etime,%cpu,comm -C minador,espia,backup_nocturn</code> i <code>ps -o pid,comm -p 2674</code></p>
-          <p><strong>Descripció:</strong> Cerca específica de PIDs per nom de procés i taula de propietats detallada. S'identifica que el PPID comú (2674) pertany al dimoni principal <code>systemd</code>.</p>
+          <p><strong>Comandes executades:</strong> <code>pgrep -l 'minador|espia|backup'</code>, <code>ps -o pid,ppid,user,stat,etime,%cpu,comm -C minador,espia,backup_nocturn</code> i <code>ps -o pid,comm -p 2674</code>.</p>
+          <p><strong>Descripció:</strong> Filtratge de PIDs per nom de procés i obtenció de la taula detallada de propietats. Es comprova l'estat d'execució (<code>R</code> per a minadors, <code>S</code> per a backup i espia) i es confirma que el PPID comú (2674) pertany al dimoni principal <code>systemd</code>.</p>
         </div>
       </figure>
 
+      <!-- NIVELL 4: LA DESCÀRREGA URGENT (CAPTURA 5) -->
       <figure class="bloc-imatge">
         <img src="../Captura5gdp.png" alt="Gestió de tasques en segon i primer pla amb Ctrl+Z, jobs, bg i fg">
         <figcaption>
-          <strong>Figura 3.7:</strong> Control de treballs (Foreground / Background).
+          <strong>Figura 3.7 (Nivell 4 - Captura 5a):</strong> Control de treballs en primer i segon pla (T1).
         </figcaption>
         <div class="documentacio-imatge">
-          <p><strong>Comandes executades:</strong> <code>./descarrega.sh</code>, <code>Ctrl+Z</code>, <code>jobs -l</code>, <code>bg %1</code>, <code>fg %1</code></p>
-          <p><strong>Descripció:</strong> Aturada temporal d'un procés en primer pla amb <code>Ctrl+Z</code>, comprovació del número de treball amb <code>jobs -l</code>, enviament a segon pla amb <code>bg %1</code> i posterior retorn a primer pla amb <code>fg %1</code>.</p>
+          <p><strong>Comandes executades:</strong> <code>./descarrega.sh</code>, <code>Ctrl+Z</code>, <code>jobs -l</code>, <code>bg %1</code>, <code>fg %1</code>, <code>Ctrl+Z</code>, <code>bg %1</code>.</p>
+          <p><strong>Descripció:</strong> Manipulació d'estats d'un procés. S'executa la descàrrega en primer pla, s'atura temporalment amb <code>Ctrl+Z</code> (estat <code>T</code> / Stopped), es llista amb <code>jobs -l</code>, es reprèn en segon pla amb <code>bg %1</code> i es recupera a primer pla amb <code>fg %1</code> fins a deixar-la definitivament executant-se en segon pla.</p>
         </div>
       </figure>
 
       <figure class="bloc-imatge">
         <img src="../Captura5_2gdp.png" alt="Monitorització continuada del fitxer de progrés amb watch">
         <figcaption>
-          <strong>Figura 3.8:</strong> Monitorització del progrés d'un procés en segon pla.
+          <strong>Figura 3.8 (Nivell 4 - Captura 5b):</strong> Seguit del fitxer de progrés a la segona terminal (T2).
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comanda executada:</strong> <code>watch -n 1 cat progres.txt</code></p>
-          <p><strong>Descripció:</strong> Execució iterativa cada segon per visualitzar l'estat d'avanç de la descàrrega reflectit al fitxer <code>progres.txt</code>.</p>
+          <p><strong>Descripció:</strong> Monitorització a la terminal T2 que mostra com el percentatge de la descàrrega es congela quan el procés està aturat amb <code>Ctrl+Z</code> i torna a avançar quan passa a segon pla amb <code>bg</code>.</p>
         </div>
       </figure>
 
+      <!-- NIVELL 5: PRIORITAT A LA DESCÀRREGA (CAPTURA 6) -->
       <figure class="bloc-imatge">
         <img src="../Captura6gdp.png" alt="Verificació de la prioritat modificada al top amb valor NI negatiu">
         <figcaption>
-          <strong>Figura 3.9:</strong> Modificació de la prioritat d'execució (Niceness).
+          <strong>Figura 3.9 (Nivell 5 - Captura 6):</strong> Canvi de prioritat de CPU amb <code>renice</code>.
         </figcaption>
         <div class="documentacio-imatge">
-          <p><strong>Comanda executada:</strong> <code>top</code></p>
-          <p><strong>Descripció:</strong> S'observa l'efecte d'assignar una major prioritat al procés <code>descarrega.sh</code> (PID 8756) mitjançant un valor de <em>niceness</em> negatiu (<code>NI -10</code>, <code>PR 10</code>), aconseguint destinar-hi el 71,2% de la CPU.</p>
+          <p><strong>Comandes executades:</strong> <code>renice -n -10 -p 8756</code> (denegat sense privilegis), <code>sudo renice -n -10 -p 8756</code> i <code>top -p $(pgrep -d, 'minador|descarrega')</code>.</p>
+          <p><strong>Descripció:</strong> Intent de canvi de prioritat. Es comprova que un usuari no privilegiat no pot assignar valors <em>nice</em> negatius (Permission denied). En executar-ho amb <code>sudo</code>, s'atorga un valor <code>NI -10</code> (<code>PR 10</code>) al procés <code>descarrega.sh</code> (PID 8756), aconseguint que obtingui més del 70% de la CPU respecte als minadors.</p>
+        </div>
+      </figure>
+
+      <!-- NIVELL 6: NEUTRALITZAR ELS INTRUSOS (CAPTURA 7) -->
+      <figure class="bloc-imatge">
+        <img src="../Captura7gdp.png" alt="Resistència a SIGTERM i finalització amb SIGKILL -9">
+        <figcaption>
+          <strong>Figura 3.10 (Nivell 6 - Captura 7a):</strong> Neutralització del procés espia (senyals SIGTERM vs SIGKILL).
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comandes executades:</strong> <code>pgrep -l espia</code>, <code>kill 6318</code>, <code>kill -9 6318</code>, <code>pgrep -l espia</code>.</p>
+          <p><strong>Descripció:</strong> Enviament del senyal ordinari de finalització <code>SIGTERM</code> (15) al procés <code>espia</code> (PID 6318), el qual la captura i refusa tancar-se contestant «[espia] SIGTERM? Ni parlar-ne!». A continuació s'envia el senyal incondicional <code>SIGKILL</code> (<code>kill -9</code>), obligant al nucli a eliminar el procés immediatament.</p>
         </div>
       </figure>
 
       <figure class="bloc-imatge">
         <img src="../Captura7_2gdp.png" alt="Enviament del senyal SIGSTOP a un procés amb kill">
         <figcaption>
-          <strong>Figura 3.10:</strong> Suspensió d'un procés mitjançant el senyal <code>SIGSTOP</code>.
+          <strong>Figura 3.11 (Nivell 6 - Captura 7b):</strong> Suspensió de la còpia de seguretat amb <code>SIGSTOP</code>.
         </figcaption>
         <div class="documentacio-imatge">
-          <p><strong>Comandes executades:</strong> <code>pgrep -l backup</code>, <code>kill -STOP 4985</code>, <code>ps -o pid,stat,comm -p 4985</code></p>
-          <p><strong>Descripció:</strong> Aturada forçada del procés <code>backup_nocturn</code> (PID 4985) enviant el senyal <code>SIGSTOP</code> (19). La columna <code>STAT</code> confirma que l'estat ha passat a <code>T</code> (Stopped).</p>
+          <p><strong>Comandes executades:</strong> <code>pgrep -l backup</code>, <code>kill -STOP 4985</code>, <code>ps -o pid,stat,comm -p 4985</code>.</p>
+          <p><strong>Descripció:</strong> Aturada temporal del procés legítim <code>backup_nocturn</code> (PID 4985) mitjançant el senyal <code>SIGSTOP</code> (19). Es verifica amb <code>ps</code> que l'estat del procés ha canviat a <code>T</code> (Stopped / Congelat).</p>
         </div>
       </figure>
 
       <figure class="bloc-imatge">
         <img src="../Captura7_3gdp.png" alt="Represa d'un procés aturat enviant el senyal SIGCONT">
         <figcaption>
-          <strong>Figura 3.11:</strong> Represa d'un procés suspès amb el senyal <code>SIGCONT</code>.
+          <strong>Figura 3.12 (Nivell 6 - Captura 7c):</strong> Represa del procés pausat amb <code>SIGCONT</code>.
         </figcaption>
         <div class="documentacio-imatge">
-          <p><strong>Comandes executades:</strong> <code>kill -CONT 4985</code>, <code>ps -o pid,stat,comm -p 4985</code></p>
-          <p><strong>Descripció:</strong> Represa de l'execució del procés aturat enviant el senyal <code>SIGCONT</code> (18). Mitjançant <code>ps</code> es comprova que l'estat torna a ser <code>S</code> (Sleeping/Dormint).</p>
+          <p><strong>Comandes executades:</strong> <code>kill -CONT 4985</code>, <code>ps -o pid,stat,comm -p 4985</code>.</p>
+          <p><strong>Descripció:</strong> Represa de l'execució del procés de backup mitjançant el senyal <code>SIGCONT</code> (18). La comanda <code>ps</code> confirma que l'estat torna a ser <code>S</code> (Sleeping / En espera activa).</p>
         </div>
       </figure>
 
-      <figure class="bloc-imatge">
-        <img src="../Captura7gdp.png" alt="Resistència a SIGTERM i finalització amb SIGKILL -9">
-        <figcaption>
-          <strong>Figura 3.12:</strong> Intercepció de senyals ordinaris i finalització incondicional (<code>SIGKILL</code>).
-        </figcaption>
-        <div class="documentacio-imatge">
-          <p><strong>Comandes executades:</strong> <code>kill 6318</code>, <code>kill -9 6318</code></p>
-          <p><strong>Descripció:</strong> Intent de tancament del procés <code>espia</code> amb <code>SIGTERM</code> (15), el qual és interceptat pel script. A continuació, s'enviar el senyal <code>SIGKILL</code> (<code>kill -9</code>), el qual no pot ser ignorat i finalitza immediatament el procés.</p>
-        </div>
-      </figure>
-
+      <!-- NIVELL 7: QUE LA DESCÀRREGA NO ES PERDI (CAPTURA 8) -->
       <figure class="bloc-imatge">
         <img src="../Captura8gdp.png" alt="Finestra de watch confirmant que la descàrrega ha finalitzat amb èxit">
         <figcaption>
-          <strong>Figura 3.13:</strong> Finalització de la tasca monitoritzada.
+          <strong>Figura 3.13 (Nivell 7 - Captura 8a):</strong> Confirmació de finalització de la tasca a la terminal T2.
         </figcaption>
         <div class="documentacio-imatge">
-          <p><strong>Descripció:</strong> La pantalla de <code>watch</code> mostra que la tasca <code>ubuntu.iso</code> s'ha completat satisfactòriament després de 245 segons d'execució.</p>
+          <p><strong>Descripció:</strong> La pantallada de <code>watch</code> a la terminal T2 confirma que la descàrrega simulada de la imatge <code>ubuntu.iso</code> s'ha completat amb èxit mostrant el missatge «ubuntu.iso COMPLETADA en 245 s».</p>
         </div>
       </figure>
 
       <figure class="bloc-imatge">
         <img src="../Captura8_2gdp.png" alt="Línia d'ascendència completa d'un procés amb pstree -ps">
         <figcaption>
-          <strong>Figura 3.14:</strong> Arbre d'ascendència completa fins al procés arrel.
+          <strong>Figura 3.14 (Nivell 7 - Captura 8b):</strong> Execució persistent amb <code>nohup</code> i adopció per <code>systemd</code>.
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comanda executada:</strong> <code>pstree -ps $(pgrep descarrega)</code></p>
-          <p><strong>Descripció:</strong> Rastrejament de tota la línia d'ascendència del procés <code>descarrega.sh</code> (6616) fins al procés pare original del sistema <code>systemd(1)</code>.</p>
+          <p><strong>Descripció:</strong> Comprovació d'un procés llançat amb <code>nohup ./descarrega.sh &</code>. En tancar la finestra de la terminal d'origen, el procés ignora el senyal <code>SIGHUP</code> i passa a ser adoptat pel procés arrel <code>systemd(1)</code>, garantint que la tasca no s'interrompi.</p>
         </div>
       </figure>
 
@@ -267,7 +275,7 @@
 
       <h4>------------------------------------------------------------------------------------------------------------</h4>
 
-      <p class="tornar-index"><a href="#index-apartats">↑ Tornar a l me l'índex</a></p>
+      <p class="tornar-index"><a href="#index-apartats">↑ Tornar a l'índex</a></p>
     </article>
 
     <!-- APARTAT 5 -->
