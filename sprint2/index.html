@@ -57,6 +57,7 @@
         <tr><td>5</td><td><a href="#apartat5">Gestió d'usuaris, grups i permisos (Part 1)</a></td></tr>
         <tr><td>6</td><td><a href="#apartat6">Gestió d'usuaris, grups i permisos (Part 2)</a></td></tr>
         <tr><td>7</td><td><a href="#apartat7">Quotes de disc</a></td></tr>
+        <tr><td>+</td><td><a href="#practica-extra">Pràctica extra · Recuperació de fitxers després d'un formatatge</a></td></tr>
       </tbody>
     </table>
 
@@ -112,153 +113,6 @@
         <li><strong>Nivell mitjà:</strong> Creació de l'esquema i la taula de particions (MBR o GPT).</li>
         <li><strong>Alt nivell:</strong> Creació de les estructures del sistema de fitxers (inodes, directoris inicials i taules de metadades) sobre un volum.</li>
       </ul>
-
-      <h3>1.2 Pràctica · Recuperació de fitxers després d’un formatatge</h3>
-      <p>En aquesta pràctica he comprovat què passa quan es formata un disc i si és possible recuperar-ne els fitxers. Per evitar modificar els discs reals de l’ordinador, he treballat amb un fitxer anomenat <code>disc.img</code>, que fa de disc virtual.</p>
-      <p><strong>Precaució:</strong> Les ordres amb <code>dd</code>, <code>mkfs.ext4</code> i <code>rm</code> poden destruir dades si s’apliquen al fitxer o dispositiu equivocat. En aquesta pràctica, <code>of=disc.img</code> i les altres ordres s’han d’executar sempre des de <code>~/provesiso</code>, sobre el fitxer virtual, mai sobre un disc real com ara <code>/dev/sda</code> o <code>/dev/nvme0n1</code>.</p>
-
-      <h4>Preparació</h4>
-      <p>He copiat a aquesta carpeta una foto PNG i un PDF, amb els noms <code>'Captura de pantalla de 2026-10-20 12-08-35.png'</code> i <code>'RA2NF1. Disseny lògic de bases de dades.pdf'</code>, i he creat un fitxer de text <code>notes.txt</code> amb el text corresponent.</p>
-      <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>ls -l</code></p>
-        <p><strong>Descripció:</strong> Amb <code>ls -l</code> he verificat que hi havia els tres fitxers abans de començar. La llista mostra les mides de la imatge, el document PDF i les notes.</p>
-        <img src="../Captura1practica1.png" alt="Verificació inicial dels tres fitxers de prova amb ls -l">
-      </div>
-
-      <h4>1. Crear el disc virtual</h4>
-      <p>He creat un fitxer de 200 MiB amb zeros, que farà de disc virtual i he verificat que tenia la mida esperada:</p>
-      <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>dd if=/dev/zero of=disc.img bs=1M count=200 status=progress</code> i <code>ls -lh disc.img</code></p>
-        <p><strong>Descripció:</strong> <code>ls -lh</code> mostra la mida de la imatge en unitats llegibles i permet comprovar el resultat.</p>
-        <img src="../Captura2practica1.png" alt="Creació del disc virtual amb dd i comprovació amb ls -lh">
-      </div>
-
-      <h4>2. Donar format al disc i copiar-hi els fitxers</h4>
-      <p>He creat un sistema de fitxers <code>ext4</code> dins del fitxer virtual:</p>
-      <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>mkfs.ext4 disc.img</code></p>
-        <p><strong>Descripció:</strong> La sortida de <code>mkfs.ext4</code> indica que s’han creat 51.200 blocs de 4 KiB i mostra l’UUID generat.</p>
-        <img src="../Captura3practica1.png" alt="Formatatge del disc virtual disc.img amb ext4">
-      </div>
-
-      <p>A continuació l’he muntat en una carpeta perquè es pogués utilitzar com una unitat:</p>
-      <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>sudo mkdir -p /mnt/prova</code> i <code>sudo mount -o loop disc.img /mnt/prova</code></p>
-        <p><strong>Descripció:</strong> El muntatge de la imatge acabada de formatar es completa sense mostrar cap error. L’opció <code>-o loop</code> indica que es munta un fitxer d’imatge, no un disc físic.</p>
-        <img src="../Captura4practica1.png" alt="Muntatge del disc virtual a /mnt/prova amb opció loop">
-      </div>
-
-      <p>He copiat els fitxers de prova, n’he comprovat el contingut i he calculat les empremtes SHA-256 dels originals:</p>
-      <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>sudo cp 'Captura de pantalla de 2026-10-20 12-08-35.png' 'RA2NF1. Disseny lògic de bases de dades.pdf' notes.txt /mnt/prova/</code>, <code>ls -l /mnt/prova</code>, <code>sha256sum ... > originals.sha</code> i <code>cat originals.sha</code></p>
-        <p><strong>Descripció:</strong> La còpia inclou els tres fitxers de prova al directori muntat. La llista del volum mostra també <code>lost+found</code>, creat pel sistema ext4. El fitxer de control desa un resum SHA-256 per a cadascun dels tres originals.</p>
-        <img src="../Captura5practica1.png" alt="Còpia dels fitxers i generació del fitxer originals.sha">
-      </div>
-
-      <p>He guardat els hashes originals per poder comparar-los amb els fitxers recuperats. Finalment, he desmuntat la imatge abans de tornar-la a formatar:</p>
-      <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>sudo umount /mnt/prova</code></p>
-        <p><strong>Descripció:</strong> He fet servir <code>umount</code>. Si el sistema indica que el volum està ocupat, cal tancar les finestres o terminals que hi estiguin accedint abans de repetir l’ordre.</p>
-        <img src="../Captura6practica1.png" alt="Desmuntatge de la imatge de disc virtual">
-      </div>
-
-      <h4>3. Tornar a formatar i observar el resultat</h4>
-      <p>Amb la imatge desmuntada i des de <code>~/provesiso</code>, he recreat el sistema de fitxers sense demanar que es descarten els blocs de dades:</p>
-      <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>mkfs.ext4 -E nodiscard disc.img</code></p>
-        <p><strong>Descripció:</strong> Quan l’eina m’ha avisat que <code>disc.img</code> ja contenia un sistema ext4, he comprovat que el nom del fitxer era correcte i he confirmat l’operació.</p>
-        <img src="../Captura7practica1.png" alt="Reformatatge del disc virtual amb l'opció nodiscard">
-      </div>
-
-      <p>Després he muntat la imatge, he llistat el contingut i l’he desmuntada:</p>
-      <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>sudo mount -o loop disc.img /mnt/prova</code>, <code>ls -l /mnt/prova</code> i <code>sudo umount /mnt/prova</code></p>
-        <p><strong>Descripció:</strong> Els fitxers ja no apareixien al directori: el formatatge havia recreat les estructures del sistema de fitxers, però el contingut dels fitxers encara podia romandre en blocs no sobreescrits. Després de recrear ext4 només hi apareix <code>lost+found</code>.</p>
-        <img src="../Captura8practica1.png" alt="Comprovació que el contingut del disc formatat està buit">
-      </div>
-
-      <h4>4. Recuperar i comprovar els fitxers</h4>
-      <p>He utilitzat PhotoRec per buscar fitxers reconeixibles dins de la imatge i guardar-los en una carpeta diferent de la imatge original:</p>
-      <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>sudo apt install testdisk</code></p>
-        <p><strong>Descripció:</strong> Instal·lació de l'eina TestDisk/PhotoRec mitjançant el gestor de paquets.</p>
-        <img src="../Captura9practica1.png" alt="Instal·lació de testdisk a la terminal">
-      </div>
-
-      <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>photorec /d recup /cmd disc.img options,fileopt,everything,enable,search</code></p>
-        <p><strong>Descripció:</strong> PhotoRec s’inicia en mode de recuperació sobre <code>disc.img</code>.</p>
-        <img src="../Captura10practica1.png" alt="Execució de PhotoRec sobre la imatge disc.img">
-      </div>
-
-      <p>Després he inspeccionat els fitxers trobats i n’he calculat els hashes:</p>
-      <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>ls recup.1</code> i <code>sha256sum recup.1/*</code></p>
-        <p><strong>Descripció:</strong> La sortida permet veure els noms nous assignats als fitxers recuperats i els seus resums calculats. PhotoRec pot assignar noms nous als fitxers recuperats perquè pot haver perdut els noms originals en recrear-se l’índex del sistema de fitxers. He comparat els hashes de la foto i del PDF amb els valors guardats a <code>originals.sha</code> i coincideixen.</p>
-        <img src="../Captura11practica1.png" alt="Comprovació dels fitxers recuperats i càlcul dels seus hashes SHA-256">
-      </div>
-
-      <p>El fitxer de text pot no aparèixer entre els resultats perquè no té una capçalera pròpia fàcil d’identificar. Per buscar-hi la frase he executat:</p>
-      <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>strings -e S disc.img | grep pizza</code></p>
-        <p><strong>Descripció:</strong> La cerca recupera la frase «El meu secret és que m’encanta la pizza amb pinya» del fitxer de text.</p>
-        <img src="../Captura12practica1.png" alt="Cerca del text amagat amb les comandes strings i grep">
-      </div>
-
-      <h4>5. Sobreescriure el disc virtual amb zeros</h4>
-      <p>Per comprovar què passa quan les dades se sobreescriuen, he escrit zeros sobre tota la imatge virtual:</p>
-      <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>dd if=/dev/zero of=disc.img bs=1M count=200 conv=notrunc status=progress</code></p>
-        <p><strong>Descripció:</strong> Sobreescriptura completa de la imatge del disc virtual escrivint zeros a tots els blocs de dades.</p>
-        <img src="../Captura13practica1.png" alt="Sobreescriptura de disc.img amb zeros mitjançant dd">
-      </div>
-
-      <p>He intentat recuperar els fitxers una altra vegada i he tornat a buscar el text:</p>
-      <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>photorec /d recup_zeros /cmd disc.img options,fileopt,everything,enable,search</code></p>
-        <p><strong>Descripció:</strong> Intent de recuperació amb PhotoRec després de sobreescriure la imatge.</p>
-        <img src="../Captura14practica1.png" alt="Execució de PhotoRec sobre la imatge sobreescrita amb zeros">
-      </div>
-
-      <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>ls recup_zeros.1</code></p>
-        <p><strong>Descripció:</strong> Després de sobreescriure la imatge, PhotoRec només crea l’informe i no recupera els fitxers anteriors.</p>
-        <img src="../Captura15practica1.png" alt="Comprovació que PhotoRec no ha trobat fitxers recuperables">
-      </div>
-
-      <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>strings -e S disc.img | grep pizza</code></p>
-        <p><strong>Descripció:</strong> Després de sobreescriure la imatge, la cerca de la frase no ha mostrat cap resultat; <code>grep</code> no retorna cap coincidència en cercar la frase a la imatge sobreescrita.</p>
-        <img src="../Captura16practica1.png" alt="Cerca amb grep sense resultat a la imatge sobreescrita">
-      </div>
-
-      <h4>Preguntes de la pràctica</h4>
-      <ol>
-        <li>
-          <p><strong>Després de la part 3, el disc semblava buit. On eren realment els teus fitxers?</strong></p>
-          <p>En el mateix lloc. L'únic que hem fet ha sigut esborrar el sistema de fitxers, però els fitxers continuen intactes als mateixos blocs de dades del disc fins que se sobreescriguin.</p>
-        </li>
-        <li>
-          <p><strong>Per què els fitxers recuperats tenen noms diferents dels originals?</strong></p>
-          <p>Ja que el nom del fitxer no ho guarda el fitxer mateix, sinó el sistema de fitxers (metadades/índex). En esborrar-se l'índex, PhotoRec recupera les dades i els assigna un nom nou automàtic.</p>
-        </li>
-        <li>
-          <p><strong>Com pots demostrar que la foto recuperada és exactament la mateixa que l'original?</strong></p>
-          <p>Amb el hash SHA-256 que hem generat prèviament. Si coincideix exactament amb el del fitxer recuperat, queda demostrat que tenen el mateix contingut byte a byte.</p>
-        </li>
-        <li>
-          <p><strong>Per què PhotoRec ha trobat la foto i el PDF, però no el <code>notes.txt</code>? Com l'has trobat igualment?</strong></p>
-          <p>Ja que els fitxers <code>.txt</code> no tenen una capçalera com els fitxers d'imatges o PDF. La informació està escrita en text pla al propi disc i l'he trobat cercant la frase directament amb les ordres <code>strings</code> i <code>grep</code>.</p>
-        </li>
-        <li>
-          <p><strong>Quin nivell de formateig has fet a la part 3 i quin a la part 5?</strong></p>
-          <p>Un formateig d'alt nivell a la part 3 (recreant el sistema de fitxers) i un de baix nivell a la part 5 (sobreescrivint tot el disc amb zeros).</p>
-        </li>
-        <li>
-          <p><strong>Vols vendre un USB on tenies fotos personals. Quin formateig faries abans de vendre'l i per què?</strong></p>
-          <p>Un formateig de baix nivell, reescrivint tota la informació amb zeros per exemple, per assegurar-me que no es puguin recuperar les dades. Si fossin dades molt sensibles, seria millor no vendre'l i destruir-lo directament.</p>
-        </li>
-      </ol>
 
       <h4>------------------------------------------------------------------------------------------------------------</h4>
 
@@ -731,6 +585,163 @@
     <!-- APARTAT 7 -->
     <article class="apartat" id="apartat7">
       <h2>7. Quotes de disc</h2>
+
+      <h4>------------------------------------------------------------------------------------------------------------</h4>
+
+      <p class="tornar-index"><a href="#index-apartats">↑ Tornar a l'índex</a></p>
+    </article>
+
+    <!-- PRÀCTICA EXTRA: RECUPERACIÓ DE FITXERS -->
+    <article class="apartat" id="practica-extra">
+      <h2>Pràctica extra · Recuperació de fitxers després d'un formatatge</h2>
+
+      <p>L'objectiu principal d'aquesta pràctica és analitzar el comportament del sistema davant d'un formatat de disc i avaluar fins a quin punt es poden extreure de nou les dades perdudes. Per mantenir la integritat del disc real del sistema, tot el procediment s'ha dut a terme sobre un disc virtual contingut en un fitxer anomenat <code>disc.img</code>.</p>
+
+      <p><strong>Nota de seguretat:</strong> Cal tenir present que les comandes d'escriptura directa com <code>dd</code> o <code>mkfs.ext4</code> són altament destructives. Durant aquestes proves he garantit operar exclusivament sobre la imatge <code>disc.img</code> dins del meu directori de treball (<code>~/provesiso</code>), evitant en tot moment adreçar-me a dispositius de disc físics del sistema (com <code>/dev/sda</code> o <code>/dev/nvme0n1</code>).</p>
+
+      <h4>Preparació de l'entorn</h4>
+      <p>He situat a la carpeta de treball una imatge PNG, un fitxer PDF i he generat un document de text. Abans de procedir amb les proves, n'he verificat la presència i les mides:</p>
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>ls -l</code></p>
+        <p><strong>Descripció:</strong> Comprovació inicial del directori de treball per assegurar que els tres fitxers de prova (imatge, PDF i <code>notes.txt</code>) estan llestos.</p>
+        <img src="../Captura1practica1.png" alt="Verificació inicial dels fitxers de prova amb ls -l">
+      </div>
+
+      <h4>1. Creació del disc virtual</h4>
+      <p>Mitjançant el dispositiu <code>/dev/zero</code>, he generat un fitxer de 200 MiB per actuar com a unitat d'emmagatzematge virtual:</p>
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>dd if=/dev/zero of=disc.img bs=1M count=200 status=progress</code> i <code>ls -lh disc.img</code></p>
+        <p><strong>Descripció:</strong> Generació del contenidor virtual de 200 MiB i confirmació de la seva mida final en disc.</p>
+        <img src="../Captura2practica1.png" alt="Creació i comprovació del disc virtual disc.img">
+      </div>
+
+      <h4>2. Formatat inicial i còpia de fitxers</h4>
+      <p>He aplicat l'estructura del sistema de fitxers <code>ext4</code> al disc virtual:</p>
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>mkfs.ext4 disc.img</code></p>
+        <p><strong>Descripció:</strong> Inicialització de la taula d'inodes i blocs ext4 dins del fitxer <code>disc.img</code>.</p>
+        <img src="../Captura3practica1.png" alt="Formatat del disc virtual amb ext4">
+      </div>
+
+      <p>A continuació l'he incorporat a l'arbre de directoris del sistema per poder-hi escriure:</p>
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>sudo mkdir -p /mnt/prova</code> i <code>sudo mount -o loop disc.img /mnt/prova</code></p>
+
+        <p><strong>Descripció:</strong> Muntatge del fitxer d'imatge sobre el punt <code>/mnt/prova</code> emprant el dispositiu de bucle (loop device).</p>
+        <img src="../Captura4practica1.png" alt="Muntatge del disc virtual a /mnt/prova">
+      </div>
+
+      <p>He transferit els fitxers de prova a la unitat virtual i he enregistrat les seves empremtes xifrades SHA-256 com a punt de referència:</p>
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>sudo cp 'Captura de pantalla de 2026-10-20 12-08-35.png' 'RA2NF1. Disseny lògic de bases de dades.pdf' notes.txt /mnt/prova/</code>, <code>ls -l /mnt/prova</code>, <code>sha256sum ... > originals.sha</code> i <code>cat originals.sha</code></p>
+        <p><strong>Descripció:</strong> Còpia dels tres fitxers al volum virtual i càlcul del hash SHA-256 de cadascun per desar-los al fitxer de verificació <code>originals.sha</code>.</p>
+        <img src="../Captura5practica1.png" alt="Còpia de fitxers i enregistrament de hashes SHA-256">
+      </div>
+
+      <p>Un cop desades les dades, he desmuntat el volum per poder-hi operar directament:</p>
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>sudo umount /mnt/prova</code></p>
+        <p><strong>Descripció:</strong> Desconnexió segura del punt de muntatge abans de procedir al reformatat.</p>
+        <img src="../Captura6practica1.png" alt="Desmuntatge de la unitat virtual">
+      </div>
+
+      <h4>3. Reformatat d'alt nivell</h4>
+      <p>Amb la imatge desmuntada, he tornat a executar <code>mkfs.ext4</code> afegint el paràmetre <code>-E nodiscard</code> per garantir que els blocs de dades no se sobreescriguin:</p>
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>mkfs.ext4 -E nodiscard disc.img</code></p>
+        <p><strong>Descripció:</strong> Recreació de les estructures d'índexs i directoris ext4 mantenint inalterat el contingut físic dels blocs.</p>
+        <img src="../Captura7practica1.png" alt="Reformatat ext4 amb l'opció nodiscard">
+      </div>
+
+      <p>En remuntar la unitat, s'observa com l'accés habitual des del sistema d'arxius ja no mostra cap dels fitxers previs:</p>
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>sudo mount -o loop disc.img /mnt/prova</code>, <code>ls -l /mnt/prova</code> i <code>sudo umount /mnt/prova</code></p>
+        <p><strong>Descripció:</strong> Comprovació que la llista de la directori apareix buida (únicament conté el directori del sistema <code>lost+found</code>).</p>
+        <img src="../Captura8practica1.png" alt="Verificació del volum buit després del formatat">
+      </div>
+
+      <h4>4. Procés de recuperació de les dades</h4>
+      <p>He instal·lat el paquet d'eines de diagnòstic <code>testdisk</code> per utilitzar la utilitat <code>PhotoRec</code>:</p>
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>sudo apt install testdisk</code></p>
+        <p><strong>Descripció:</strong> Instal·lació de PhotoRec a la màquina local mitjançant el gestor de paquets.</p>
+        <img src="../Captura9practica1.png" alt="Instal·lació de testdisk">
+      </div>
+
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>photorec /d recup /cmd disc.img options,fileopt,everything,enable,search</code></p>
+        <p><strong>Descripció:</strong> Anàlisi de baix nivell del disc virtual cercant capçaleres conegudes per extreure fitxers cap a la carpeta <code>recup</code>.</p>
+        <img src="../Captura10practica1.png" alt="Execució de l'eina PhotoRec sobre disc.img">
+      </div>
+
+      <p>He revisat els arxius recavats i he calculat la seva signatura SHA-256 per acarar-los amb els originals:</p>
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>ls recup.1</code> i <code>sha256sum recup.1/*</code></p>
+        <p><strong>Descripció:</strong> Llistat dels elements trobats i verificació dels seus hashes. Es confirma que les signatures hash de la imatge PNG i del PDF coincideixen exactament amb les guardades inicialment.</p>
+        <img src="../Captura11practica1.png" alt="Comprovació de hashes dels fitxers extrets per PhotoRec">
+      </div>
+
+      <p>Atès que els documents de text pla no tenen una estructuració de capçalera fixa, PhotoRec no n'extreu el fitxer <code>notes.txt</code> directament. Per recuperar la informació he fet una lectura directa de cadenes llegibles al disc:</p>
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>strings -e S disc.img | grep pizza</code></p>
+        <p><strong>Descripció:</strong> Filtratge de seqüències de text ASCII sobre la imatge binària del disc, aconseguint extreure intacta la frase que contenia el fitxer.</p>
+        <img src="../Captura12practica1.png" alt="Recuperació de frases de text amb strings i grep">
+      </div>
+
+      <h4>5. Formatat de baix nivell (Sobreescriptura física)</h4>
+      <p>Per avaluar l'efectivitat de la sobreescriptura completa, he omplert d'un extrem a l'altre el disc virtual escrivint-hi només zeros:</p>
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>dd if=/dev/zero of=disc.img bs=1M count=200 conv=notrunc status=progress</code></p>
+        <p><strong>Descripció:</strong> Sobreescriptura bloc a bloc de tot el fitxer d'imatge amb caràcters nuls.</p>
+        <img src="../Captura13practica1.png" alt="Neteja total del disc virtual escrivint zeros">
+      </div>
+
+      <p>Després de la neteja, he tornat a passar l'analitzador de PhotoRec i la cerca de frases per comprovar si quedava cap residu:</p>
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>photorec /d recup_zeros /cmd disc.img options,fileopt,everything,enable,search</code></p>
+        <p><strong>Descripció:</strong> Segona cerca de recuperació sobre la imatge neta.</p>
+        <img src="../Captura14practica1.png" alt="Segona execució de PhotoRec sobre el disc netejat">
+      </div>
+
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>ls recup_zeros.1</code></p>
+        <p><strong>Descripció:</strong> Verificació que el directori de recuperació resulta buit (a excepció del log de la mateixa eina).</p>
+        <img src="../Captura15practica1.png" alt="Confirmació de carpeta buida de resultats">
+      </div>
+
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>strings -e S disc.img | grep pizza</code></p>
+        <p><strong>Descripció:</strong> Cerca de cadenes de text que confirma la impossibilitat d'extreure cap fragment d'informació un cop sobreescrit el disc.</p>
+        <img src="../Captura16practica1.png" alt="Absència de resultats de text a la imatge sobreescrita">
+      </div>
+
+      <h4>Qüestionari d'anàlisi</h4>
+      <ol>
+        <li>
+          <p><strong>Després de la part 3, el disc semblava buit. On eren realment els teus fitxers?</strong></p>
+          <p>Les dades continuaven emmagatzemades exactament en els mateixos blocs físics del disc. El formatat d'alt nivell només esborra l'estructura del sistema de fitxers (la taula d'inodes i directoris), però no modifica el contingut dels blocs de dades fins que posteriorment se sobreescriguin amb dades noves.</p>
+        </li>
+        <li>
+          <p><strong>Per què els fitxers recuperats tenen noms diferents dels originals?</strong></p>
+          <p>Perquè el nom d'un arxiu no forma part de les dades del fitxer mateix, sinó que es guarda a la taula d'índexs del sistema de fitxers. En haver recreat aquesta estructura, PhotoRec no pot saber com es deia originalment i els reanomena amb una nomenclatura numèrica automàtica.</p>
+        </li>
+        <li>
+          <p><strong>Com pots demostrar que la foto recuperada és exactament la mateixa que l'original?</strong></p>
+          <p>Fent servir el codi de verificació SHA-256. En calcular el resum hash de l'arxiu extret i comprovar que coincideix caràcter per caràcter amb el hash del fitxer original, queda demostrat matemàticament que el contingut binari és 100% idèntic.</p>
+        </li>
+        <li>
+          <p><strong>Per què PhotoRec ha trobat la foto i el PDF, però no el <code>notes.txt</code>? Com l'has trobat igualment?</strong></p>
+          <p>PhotoRec cerca la signatura o la capçalera característica de determinats formats (com les marques d'inici de PNG o PDF). Els fitxers de text pla no disposen de cap estructura de capçalera que en delimiti l'inici o el final. Per recuperar-ne el text, he utilitzat <code>strings</code> per extreure tota la informació de caràcters ASCII del disc virtual combinat amb <code>grep</code> per filtrar la frase concreta.</p>
+        </li>
+        <li>
+          <p><strong>Quin nivell de formateig has fet a la part 3 i quin a la part 5?</strong></p>
+          <p>A la part 3 he fet un formatat d'alt nivell (reconstrucció del sistema de fitxers ext4 sense esborrat de blocs), mentre que a la part 5 he aplicat un formatat de baix nivell o neteja segura (sobreescrivint tot el contingut físic del disc amb caràcters zero).</p>
+        </li>
+        <li>
+          <p><strong>Vols vendre un USB on tenies fotos personals. Quin formateig faries abans de vendre'l i per què?</strong></p>
+          <p>Faria un formatat de baix nivell omplint tota la unitat amb zeros (mitjançant eines com <code>dd</code> o <code>shred</code>). D'aquesta manera s'elimina qualsevol possibilitat que el comprador pugui recuperar les fotos amb eines de recuperació de dades. Si fossin dades de màxima seguretat, la recomanació seria no vendre la unitat i destruir-la físicament.</p>
+        </li>
+      </ol>
 
       <h4>------------------------------------------------------------------------------------------------------------</h4>
 
