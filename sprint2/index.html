@@ -64,47 +64,54 @@
     <article class="apartat" id="apartat1">
       <h2>1. Sistemes de fitxers i particions</h2>
 
-      <h4>Estructura del disc</h4>
+      <h3>1.1 Teoria i estructura del disc</h3>
+      <p>Per entendre com s'emmagatzemen les dades, cal distingir clarament entre l'estructura física del disc, la manera com es divideix lògicament i la forma com el sistema operatiu organitza els fitxers.</p>
+
+      <h4>Estructura física d’un disc</h4>
+      <p>L’estructura física descriu com s’emmagatzema la informació al dispositiu de maquinari:</p>
       <ul>
-        <li><strong>Estructura física d'un disc:</strong> Definició de la part física del maquinari (capçals, pistes, cilindres i sectors).</li>
-        <li><strong>Estructura lògica d'un disc:</strong> Com s'organitza l'espai mitjançant taules de particions:
-          <ul>
-            <li><code>MBR</code> (Master Boot Record): Esquema clàssic.</li>
-            <li><code>GPT</code> (GUID Partition Table): Esquema modern.</li>
-          </ul>
-        </li>
+        <li><strong>Disc dur mecànic (HDD):</strong> Les dades es guarden en platets magnètics dividits en pistes i sectors sobre els quals es desplacen capçals de lectura/escriptura.</li>
+        <li><strong>Unitat d'estat sòlid (SSD):</strong> No conté parts mòbils; les dades s'emmagatzemen directament en memòria flaix.</li>
+      </ul>
+      <p>Un <strong>sector</strong> és la unitat d’adreçament de baix nivell del dispositiu. La mida física del sector depèn del maquinari (en discs moderns és habitual trobar sectors de 4.096 bytes). Alguns discs exposen sectors lògics de 512 bytes tot i escriure físicament en unitats de 4.096 bytes (format 512e). Per això, la mida de sector que informa el sistema pot ser diferent de la mida física real.</p>
+
+      <h4>Estructura lògica d’un disc: MBR i GPT</h4>
+      <p>Abans de crear sistemes de fitxers, el disc es divideix en particions mitjançant una taula de particions que descriu on comença i on acaba cadascuna. Els dos formats principals són:</p>
+      <ul>
+        <li><strong>MBR (Master Boot Record):</strong> Format clàssic i senzill amb un límit d'uns 2 TiB per disc quan s'utilitzen sectors lògics de 512 bytes. Admet un màxim de quatre particions primàries (per superar aquest límit cal crear una partició estesa amb particions lògiques a l'interior).</li>
+        <li><strong>GPT (GUID Partition Table):</strong> Format modern dissenyat per a discs de gran capacitat, que permet crear moltes particions sense el límit de quatre primàries de MBR. Manté còpies de seguretat de la taula i dades de comprovació per detectar corrupció. S'utilitza habitualment amb sistemes d'arrencada UEFI.</li>
       </ul>
 
-      <h4>Estructura de la informació</h4>
+      <h4>Estructura de la informació: Partició, volum i sistema de fitxers</h4>
+      <p>Cal diferenciar tres conceptes fonamentals:</p>
       <ul>
-        <li><strong>Partició (Físic):</strong> Divisió de l'espai cru sobre el disc físic.</li>
-        <li><strong>Volum (Lògic):</strong> Espai accessible i gestionat pel sistema operatiu per emmagatzemar dades.</li>
+        <li><strong>Partició:</strong> Regió del disc definida a la taula de particions; és la divisió lògica de l'espai físic.</li>
+        <li><strong>Volum:</strong> Unitat lògica d'emmagatzematge que el sistema operatiu pot utilitzar i muntar (un volum pot agrupar una o diverses particions).</li>
+        <li><strong>Sistema de fitxers:</strong> Estructura organitzativa (directoris, fitxers, metadades i inodes) creada sobre un volum mitjançant el formatatge per poder gestionar les dades.</li>
       </ul>
 
-      <h4>Sistemes de fitxers</h4>
-      <p>El sistema de fitxers es col·loca damunt d'una partició quan es crea i se li dona format.</p>
+      <h4>Sistemes de fitxers, blocs i fragmentació</h4>
+      <p>El sistema operatiu adreça el disc mitjançant sectors lògics, però el sistema de fitxers assigna l’espai en unitats pròpies anomenades <strong>blocs</strong>. La mida del bloc es tria durant la instal·lació o el formatatge.</p>
+
+      <p>En aquest volum ext4, cada bloc ocupa 4096 bytes:</p>
+      <figure class="bloc-imatge">
+        <figcaption>Comprovació de la mida de bloc d'un volum <code>ext4</code> amb <code>tune2fs</code>.</figcaption>
+        <p><strong>Comanda executada:</strong> <code>sudo tune2fs -l /dev/sdb2 | grep Block</code></p>
+        <p><strong>Descripció:</strong> S'inspeccionen els paràmetres del sistema de fitxers a la partició <code>/dev/sdb2</code>, confirmant que la mida del bloc d'assignació és de 4096 bytes (4 KiB).</p>
+        <img src="../tune2fs.png" alt="Verificació de la mida de bloc en ext4 amb tune2fs">
+      </figure>
+
+      <p>Diferències clau en la gestió de blocs i la fragmentació:</p>
       <ul>
-        <li><strong>Mida del sector:</strong> Unitat mínima d'emmagatzematge en el disc dur a <strong>nivell físic</strong>. Ve definida de fàbrica i no es pot canviar.</li>
-        <li><strong>Bloc:</strong> Unitat mínima d'emmagatzematge a <strong>nivell lògic</strong>. El sistema operatiu treballa a nivell de bloc i la seva mida sí que es pot canviar en formatar.</li>
-        <li><strong>Fragmentació:</strong>
-          <ul>
-            <li><strong>Interna:</strong> Quan l'espai d'un bloc no s'aprofita completament pel fitxer.</li>
-            <li><strong>Externa:</strong> Fitxers dispersos pel disc; es soluciona passant les zones ocupades juntes i l'espai lliure a continuació per augmentar la velocitat de lectura.</li>
-          </ul>
-        </li>
-        <li><strong>Formats segons el sistema:</strong>
-          <ul>
-            <li><strong>Windows:</strong> Històricament <code>FAT</code> / <code>FAT32</code>, i actualment <code>NTFS</code>.</li>
-            <li><strong>Ubuntu:</strong> Format habitualment en <code>ext4</code>.</li>
-          </ul>
-        </li>
+        <li><strong>Fragmentació interna:</strong> Es produeix quan un fitxer no omple el bloc complet. Per exemple, un fitxer de text de 15 bytes reserva com a mínim un bloc de 4.096 bytes (4 KiB). L'ordre <code>ls -l</code> mostra la mida lògica del fitxer (15 bytes), mentre que <code>du -sh</code> aproxima l'espai real ocupat al disc (4 KiB).</li>
+        <li><strong>Fragmentació externa:</strong> Les parts d'un mateix fitxer queden repartides en zones no contigües. Això alenta la lectura en discs durs mecànics (HDD) a causa dels moviments del capçal. En discs SSD no s'ha d'aplicar desfragmentació rutinària per evitar el desgast inútil de les cel·les de memòria flaix.</li>
       </ul>
 
-      <h4>Tipus de formateig</h4>
+      <h4>Tipus de formatatge</h4>
       <ul>
-        <li><strong>Baix nivell:</strong> Defineix físicament pistes, sectors i cilindres. No es poden recuperar fitxers un cop fet.</li>
-        <li><strong>Mig nivell:</strong> Crea l'estructura de particions (<code>MBR</code> o <code>GPT</code>).</li>
-        <li><strong>Alt nivell:</strong> Aplica el sistema de fitxers (<code>NTFS</code>, <code>ext4</code>, <code>FAT32</code>). Esborra l'índex de gestió, de manera que les dades es poden recuperar si no s'han sobreescrit.</li>
+        <li><strong>Baix nivell:</strong> Preparació física de pistes i sectors feta durant la fabricació al taller (o sobreescriptura completa amb zeros).</li>
+        <li><strong>Nivell mitjà:</strong> Creació de l'esquema i la taula de particions (MBR o GPT).</li>
+        <li><strong>Alt nivell:</strong> Creació de les estructures del sistema de fitxers (inodes, directoris inicials i taules de metadades) sobre un volum.</li>
       </ul>
 
       <h4>------------------------------------------------------------------------------------------------------------</h4>
