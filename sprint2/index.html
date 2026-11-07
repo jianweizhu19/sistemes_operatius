@@ -123,6 +123,85 @@
     <article class="apartat" id="apartat2">
       <h2>2. Particions i muntatge</h2>
 
+      <p>En aquest apartat es detalla el procediment pràctic per a la identificació, creació de particions, aplicació de sistemes de fitxers i configuració del muntatge tant manual com permanent al fitxer de configuració del sistema.</p>
+
+      <figure class="bloc-imatge">
+        <figcaption><strong>Captura 1:</strong> Inspecció i llistat inicial dels discs del sistema.</figcaption>
+        <p><strong>Comandes executades:</strong> <code>lsblk</code> i <code>sudo fdisk -l</code></p>
+        <p><strong>Descripció:</strong> Comprovem els dispositius d'emmagatzematge detectats pel kernel, identificant el disc secundari i el seu estat actual abans de realitzar qualsevol modificació.</p>
+        <img src="../captura1pim.png" alt="Llistat inicial de dispositius amb lsblk i fdisk">
+      </figure>
+
+      <figure class="bloc-imatge">
+        <figcaption><strong>Captura 2:</strong> Inici de l'eina de particionament sobre el disc secundari.</figcaption>
+        <p><strong>Comanda executada:</strong> <code>sudo fdisk /dev/sdb</code></p>
+        <p><strong>Descripció:</strong> Obrim la consola interactiva de <code>fdisk</code> sobre la unitat de disc seleccionada per començar a gestionar l'esquema de particions.</p>
+        <img src="../captura2pim.png" alt="Inici de la consola de fdisk per al disc /dev/sdb">
+      </figure>
+
+      <figure class="bloc-imatge">
+        <figcaption><strong>Captura 3:</strong> Creació d'una nova taula de particions.</figcaption>
+        <p><strong>Comanda executada:</strong> Opció <code>g</code> dins de <code>fdisk</code></p>
+        <p><strong>Descripció:</strong> Establim un nou esquema de particionament GPT (GUID Partition Table) sobre el disc per suportar particions modernes i grans capacitats.</p>
+        <img src="../captura3pim.png" alt="Creació de la taula de particions GPT en fdisk">
+      </figure>
+
+      <figure class="bloc-imatge">
+        <figcaption><strong>Captura 4:</strong> Creació de la primera partició del disc.</figcaption>
+        <p><strong>Comanda executada:</strong> Opció <code>n</code> dins de <code>fdisk</code></p>
+        <p><strong>Descripció:</strong> Afegim una nova partició indicant el número de partició, el primer sector de disc i la mida desitjada per al primer volum.</p>
+        <img src="../captura4pim.png" alt="Creació de la primera partició amb l'opció n">
+      </figure>
+
+      <figure class="bloc-imatge">
+        <figcaption><strong>Captura 5:</strong> Creació de particions addicionals.</figcaption>
+        <p><strong>Comanda executada:</strong> Opció <code>n</code> dins de <code>fdisk</code></p>
+        <p><strong>Descripció:</strong> Definim la resta de particions del disc segons l'esquema planificat per organitzar l'espai d'emmagatzematge.</p>
+        <img src="../captura5pim.png" alt="Creació de particions addicionals en el disc">
+      </figure>
+
+      <figure class="bloc-imatge">
+        <figcaption><strong>Captura 6:</strong> Verificació de la taula de particions a la memòria.</figcaption>
+        <p><strong>Comanda executada:</strong> Opció <code>p</code> dins de <code>fdisk</code></p>
+        <p><strong>Descripció:</strong> Llistem el resum de totes les particions creades per comprovar la mida, el tipus i els sectors d'inici i final abans de guardar els canvis.</p>
+        <img src="../captura6pim.png" alt="Visualització del resum de particions creades">
+      </figure>
+
+      <figure class="bloc-imatge">
+        <figcaption><strong>Captura 7:</strong> Escriptura definitiva dels canvis al disc.</figcaption>
+        <p><strong>Comanda executada:</strong> Opció <code>w</code> dins de <code>fdisk</code></p>
+        <p><strong>Descripció:</strong> Guardem la nova taula de particions al disc físic i sortim de l'eina <code>fdisk</code>, fent que el kernel actualitzi la taula de dispositius.</p>
+        <img src="../captura7pim.png" alt="Escriptura de la taula de particions al disc amb w">
+      </figure>
+
+      <figure class="bloc-imatge">
+        <figcaption><strong>Captura 8:</strong> Aplicació del sistema de fitxers (formatatge).</figcaption>
+        <p><strong>Comanda executada:</strong> <code>sudo mkfs.ext4 /dev/sdb1</code></p>
+        <p><strong>Descripció:</strong> Formatem la partició amb el sistema de fitxers <code>ext4</code>, creant l'estructura d'inodes, blocs i metadades necessària per emmagatzemar dades.</p>
+        <img src="../captura8pim.png" alt="Formatatge de la partició amb sistema de fitxers ext4">
+      </figure>
+
+      <figure class="bloc-imatge">
+        <figcaption><strong>Captura 9:</strong> Creació del punt de muntatge i muntatge manual.</figcaption>
+        <p><strong>Comandes executades:</strong> <code>sudo mkdir -p /mnt/dades</code> i <code>sudo mount /dev/sdb1 /mnt/dades</code></p>
+        <p><strong>Descripció:</strong> Creem el directori on s'enllaçarà el volum i realitzem el muntatge manual de la partició, verificant-ho amb l'ordre <code>df -h</code>.</p>
+        <img src="../captura9pim.png" alt="Creació del punt de muntatge i execució de la comanda mount">
+      </figure>
+
+      <figure class="bloc-imatge">
+        <figcaption><strong>Captura 10:</strong> Obtenció del UUID de la partició.</figcaption>
+        <p><strong>Comanda executada:</strong> <code>sudo blkid /dev/sdb1</code></p>
+        <p><strong>Descripció:</strong> Obtenim l'identificador únic universal (UUID) de la partició per poder configurar un muntatge persistent i segur al sistema.</p>
+        <img src="../captura10pim.png" alt="Obtenció del UUID de la partició amb blkid">
+      </figure>
+
+      <figure class="bloc-imatge">
+        <figcaption><strong>Captura 11:</strong> Configuració del muntatge automàtic a <code>/etc/fstab</code> i comprovació.</figcaption>
+        <p><strong>Comandes executades:</strong> <code>sudo nano /etc/fstab</code> i <code>sudo mount -a</code></p>
+        <p><strong>Descripció:</strong> Afegim la línia corresponent amb el UUID, punt de muntatge, sistema de fitxers i opcions per defecte a <code>/etc/fstab</code>, verificant amb <code>mount -a</code> que no hi ha errors de sintaxi.</p>
+        <img src="../captura11pim.png" alt="Configuració del muntatge automàtic a etc fstab i verificació">
+      </figure>
+
       <h4>------------------------------------------------------------------------------------------------------------</h4>
 
       <p class="tornar-index"><a href="#index-apartats">↑ Tornar a l'índex</a></p>
@@ -519,75 +598,4 @@
       <figure class="bloc-imatge">
         <figcaption><strong>Figura 6.15 (Nivell 6 - Captura 2):</strong> Bloqueig d'esborrat de fitxers d'altres usuaris per Sticky Bit.</figcaption>
         <p><strong>Comandes executades:</strong> <code>su - pau</code>, <code>touch /srv/pixelforge/compartit/de_pau.txt</code>, <code>su - marc</code> i <code>rm /srv/pixelforge/compartit/de_pau.txt</code></p>
-        <p><strong>Descripció:</strong> En intentar esborrar el fitxer creat per en Pau, l'usuari Marc rep l'error <code>Operación no permitida / Operation not permitted</code> gràcies a la protecció del Sticky Bit.</p>
-        <img src="../Captura7_2gdu2.png" alt="Denegació d'esborrat de fitxer alien per Sticky Bit">
-      </figure>
-
-      <!-- NIVELL 7 -->
-      <h3>Nivell 7 · ACL · Accés per a una persona de fora</h3>
-      <figure class="bloc-imatge">
-        <figcaption><strong>Figura 6.16 (Nivell 7 - Captura 1):</strong> Accés inicial denegat a l'usuari tester.</figcaption>
-        <p><strong>Comandes executades:</strong> <code>su - marc</code> i <code>ls /srv/pixelforge/codi</code></p>
-        <p><strong>Descripció:</strong> Es comprova que l'usuari <code>marc</code> no pot accedir ni veure el contingut del directori <code>codi</code> (<code>Permission denied</code>).</p>
-        <img src="../Captura8gdu2.png" alt="Accés denegat a l'usuari Marc al directori de codi">
-      </figure>
-
-      <figure class="bloc-imatge">
-        <figcaption><strong>Figura 6.17 (Nivell 7 - Captura 2):</strong> Assignació d'ACL de lectura i execució amb <code>setfacl</code>.</figcaption>
-        <p><strong>Comandes executades:</strong> <code>sudo setfacl -m u:marc:rx /srv/pixelforge/codi</code>, <code>ls -ld /srv/pixelforge/codi</code> i <code>getfacl /srv/pixelforge/codi</code></p>
-        <p><strong>Descripció:</strong> S'assigna la regla ACL <code>u:marc:rx</code>. El directori mostra el signe <code>+</code> als permisos i <code>getfacl</code> confirma la línia <code>user:marc:r-x</code>.</p>
-        <img src="../Captura8_2gdu2.png" alt="Assignació d'ACL amb setfacl i verificació amb getfacl">
-      </figure>
-
-      <figure class="bloc-imatge">
-        <figcaption><strong>Figura 6.18 (Nivell 7 - Captura 3):</strong> Accés efectiu de l'usuari Marc i revocació de la regla ACL amb <code>setfacl -x</code>.</figcaption>
-        <p><strong>Comandes executades:</strong> <code>su - marc</code>, <code>ls /srv/pixelforge/codi</code>, <code>sudo setfacl -x u:marc /srv/pixelforge/codi</code> i <code>getfacl /srv/pixelforge/codi</code></p>
-        <p><strong>Descripció:</strong> Comprovació d'accés efectiu de l'usuari i posterior eliminació de la regla d'accés individual per a en Marc, verificant amb <code>getfacl</code> que la línia ha estat suprimida.</p>
-        <img src="../Captura8_3gdu2.png" alt="Accés efectiu i eliminació de la regla ACL amb setfacl -x">
-      </figure>
-
-      <!-- NIVELL 8 -->
-      <h3>Nivell 8 · umask i SUID</h3>
-      <figure class="bloc-imatge">
-        <figcaption><strong>Figura 6.19 (Nivell 8 - Captura 1):</strong> Configuració de la màscara <code>umask 027</code>.</figcaption>
-        <p><strong>Comandes executades:</strong> <code>umask 027</code>, <code>touch prova2.txt</code>, <code>mkdir prova2_dir</code> i <code>ls -ld prova2.txt prova2_dir</code></p>
-        <p><strong>Descripció:</strong> En establir la màscara <code>027</code>, els nous fitxers es creen amb permisos <code>640</code> (<code>rw-r-----</code>) i els directoris amb <code>750</code> (<code>rwxr-x---</code>), restringint l'accés a la resta d'usuaris.</p>
-        <img src="../Captura9gdu2.png" alt="Verificació dels permisos resultants amb umask 027">
-      </figure>
-
-      <figure class="bloc-imatge">
-        <figcaption><strong>Figura 6.20 (Nivell 8 - Captura 2):</strong> Identificació del bit SUID en programes executables.</figcaption>
-        <p><strong>Comandes executades:</strong> <code>ls -l /usr/bin/passwd</code> i <code>find /usr/bin -perm -4000 2>/dev/null</code></p>
-        <p><strong>Descripció:</strong> Es visualitza la lletra <code>s</code> a la posició d'execució de l'usuari propietari a <code>/usr/bin/passwd</code> i es cerca la llista d'executables del sistema amb el bit SUID (<code>-4000</code>) actiu.</p>
-        <img src="../Captura9_2gdu2.png" alt="Cerca de binaris executables amb permís SUID">
-      </figure>
-
-      <h4>------------------------------------------------------------------------------------------------------------</h4>
-
-      <p class="tornar-index"><a href="#index-apartats">↑ Tornar a l'índex</a></p>
-    </article>
-
-    <!-- APARTAT 7 -->
-    <article class="apartat" id="apartat7">
-      <h2>7. Quotes de disc</h2>
-
-      <h4>------------------------------------------------------------------------------------------------------------</h4>
-
-      <p class="tornar-index"><a href="#index-apartats">↑ Tornar a l'índex</a></p>
-    </article>
-
-  </section>
-</main>
-
-<footer class="peu">
-  <p class="peu-llicencia">
-    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ca" target="_blank" rel="license noopener">
-      <img src="https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png" alt="Llicència Creative Commons Reconeixement-NoComercial-CompartirIgual 4.0" width="88" height="31">
-    </a>
-    <span>Contingut sota llicència <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ca" target="_blank" rel="license noopener">CC BY-NC-SA 4.0</a></span>
-  </p>
-  <p class="autoria">Autor/a: <strong>Nom Cognom1 Cognom2</strong> · Pràctica 0 · Sistemes Operatius (ISOPJ1)</p>
-</footer>
-
-</body>
-</html>
+        <p><strong>Descripció
