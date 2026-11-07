@@ -268,7 +268,7 @@
 
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>kill -STOP 4985</code></p>
-        <p><strong>Descripció:</strong> Executem <code>kill -STOP</code> sobre el procés de la còpia de seguretat per pausar la seva execució momentàniament.</p>
+        <p><strong>Descripció:</strong> Executem <code>kill -STOP</code> sobre el procés de la còpia de seguretat per pausar la seva meva execució momentàniament.</p>
         <img src="../Captura7_2gdp.png" alt="Enviament del senyal SIGSTOP a un procés amb kill">
       </div>
 
@@ -306,7 +306,7 @@
 
     <!-- APARTAT 5 -->
     <article class="apartat" id="apartat5">
-      <h2>5. Gestió d'usuaris, grups i permisos (Part 1) - Missió PixelForge</h2>
+      <h2>5. Gestió d'usuaris, grups i permisos (Part 1)</h2>
 
       <h3>Nivell 0 · Conèixer el sistema</h3>
       <div class="bloc-imatge">
@@ -362,13 +362,13 @@
       <h3>Nivell 3 · Departaments</h3>
       <div class="bloc-imatge">
         <p><strong>Comandes executades:</strong> <code>sudo groupadd progamadors</code> i <code>tail -5 /etc/group</code></p>
-        <p><strong>Descripció:</strong> Executem <code>groupadd</code> per crear els grups de treball i creem a la vegada el grup <code>progamadors</code> amb una erra de mecanografia per veure com el corregim després.</p>
+        <p><strong>Descripció:</strong> Simulem un error en la creació de grups creant per equivocació el grup <code>progamadors</code> (sense la «r») i comprovem amb <code>tail -5 /etc/group</code> que ha quedat registrat al sistema.</p>
         <img src="../Captura4gdu.png" alt="Llistat dels grups nous a /etc/group incloent el grup erroni">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comandes executades:</strong> <code>sudo groupdel progamadors</code> i <code>getent group progamadors</code></p>
-        <p><strong>Descripció:</strong> Executem <code>sudo groupdel progamadors</code> per esborrar el grup mal escrit i comprovem amb <code>getent</code> que ja ha hagut estat eliminat del sistema.</p>
+        <p><strong>Descripció:</strong> Executem la comanda <code>sudo groupdel progamadors</code> per eliminar el grup mal escrit i verifiquem amb <code>getent group progamadors</code> que ja ha estat esborrat correctament.</p>
         <img src="../Captura4_2gdu.png" alt="Eliminació de grup amb groupdel i comprovació amb getent">
       </div>
 
