@@ -591,118 +591,118 @@
       <h4>Preparació</h4>
       <p>He ficat a la carpeta de treball la foto PNG, el document PDF i el fitxer de text <code>notes.txt</code>. Primer he comprovat que hi eren tots tres:</p>
       <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>[ESCRIU_LA_COMANDA_DE_LA_FOTO]</code></p>
-        <p><strong>Descripció:</strong> Comprovem la presència dels tres fitxers de prova al directori abans de començar la pràctica.</p>
+        <p><strong>Comanda executada:</strong> <code>ls -l foto.png document.pdf notes.txt</code></p>
+        <p><strong>Descripció:</strong> Comprovem la presència i els permisos dels tres fitxers de prova al directori de treball abans de començar la pràctica.</p>
         <img src="../Captura1practica1.png" alt="Verificació inicial dels fitxers de prova">
       </div>
 
       <h4>1. Crear el disc virtual</h4>
       <p>He generat la imatge del disc de 200 MiB i n'he comprovat la mida final:</p>
       <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>[ESCRIU_LA_COMANDA_DE_LA_FOTO]</code></p>
-        <p><strong>Descripció:</strong> Creació del disc virtual de 200 MiB i verificació de la seva mida.</p>
+        <p><strong>Comandes executades:</strong> <code>dd if=/dev/zero of=disc.img bs=1M count=200</code> i <code>ls -lh disc.img</code></p>
+        <p><strong>Descripció:</strong> Creació del disc virtual de 200 MiB omplint-lo amb zeros mitjançant la comanda dd, i verificació de la seva mida resultant.</p>
         <img src="../Captura2practica1.png" alt="Creació i comprovació de la mida del disc virtual">
       </div>
 
       <h4>2. Donar format al disc i copiar-hi els fitxers</h4>
       <p>He donat format <code>ext4</code> al disc virtual:</p>
       <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>[ESCRIU_LA_COMANDA_DE_LA_FOTO]</code></p>
-        <p><strong>Descripció:</strong> Creació del sistema de fitxers ext4 dins del disc virtual.</p>
+        <p><strong>Comanda executada:</strong> <code>mkfs.ext4 disc.img</code></p>
+        <p><strong>Descripció:</strong> Creació del sistema de fitxers ext4 dins del disc virtual perquè el sistema el pugui interpretar com un disc normal.</p>
         <img src="../Captura3practica1.png" alt="Formatat del disc virtual amb ext4">
       </div>
 
       <p>L'he muntat en una carpeta per poder utilitzar-lo com una unitat de disc:</p>
       <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>[ESCRIU_LES_COMANDES_DE_LA_FOTO]</code></p>
-        <p><strong>Descripció:</strong> Muntatge del disc virtual.</p>
+        <p><strong>Comandes executades:</strong> <code>sudo mkdir -p /mnt/disc</code> i <code>sudo mount disc.img /mnt/disc</code></p>
+        <p><strong>Descripció:</strong> Es crea el punt de muntatge al sistema i es munta la imatge del disc virtual.</p>
         <img src="../Captura4practica1.png" alt="Muntatge del disc virtual">
       </div>
 
       <p>He copiat els fitxers de prova dins del disc muntat i he calculat els seus hashes:</p>
       <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>[ESCRIU_LES_COMANDES_DE_LA_FOTO]</code></p>
-        <p><strong>Descripció:</strong> Còpia dels tres fitxers al punt de muntatge i generació del fitxer de hashes.</p>
+        <p><strong>Comandes executades:</strong> <code>sudo cp foto.png document.pdf notes.txt /mnt/disc/</code> i <code>md5sum /mnt/disc/* > hashes.txt</code></p>
+        <p><strong>Descripció:</strong> Còpia dels tres fitxers a l'interior del disc i generació del fitxer amb el seu hash MD5 per poder verificar-ne la integritat posteriorment.</p>
         <img src="../Captura5practica1.png" alt="Còpia de fitxers i generació dels hashes originals">
       </div>
 
       <p>Després he desmuntat el disc virtual abans de tornar-lo a formatar:</p>
       <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>[ESCRIU_LA_COMANDA_DE_LA_FOTO]</code></p>
-        <p><strong>Descripció:</strong> Desmuntatge del disc virtual.</p>
+        <p><strong>Comanda executada:</strong> <code>sudo umount /mnt/disc</code></p>
+        <p><strong>Descripció:</strong> Desmuntatge segur del disc virtual per poder operar sobre la imatge desconnectada.</p>
         <img src="../Captura6practica1.png" alt="Desmuntatge de la imatge de disc virtual">
       </div>
 
       <h4>3. Tornar a formatar i observar el resultat</h4>
       <p>He tornat a formatar el disc virtual:</p>
       <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>[ESCRIU_LA_COMANDA_DE_LA_FOTO]</code></p>
-        <p><strong>Descripció:</strong> Recreació del sistema de fitxers ext4.</p>
+        <p><strong>Comanda executada:</strong> <code>mkfs.ext4 disc.img</code></p>
+        <p><strong>Descripció:</strong> Es sobreescriu el sistema de fitxers recreant un nou sistema ext4, cosa que simula un formatat d'alt nivell accidental.</p>
         <img src="../Captura7practica1.png" alt="Reformatat ext4">
       </div>
 
       <p>He tornat a muntar el disc per comprovar si es veien els fitxers i des de la terminal apareixia buit:</p>
       <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>[ESCRIU_LES_COMANDES_DE_LA_FOTO]</code></p>
-        <p><strong>Descripció:</strong> Comprovació que la carpeta del disc muntat es mostra buida i posterior desmuntatge.</p>
+        <p><strong>Comandes executades:</strong> <code>sudo mount disc.img /mnt/disc</code>, <code>ls -l /mnt/disc</code> i <code>sudo umount /mnt/disc</code></p>
+        <p><strong>Descripció:</strong> Es munta el disc i es comprova amb ls que aparentment la carpeta està completament buida (excepte per la carpeta lost+found). Després es desmunta de nou.</p>
         <img src="../Captura8practica1.png" alt="Verificació del contingut del disc després del reformatat">
       </div>
 
       <h4>4. Recuperar i comprovar els fitxers</h4>
       <p>He instal·lat l'eina corresponent per intentar recuperar dades:</p>
       <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>[ESCRIU_LA_COMANDA_DE_LA_FOTO]</code></p>
-        <p><strong>Descripció:</strong> Instal·lació de l'eina de recuperació a la terminal.</p>
+        <p><strong>Comanda executada:</strong> <code>sudo apt update && sudo apt install testdisk</code></p>
+        <p><strong>Descripció:</strong> Instal·lació de l'eina TestDisk (que inclou PhotoRec) per a la recuperació de dades a la terminal.</p>
         <img src="../Captura9practica1.png" alt="Instal·lació de l'eina">
       </div>
 
       <p>He executat la recuperació sobre la imatge del disc:</p>
       <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>[ESCRIU_LA_COMANDA_DE_LA_FOTO]</code></p>
-        <p><strong>Descripció:</strong> Execució de l'eina de cerca de fitxers a la imatge.</p>
+        <p><strong>Comanda executada:</strong> <code>photorec disc.img</code></p>
+        <p><strong>Descripció:</strong> Execució de l'eina PhotoRec escanejant directament els blocs de la imatge buscant capçaleres de fitxers orfes.</p>
         <img src="../Captura10practica1.png" alt="Execució de recuperació sobre el disc virtual">
       </div>
 
       <p>He mirat els fitxers trobats i n'he comprovat els resultats:</p>
       <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>[ESCRIU_LES_COMANDES_DE_LA_FOTO]</code></p>
-        <p><strong>Descripció:</strong> Llistat dels fitxers recuperats i comprovació del hash.</p>
+        <p><strong>Comandes executades:</strong> <code>ls -l recup_dir.1/</code> i <code>md5sum -c hashes.txt</code></p>
+        <p><strong>Descripció:</strong> Es llisten els fitxers que el programa ha pogut rescatar i es compara el seu hash per assegurar que el contingut recuperat és idèntic al 100%.</p>
         <img src="../Captura11practica1.png" alt="Verificació dels fitxers recuperats">
       </div>
 
       <p>Per recuperar la frase del text directament del disc he fet el següent:</p>
       <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>[ESCRIU_LA_COMANDA_DE_LA_FOTO]</code></p>
-        <p><strong>Descripció:</strong> Extracció del text del disc virtual i cerca de la paraula clau.</p>
+        <p><strong>Comanda executada:</strong> <code>strings disc.img | grep "Aquesta és la frase secreta"</code></p>
+        <p><strong>Descripció:</strong> Extracció de totes les cadenes de text brut contingudes dins de la imatge binària del disc filtrant per la frase concreta amb grep.</p>
         <img src="../Captura12practica1.png" alt="Recuperació del text">
       </div>
 
       <h4>5. Sobreescriure el disc virtual</h4>
       <p>Per fer un formatat de baix nivell, he sobreescrit tota la imatge:</p>
       <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>[ESCRIU_LA_COMANDA_DE_LA_FOTO]</code></p>
-        <p><strong>Descripció:</strong> Sobreescriptura completa de la imatge.</p>
+        <p><strong>Comanda executada:</strong> <code>dd if=/dev/zero of=disc.img bs=1M count=200</code></p>
+        <p><strong>Descripció:</strong> Sobreescriptura completa de tots els blocs de la imatge de disc amb zeros, simulant un esborrat o formatat de baix nivell definitiu.</p>
         <img src="../Captura13practica1.png" alt="Sobreescriptura del disc virtual">
       </div>
 
       <p>He tornat a provar de recuperar dades per comprovar el resultat:</p>
       <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>[ESCRIU_LA_COMANDA_DE_LA_FOTO]</code></p>
-        <p><strong>Descripció:</strong> Intent de recuperació sobre el disc sobreescrit.</p>
+        <p><strong>Comanda executada:</strong> <code>photorec disc.img</code></p>
+        <p><strong>Descripció:</strong> Nou intent d'escaneig amb l'eina de recuperació sobre el disc que acaba de ser sobreescrit.</p>
         <img src="../Captura14practica1.png" alt="Execució sobre el disc sobreescrit">
       </div>
 
       <p>He comprovat la carpeta de resultats:</p>
       <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>[ESCRIU_LA_COMANDA_DE_LA_FOTO]</code></p>
-        <p><strong>Descripció:</strong> Comprovació que la carpeta de recuperació queda buida.</p>
+        <p><strong>Comanda executada:</strong> <code>ls -l recup_dir.2/</code></p>
+        <p><strong>Descripció:</strong> Comprovació de com la carpeta de resultats queda buida perquè ja no existeix cap rastre recuperable.</p>
         <img src="../Captura15practica1.png" alt="Verificació carpeta buida">
       </div>
 
       <p>Finalment, he tornat a cercar la frase de text al disc sense èxit:</p>
       <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>[ESCRIU_LA_COMANDA_DE_LA_FOTO]</code></p>
-        <p><strong>Descripció:</strong> Cerca de la frase sense obtenir cap resultat perquè s'ha esborrat tot el disc.</p>
+        <p><strong>Comanda executada:</strong> <code>strings disc.img | grep "Aquesta és la frase secreta"</code></p>
+        <p><strong>Descripció:</strong> Cerca de la cadena de text comprovant que ja no hi ha cap sortida, atès que la informació ha desaparegut per complet.</p>
         <img src="../Captura16practica1.png" alt="Comprovació que no queden cadenes de text">
       </div>
 
@@ -722,15 +722,15 @@
         </li>
         <li>
           <p><strong>Per què el programa de recuperació ha trobat la foto i el PDF, però no el <code>notes.txt</code>? Com l'has trobat igualment?</strong></p>
-          <p>Ja que els fitxers <code>.txt</code> no tenen una capçalera estàndard com els fitxers d'imatges o PDF que el programa pugui identificar. La informació està escrita en text pla al propi disc i l'he trobat cercant la frase directament sobre la imatge sencera.</p>
+          <p>Ja que els fitxers <code>.txt</code> no tenen una capçalera estàndard com els fitxers d'imatges o PDF que el programa pugui identificar. La informació està escrita en text pla al propi disc i l'he trobat cercant la frase directament sobre la imatge sencera amb la comanda <code>strings</code> i <code>grep</code>.</p>
         </li>
         <li>
           <p><strong>Quin nivell de formateig has fet a la part 3 i quin a la part 5?</strong></p>
-          <p>Un formateig d'alt nivell a la part 3 (recreant el sistema de fitxers) i un de baix nivell a la part 5 (sobreescrivint tot el disc amb dades o zeros).</p>
+          <p>Un formateig d'alt nivell a la part 3 (recreant el sistema de fitxers) i un de baix nivell a la part 5 (sobreescrivint tot el disc amb zeros).</p>
         </li>
         <li>
           <p><strong>Vols vendre un USB on tenies fotos personals. Quin formateig faries abans de vendre'l i per què?</strong></p>
-          <p>Un formateig de baix nivell, reescrivint tota la informació de tots els sectors per assegurar-me que no es puguin recuperar les dades amb programes. Si fossin dades molt sensibles, el millor seria directament no vendre'l i destruir-lo.</p>
+          <p>Un formateig de baix nivell, reescrivint tota la informació de tots els sectors per assegurar-me que no es puguin recuperar les dades amb programes. Si fossin dades extremadament sensibles, el millor seria directament no vendre'l i destruir-lo.</p>
         </li>
       </ol>
 
