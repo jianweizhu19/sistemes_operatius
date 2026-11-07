@@ -601,81 +601,117 @@
       </div>
 
       <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>cd ~/practica</code></p>
+        <p><strong>Descripció:</strong> Accés al directori de treball creat per realitzar-hi totes les operacions de la pràctica.</p>
+        <img src="../Captura3practica1.png" alt="Accés al directori practica">
+      </div>
+
+      <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>ls -l</code></p>
-        <p><strong>Descripció:</strong> Comprovació del contingut inicial del directori de treball per veure els fitxers de prova abans de començar.</p>
-        <img src="../Captura3practica1.png" alt="Verificació inicial de fitxers">
+        <p><strong>Descripció:</strong> Comprovació del contingut inicial del directori de treball per veure els fitxers de prova originals (imatge, PDF i text).</p>
+        <img src="../Captura4practica1.png" alt="Verificació inicial de fitxers originals">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>dd if=/dev/zero of=disc.img bs=1M count=200 status=progress</code></p>
         <p><strong>Descripció:</strong> Generació del disc virtual de 200 MiB omplint-lo amb zeros i visualitzant el progrés de la creació.</p>
-        <img src="../Captura4practica1.png" alt="Creació de la imatge de disc amb dd">
+        <img src="../Captura5practica1.png" alt="Creació de la imatge de disc amb dd">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>ls -lh disc.img</code></p>
         <p><strong>Descripció:</strong> Verificació de la mida final de la imatge del disc virtual (200 MiB).</p>
-        <img src="../Captura5practica1.png" alt="Comprovació de la mida del disc virtual">
+        <img src="../Captura6practica1.png" alt="Comprovació de la mida del disc virtual">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>mkfs.ext4 disc.img</code></p>
         <p><strong>Descripció:</strong> Formatat inicial de la imatge de disc aplicant-hi el sistema de fitxers <code>ext4</code>.</p>
-        <img src="../Captura6practica1.png" alt="Formatat inicial amb ext4">
+        <img src="../Captura7practica1.png" alt="Formatat inicial amb ext4">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>sudo mkdir -p /mnt/prova</code></p>
-        <p><strong>Descripció:</strong> Creació del punt de muntatge <code>/mnt/prova</code> al sistema per poder accedir al disc virtual.</p>
-        <img src="../Captura7practica1.png" alt="Creació del punt de muntatge">
+        <p><strong>Descripció:</strong> Creació del directori <code>/mnt/prova</code> al sistema per fer-lo servir com a punt de muntatge del disc virtual.</p>
+        <img src="../Captura8practica1.png" alt="Creació del punt de muntatge /mnt/prova">
       </div>
 
       <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>sudo mount -o loop disc.img /mnt/prova</code> i <code>sudo cp imatge.jpg document.pdf notes.txt /mnt/prova/</code></p>
-        <p><strong>Descripció:</strong> Muntatge de la imatge de disc com a dispositiu bucle i còpia dels tres fitxers de prova (imatge, PDF i fitxer de text) a l'interior del disc.</p>
-        <img src="../Captura8practica1.png" alt="Còpia de fitxers al disc virtual muntat">
+        <p><strong>Comanda executada:</strong> <code>sudo mount -o loop disc.img /mnt/prova</code></p>
+        <p><strong>Descripció:</strong> Muntatge de la imatge del disc virtual com a dispositiu bucle (loop) al directori <code>/mnt/prova</code>.</p>
+        <img src="../Captura9practica1.png" alt="Muntatge de la imatge de disc">
+      </div>
+
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>sudo cp imatge.jpg document.pdf notes.txt /mnt/prova/</code></p>
+        <p><strong>Descripció:</strong> Còpia dels tres fitxers de prova (imatge, PDF i fitxer de text) a l'interior del disc virtual muntat.</p>
+        <img src="../Captura10practica1.png" alt="Còpia de fitxers al disc muntat">
+      </div>
+
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>ls -l /mnt/prova</code></p>
+        <p><strong>Descripció:</strong> Comprovació que els fitxers han quedat ben guardats a l'interior del disc virtual muntat.</p>
+        <img src="../Captura11practica1.png" alt="Verificació dels fitxers copiats a /mnt/prova">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>sha256sum imatge.jpg document.pdf notes.txt > originals.sha</code></p>
         <p><strong>Descripció:</strong> Generació i desament dels hashes SHA256 dels fitxers originals per poder comparar la seva integritat després de la recuperació.</p>
-        <img src="../Captura9practica1.png" alt="Generació de hashes SHA256 originals">
+        <img src="../Captura12practica1.png" alt="Generació de hashes SHA256 originals">
+      </div>
+
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>sudo umount /mnt/prova</code></p>
+        <p><strong>Descripció:</strong> Desmuntatge segur del volum del disc virtual abans de realitzar el reformatat.</p>
+        <img src="../Captura13practica1.png" alt="Desmuntatge de /mnt/prova">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>mkfs.ext4 -E nodiscard disc.img</code></p>
         <p><strong>Descripció:</strong> Simulació d'un formatatge d'alt nivell accidental forçant l'opció <code>nodiscard</code> per reinstal·lar l'estructura del sistema de fitxers sense sobreescriure físicament els blocs de dades.</p>
-        <img src="../Captura10practica1.png" alt="Reformatat ext4 amb nodiscard">
+        <img src="../Captura14practica1.png" alt="Reformatat ext4 amb nodiscard">
       </div>
 
       <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>sudo mount -o loop disc.img /mnt/prova</code> i <code>ls -l /mnt/prova</code></p>
-        <p><strong>Descripció:</strong> Muntatge del disc reformatat per comprovar que el sistema de fitxers apareix completament buit a la terminal.</p>
-        <img src="../Captura11practica1.png" alt="Comprovació del disc reformatat buit">
+        <p><strong>Comanda executada:</strong> <code>sudo mount -o loop disc.img /mnt/prova</code></p>
+        <p><strong>Descripció:</strong> Remuntatge de la imatge de disc després d'haver estat reformatada.</p>
+        <img src="../Captura15practica1.png" alt="Remuntatge del disc reformatat">
+      </div>
+
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>ls -l /mnt/prova</code></p>
+        <p><strong>Descripció:</strong> Comprovació des de la terminal que el disc ara apareix completament buit (excepte per la carpeta <code>lost+found</code>).</p>
+        <img src="../Captura16practica1.png" alt="Comprovació que el disc reformatat està buit">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>photorec /d recup /cmd disc.img options,fileopt,everything,enable,search</code></p>
-        <p><strong>Descripció:</strong> Execució automatitzada de <code>photorec</code> sobre la imatge del disc indicant la carpeta de destinació <code>recup</code> i cercar totes les capçaleres de fitxer suportades.</p>
-        <img src="../Captura12practica1.png" alt="Execució automatitzada de PhotoRec">
+        <p><strong>Descripció:</strong> Execució automatitzada de <code>photorec</code> sobre la imatge del disc indicant la carpeta de destinació <code>recup</code> i cercant totes les capçaleres de fitxer suportades.</p>
+        <img src="../Captura17practica1.png" alt="Execució automatitzada de PhotoRec">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>ls recup.1</code></p>
-        <p><strong>Descripció:</strong> Llistat del contingut del directori <code>recup.1</code> per veure els primer fitxers recuperats pel programa.</p>
-        <img src="../Captura13practica1.png" alt="Llistat del directori recup.1">
+        <p><strong>Descripció:</strong> Llistat del contingut del directori <code>recup.1</code> per veure els primers fitxers recuperats pel programa.</p>
+        <img src="../Captura18practica1.png" alt="Llistat del directori recup.1">
       </div>
 
       <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>ls recup.1 | grep jpg</code> i <code>sha256sum recup.1/*</code></p>
-        <p><strong>Descripció:</strong> Filtratge dels fitxers d'imatge trobats i càlcul dels seus hashes SHA256 per comprovar si coincideixen amb els originals.</p>
-        <img src="../Captura14practica1.png" alt="Comprovació de hashes dels fitxers rescatats">
+        <p><strong>Comanda executada:</strong> <code>ls recup.1 | grep jpg</code></p>
+        <p><strong>Descripció:</strong> Filtratge específic dels fitxers d'imatge JPG trobats a la carpeta de recuperació.</p>
+        <img src="../Captura19practica1.png" alt="Filtratge de fitxers JPG recuperats">
+      </div>
+
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>sha256sum recup.1/*</code></p>
+        <p><strong>Descripció:</strong> Càlcul dels hashes SHA256 dels fitxers rescatats a <code>recup.1</code> per comprovar si coincideixen amb els originals desats a <code>originals.sha</code>.</p>
+        <img src="../Captura20practica1.png" alt="Comprovació de hashes dels fitxers rescatats">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>ls -l recup.1/ recup.4/</code></p>
-        <p><strong>Descripció:</strong> Inspecció final de les carpetes de resultat. S'ha trobat el fitxer <code>report.xml</code> a la carpeta <code>recup.1</code> i la imatge juntament amb el PDF a la carpeta <code>recup.4</code>. El fitxer <code>notes.txt</code> no s'ha trobat directament ja que els fitxers de text pla no tenen capçaleres de fitxer binàries estàndard que <code>photorec</code> pugui identificar.</p>
-        <img src="../Captura15practica1.png" alt="Visualització dels fitxers recuperats a recup.1 i recup.4">
+        <p><strong>Descripció:</strong> Inspecció final de les carpetes de resultat. S'ha trobat el fitxer <code>report.xml</code> a la carpeta <code>recup.1</code> i la imatge juntament amb el PDF a la carpeta <code>recup.4</code>. El fitxer <code>notes.txt</code> no s'ha trobat directament ja que els fitxers de text pla no tenen capçaleres binàries estàndard que <code>photorec</code> pugui identificar.</p>
+        <img src="../Captura21practica1.png" alt="Visualització dels fitxers recuperats a recup.1 i recup.4">
       </div>
 
       <h4>------------------------------------------------------------------------------------------------------------</h4>
