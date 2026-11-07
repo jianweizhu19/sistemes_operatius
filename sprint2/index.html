@@ -263,10 +263,10 @@
       </figure>
 
       <figure class="bloc-imatge">
-        <figcaption><strong>Figura 5.3 (Nivell 0):</strong> Lectura de <code>/etc/shadow</code> com a usuari normal.</figcaption>
+        <figcaption><strong>Figura 5.3 (Nivell 0):</strong> Lectura del fitxer <code>/etc/shadow</code> directament com a root.</figcaption>
         <p><strong>Comanda executada:</strong> <code>cat /etc/shadow</code></p>
-        <p><strong>Descripció:</strong> Executem la comanda <code>cat /etc/shadow</code> per veure si podem llegir el fitxer de contrasenyes com a usuari normal, però el sistema ens denega l'accés perquè no tenim permisos.</p>
-        <img src="../Captura1_3gdu.png" alt="Consulta de les primeres línies del fitxer /etc/shadow">
+        <p><strong>Descripció:</strong> Executem la comanda <code>cat /etc/shadow</code> directament com a usuari <code>root</code> per poder veure el contingut del fitxer de contrasenyes del sistema sense restriccions de permisos.</p>
+        <img src="../Captura1_3gdu.png" alt="Consulta de les primeres línies del fitxer /etc/shadow com a root">
       </figure>
 
       <figure class="bloc-imatge">
@@ -285,14 +285,7 @@
 
       <!-- NIVELL 1: CONTRACTACIONS -->
       <figure class="bloc-imatge">
-        <figcaption><strong>Figura 5.6 (Nivell 1 - Repte 1):</strong> Creació de la usuària <code>sara</code>.</figcaption>
-        <p><strong>Comandes executades:</strong> <code>cat /etc/passwd | grep sara</code> i <code>ls /home/</code></p>
-        <p><strong>Descripció:</strong> Executem aquestes comandes per comprovar que la nova usuària <code>sara</code> s'ha creat bé al sistema i té la seva carpeta generada a <code>/home/sara</code>.</p>
-        <img src="../Captura2_2gdu.png" alt="Verificació del compte de Sara a passwd i directori a /home">
-      </figure>
-
-      <figure class="bloc-imatge">
-        <figcaption><strong>Figura 5.7 (Nivell 1 - Captura 2):</strong> Verificació de l'equip d'usuaris creats.</figcaption>
+        <figcaption><strong>Figura 5.6 (Nivell 1 - Captura 2):</strong> Verificació de l'equip d'usuaris creats.</figcaption>
         <p><strong>Comandes executades:</strong> <code>getent passwd nuria pau marc laia</code> i <code>ls /home</code></p>
         <p><strong>Descripció:</strong> Executem <code>getent passwd</code> i <code>ls /home</code> per comprovar que tots els usuaris de l'estudi (<code>nuria</code>, <code>pau</code>, <code>marc</code> i <code>laia</code>) s'han creat correctament amb la seva carpeta a <code>/home</code>.</p>
         <img src="../Captura2gdu.png" alt="Llistat dels usuaris creats i comprovació de carpetes a /home">
@@ -300,14 +293,14 @@
 
       <!-- NIVELL 2: PRIMER DIA -->
       <figure class="bloc-imatge">
-        <figcaption><strong>Figura 5.8 (Nivell 2):</strong> Inici de sessió com a l'usuària <code>nuria</code>.</figcaption>
+        <figcaption><strong>Figura 5.7 (Nivell 2):</strong> Inici de sessió com a l'usuària <code>nuria</code>.</figcaption>
         <p><strong>Comandes executades:</strong> <code>su - nuria</code>, <code>whoami</code> i <code>pwd</code></p>
         <p><strong>Descripció:</strong> Executem <code>su - nuria</code> per canviar a la usuària Núria i comprovem amb <code>whoami</code> i <code>pwd</code> que s'ha carregat el seu entorn i estem a <code>/home/nuria</code>.</p>
         <img src="../Captura3gdu.png" alt="Inici de sessió d'usuari amb su - i comprovació de directori">
       </figure>
 
       <figure class="bloc-imatge">
-        <figcaption><strong>Figura 5.9 (Nivell 2 - Captura 3):</strong> Creació d'un fitxer de prova i comprovació de propietat.</figcaption>
+        <figcaption><strong>Figura 5.8 (Nivell 2 - Captura 3):</strong> Creació d'un fitxer de prova i comprovació de propietat.</figcaption>
         <p><strong>Comandes executades:</strong> <code>touch primer_dia.txt</code> i <code>ls -l</code></p>
         <p><strong>Descripció:</strong> Executem <code>touch primer_dia.txt</code> per crear un fitxer nou com a <code>nuria</code> i verifiquem amb <code>ls -l</code> que ella en queda registrada com a propietària.</p>
         <img src="../Captura3_2gdu.png" alt="Creació de fitxer de treball i comprovació de propietaris">
@@ -315,14 +308,14 @@
 
       <!-- NIVELL 3: DEPARTAMENTS -->
       <figure class="bloc-imatge">
-        <figcaption><strong>Figura 5.10 (Nivell 3):</strong> Creació dels grups i simulació d'una erra de mecanografia.</figcaption>
+        <figcaption><strong>Figura 5.9 (Nivell 3):</strong> Creació dels grups i simulació d'una erra de mecanografia.</figcaption>
         <p><strong>Comandes executades:</strong> <code>sudo groupadd progamadors</code> i <code>tail -5 /etc/group</code></p>
         <p><strong>Descripció:</strong> Executem <code>groupadd</code> per crear els grups de treball i creem a la vegada el grup <code>progamadors</code> amb una erra de mecanografia per veure com el corregim després.</p>
         <img src="../Captura4gdu.png" alt="Llistat dels grups nous a /etc/group incloent el grup erroni">
       </figure>
 
       <figure class="bloc-imatge">
-        <figcaption><strong>Figura 5.11 (Nivell 3 - Captura 4):</strong> Eliminació del grup mal escrit.</figcaption>
+        <figcaption><strong>Figura 5.10 (Nivell 3 - Captura 4):</strong> Eliminació del grup mal escrit.</figcaption>
         <p><strong>Comandes executades:</strong> <code>sudo groupdel progamadors</code> i <code>getent group progamadors</code></p>
         <p><strong>Descripció:</strong> Executem <code>sudo groupdel progamadors</code> per esborrar el grup mal escrit i comprovem amb <code>getent</code> que ja ha hagut estat eliminat del sistema.</p>
         <img src="../Captura4_2gdu.png" alt="Eliminació de grup amb groupdel i comprovació amb getent">
@@ -330,21 +323,21 @@
 
       <!-- NIVELL 4: EQUIPS -->
       <figure class="bloc-imatge">
-        <figcaption><strong>Figura 5.12 (Nivell 4):</strong> Error habitual en utilitzar <code>usermod -G</code> sense <code>-a</code>.</figcaption>
+        <figcaption><strong>Figura 5.11 (Nivell 4):</strong> Error habitual en utilitzar <code>usermod -G</code> sense <code>-a</code>.</figcaption>
         <p><strong>Comandes executades:</strong> <code>sudo usermod -G testers nuria</code> i <code>groups nuria</code></p>
         <p><strong>Descripció:</strong> Executem <code>usermod -G testers nuria</code> sense el flag <code>-a</code> per veure l'error típic on s'afegeix el nou grup però s'esborren els altres grups secundaris que teníem.</p>
         <img src="../Captura5gdu.png" alt="Demostració de la pèrdua de grups en utilitzar usermod -G sense el flag -a">
       </figure>
 
       <figure class="bloc-imatge">
-        <figcaption><strong>Figura 5.13 (Nivell 4):</strong> Afegiment correcte de grups secundaris amb <code>usermod -aG</code>.</figcaption>
+        <figcaption><strong>Figura 5.12 (Nivell 4):</strong> Afegiment correcte de grups secundaris amb <code>usermod -aG</code>.</figcaption>
         <p><strong>Comandes executades:</strong> <code>sudo usermod -aG programadors nuria</code> i <code>groups nuria</code></p>
         <p><strong>Descripció:</strong> Executem <code>usermod -aG programadors nuria</code> amb el flag <code>-aG</code> per afegir la Núria al grup de programadors de forma segura sense perdre la resta de grups.</p>
         <img src="../Captura5antesgdu.png" alt="Reassignació correcta de grups secundaris amb usermod -aG">
       </figure>
 
       <figure class="bloc-imatge">
-        <figcaption><strong>Figura 5.14 (Nivell 4 - Captura 5):</strong> Comprovació final dels membres dels grups.</figcaption>
+        <figcaption><strong>Figura 5.13 (Nivell 4 - Captura 5):</strong> Comprovació final dels membres dels grups.</figcaption>
         <p><strong>Comanda executada:</strong> <code>getent group programadors artistes testers becaris</code></p>
         <p><strong>Descripció:</strong> Executem aquesta comanda per llistar els departaments creats i comprovar que tots els usuaris han quedat ben assignats als seus grups.</p>
         <img src="../Captura5_2gdu.png" alt="Comprovació final dels grups de treball i els seus usuaris assignats">
@@ -352,7 +345,7 @@
 
       <!-- NIVELL 5: CANVI DE DEPARTAMENT -->
       <figure class="bloc-imatge">
-        <figcaption><strong>Figura 5.15 (Nivell 5 - Captura 6):</strong> Canvi de grup principal d'un usuari.</figcaption>
+        <figcaption><strong>Figura 5.14 (Nivell 5 - Captura 6):</strong> Canvi de grup principal d'un usuari.</figcaption>
         <p><strong>Comandes executades:</strong> <code>sudo usermod -g programadors pau</code>, <code>id pau</code> i <code>ls -l</code></p>
         <p><strong>Descripció:</strong> Executem <code>usermod -g programadors pau</code> per canviar el grup principal d'en Pau i comprovem que els nous fitxers que crea passen a pertànyer a aquest nou grup.</p>
         <img src="../Captura6gdu.png" alt="Demostració de canvi de grup principal i el seu efecte en la creació de fitxers">
@@ -360,21 +353,21 @@
 
       <!-- NIVELL 6: EL TRÀILER FILTRAT -->
       <figure class="bloc-imatge">
-        <figcaption><strong>Figura 5.16 (Nivell 6):</strong> Consulta del compte de Marc a <code>/etc/shadow</code>.</figcaption>
+        <figcaption><strong>Figura 5.15 (Nivell 6):</strong> Consulta del compte de Marc a <code>/etc/shadow</code>.</figcaption>
         <p><strong>Comanda executada:</strong> <code>sudo grep marc /etc/shadow</code></p>
         <p><strong>Descripció:</strong> Executem <code>sudo grep marc /etc/shadow</code> per inspeccionar la contrasenya xifrada d'en Marc abans i després d'aplicar-ne el bloqueig de seguretat.</p>
         <img src="../Captura5_3gdu.png" alt="Verificació del hash xifrat de la contrasenya a shadow">
       </figure>
 
       <figure class="bloc-imatge">
-        <figcaption><strong>Figura 5.17 (Nivell 6):</strong> Comprovació del bloqueig d'accés.</figcaption>
+        <figcaption><strong>Figura 5.16 (Nivell 6):</strong> Comprovació del bloqueig d'accés.</figcaption>
         <p><strong>Comanda executada:</strong> <code>su - marc</code></p>
         <p><strong>Descripció:</strong> Executem <code>su - marc</code> per intentar accedir al compte bloquejat d'en Marc i comprovem que el sistema ens mostra directament un fallo d'autenticació.</p>
         <img src="../Captura7gdu.png" alt="Bloqueig d'autenticació en intentar accedir a un compte desactivat">
       </figure>
 
       <figure class="bloc-imatge">
-        <figcaption><strong>Figura 5.18 (Nivell 6 - Captura 7):</strong> Desbloqueig del compte amb <code>passwd -u</code>.</figcaption>
+        <figcaption><strong>Figura 5.17 (Nivell 6 - Captura 7):</strong> Desbloqueig del compte amb <code>passwd -u</code>.</figcaption>
         <p><strong>Comandes executades:</strong> <code>sudo passwd -u marc</code> i <code>su - marc</code></p>
         <p><strong>Descripció:</strong> Executem <code>sudo passwd -u marc</code> per treure el bloqueig de la contrasenya d'en Marc i comprovem que ara ja pot tornar a iniciar sessió normalment.</p>
         <img src="../Captura7_2gdu.png" alt="Desbloqueig de compte amb passwd -u i inici de sessió d'èxit">
@@ -382,14 +375,14 @@
 
       <!-- NIVELL 7: NOVA NORMA DE NOMS -->
       <figure class="bloc-imatge">
-        <figcaption><strong>Figura 5.19 (Nivell 7):</strong> Canvi de nom d'usuari mantenint l'UID.</figcaption>
+        <figcaption><strong>Figura 5.18 (Nivell 7):</strong> Canvi de nom d'usuari mantenint l'UID.</figcaption>
         <p><strong>Comandes executades:</strong> <code>sudo usermod -l nvidal nuria</code> i <code>id nvidal</code></p>
         <p><strong>Descripció:</strong> Executem <code>usermod -l nvidal nuria</code> per canviar el nom d'usuari de <code>nuria</code> a <code>nvidal</code> i verifiquem amb <code>id</code> que manté el mateix UID (1001).</p>
         <img src="../Captura7_3.png" alt="Modificació de nom d'usuari amb usermod -l">
       </figure>
 
       <figure class="bloc-imatge">
-        <figcaption><strong>Figura 5.20 (Nivell 7 - Captura 8):</strong> Canvi de nom de grup i trasllat de la carpeta personal.</figcaption>
+        <figcaption><strong>Figura 5.19 (Nivell 7 - Captura 8):</strong> Canvi de nom de grup i trasllat de la carpeta personal.</figcaption>
         <p><strong>Comandes executades:</strong> <code>sudo groupmod -n nvidal nuria</code> i <code>sudo usermod -d /home/nvidal -m nvidal</code></p>
         <p><strong>Descripció:</strong> Executem <code>groupmod -n</code> per canviar el nom del seu grup personal i <code>usermod -d -m</code> per traslladar la seva carpeta personal a <code>/home/nvidal</code>.</p>
         <img src="../Captura8gdu.png" alt="Migració de carpeta personal i verificació del nou nom d'usuari">
@@ -397,7 +390,7 @@
 
       <!-- NIVELL 8: FI DE LES PRÀCTIQUES -->
       <figure class="bloc-imatge">
-        <figcaption><strong>Figura 5.21 (Nivell 8 - Captura 9):</strong> Supressió d'usuari sense eliminar la carpeta personal.</figcaption>
+        <figcaption><strong>Figura 5.20 (Nivell 8 - Captura 9):</strong> Supressió d'usuari sense eliminar la carpeta personal.</figcaption>
         <p><strong>Comandes executades:</strong> <code>sudo userdel laia</code> i <code>ls -l /home</code></p>
         <p><strong>Descripció:</strong> Executem <code>userdel laia</code> sense el flag <code>-r</code> per donar de baixa la usuària i comprovem que la seva carpeta es queda a <code>/home</code> mostrant l'UID numèric orfe (1004).</p>
         <img src="../Captura8_2gdu.png" alt="Esborrat d'usuari sense -r i presència de directori orfe amb UID numèric">
