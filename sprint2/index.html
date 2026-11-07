@@ -6,23 +6,24 @@
 <title>Sprint 2: Instal·lació, Configuració de Programari de Base i Gestió de Fitxers (20h)</title>
 <link rel="stylesheet" href="../css/estils.css">
 <style>
-  img {
+  .bloc-imatge {
+    margin: 24px 0;
+    padding: 0;
+    background: none;
+    border: none;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .bloc-imatge img {
+    width: 100%;
     max-width: 100%;
     height: auto;
     display: block;
-    margin: 16px 0;
+    margin: 12px 0;
     border-radius: 4px;
   }
-  pre {
-    background-color: #f4f4f4;
-    padding: 12px;
-    border-radius: 4px;
-    overflow-x: auto;
-    font-family: monospace;
-    font-size: 0.95em;
-  }
-  code {
-    font-family: monospace;
+  .bloc-imatge p {
+    margin: 4px 0;
   }
 </style>
 </head>
@@ -93,9 +94,11 @@
       <p>El sistema operatiu adreça el disc mitjançant sectors lògics, però el sistema de fitxers assigna l’espai en unitats pròpies anomenades <strong>blocs</strong>. La mida del bloc es tria durant la instal·lació o el formatatge.</p>
 
       <p>En aquest volum ext4, cada bloc ocupa 4096 bytes:</p>
-      <pre><code># sudo tune2fs -l /dev/sdb2 | grep Block</code></pre>
-      <p>S'inspeccionen els paràmetres del sistema de fitxers a la partició <code>/dev/sdb2</code>, confirmant que la mida del bloc d'assignació és de 4096 bytes (4 KiB).</p>
-      <img src="../tune2fs.png" alt="Verificació de la mida de bloc en ext4 amb tune2fs">
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>sudo tune2fs -l /dev/sdb2 | grep Block</code></p>
+        <p><strong>Descripció:</strong> S'inspeccionen els paràmetres del sistema de fitxers a la partició <code>/dev/sdb2</code>, confirmant que la mida del bloc d'assignació és de 4096 bytes (4 KiB).</p>
+        <img src="../tune2fs.png" alt="Verificació de la mida de bloc en ext4 amb tune2fs">
+      </div>
 
       <p>Diferències clau en la gestió de blocs i la fragmentació:</p>
       <ul>
@@ -119,76 +122,73 @@
     <article class="apartat" id="apartat2">
       <h2>2. Particions i muntatge</h2>
 
-      <p>En aquesta pràctica he realitzat el procediment complet per identificar un disc secundari, crear una partició, aplicar-hi un sistema de fitxers amb mides de bloc personalitzades i configurar el muntatge tant manual com permanent al sistema.</p>
+      <p>En aquest apartat es detalla el procediment pràctic per a la identificació, creació de particions, aplicació de sistemes de fitxers amb mides de bloc personalitzades i configuració del muntatge tant manual com permanent al fitxer de configuració del sistema.</p>
 
-      <h3>2.1 Comprovació inicial del disc</h3>
-      <p>Abans de modificar qualsevol taula de particions, he verificat que el disc secundari estigués correctament detectat pel sistema utilitzant <code>fdisk</code>:</p>
-      <pre><code># fdisk -l | grep sdb</code></pre>
-      <p>La sortida confirma la presència del disc <code>/dev/sdb</code> de 25 GiB amb 524.288.000 sectors disponibles.</p>
-      <img src="../captura1pim.png" alt="Comprovació del disc sdb amb fdisk -l">
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>fdisk -l | grep sdb</code></p>
+        <p><strong>Descripció:</strong> Es verifica l'existència del disc secundari <code>/dev/sdb</code> (25 GiB) al sistema abans de procedir amb el particionament.</p>
+        <img src="../captura1pim.png" alt="Comprovació del disc sdb amb fdisk -l">
+      </div>
 
-      <h3>2.2 Creació de la partició</h3>
-      <p>He iniciat l'eina interactiva de particionament sobre la unitat <code>/dev/sdb</code>:</p>
-      <pre><code># fdisk /dev/sdb</code></pre>
-      <p>Dins de <code>fdisk</code>, he utilitzat l'opció <code>n</code> per generar una nova partició primària. He especificat com a sector final el valor <code>200000</code> per tal de crear una partició d'aproximadament 96,7 MiB. Després he guardat els canvis i sortit amb l'opció <code>w</code>:</p>
-      <img src="../captura2pim.png" alt="Creació de la partició amb fdisk">
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>fdisk /dev/sdb</code> (opcions <code>n</code> i <code>w</code>)</p>
+        <p><strong>Descripció:</strong> Dins de l'eina <code>fdisk</code> es crea una nova partició primària (<code>n</code>) indicant el sector límit <code>200000</code> (mida de 96,7 MiB) i s'escriuen els canvis al disc amb <code>w</code>.</p>
+        <img src="../captura2pim.png" alt="Creació de la partició amb fdisk">
+      </div>
 
-      <p>He comprovat que la partició <code>/dev/sdb1</code> s'hagués enregistrat correctament al sistema:</p>
-      <pre><code># fdisk -l | grep sdb</code></pre>
-      <p>El llistat mostra la partició <code>/dev/sdb1</code> creada des del sector 2048 fins al 200000 de tipus Linux.</p>
-      <img src="../captura3pim.png" alt="Verificació de la partició sdb1 creada amb fdisk -l">
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>fdisk -l | grep sdb</code></p>
+        <p><strong>Descripció:</strong> Es comprova que la nova partició <code>/dev/sdb1</code> s'ha registrat correctament al disc amb el tipus de partició Linux.</p>
+        <img src="../captura3pim.png" alt="Verificació de la partició sdb1 creada amb fdisk -l">
+      </div>
 
-      <h3>2.3 Formatatge i mida de bloc</h3>
-      <p>Un cop creada la partició, li he donat format amb el sistema de fitxers <code>ext4</code> establint una mida de bloc personalitzada de 8192 bytes (8 KiB) amb el paràmetre <code>-b 8192</code>:</p>
-      <pre><code># mkfs.ext4 -b 8192 /dev/sdb1</code></pre>
-      <p>El sistema ha mostrat un avís advertint que blocs de 8 KiB poden no ser compatibles amb tots els sistemes, però he confirmat l'operació amb <code>s</code>. S'ha completat la creació de 12.372 blocs i 12.384 nodes-i.</p>
-      <img src="../captura4pim.png" alt="Formatatge de sdb1 amb mkfs.ext4">
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>mkfs.ext4 -b 8192 /dev/sdb1</code></p>
+        <p><strong>Descripció:</strong> Es crea el sistema de fitxers <code>ext4</code> sobre la partició <code>/dev/sdb1</code> forçant una mida de bloc d'assignació de 8192 bytes (8 KiB).</p>
+        <img src="../captura4pim.png" alt="Formatatge de sdb1 amb mkfs.ext4">
+      </div>
 
-      <p>He comprovat que el sistema de fitxers hagués aplicat realment la mida de bloc sol·licitada fent servir <code>tune2fs</code>:</p>
-      <pre><code># tune2fs -l /dev/sdb1 | grep Block</code></pre>
-      <p>La llista de paràmetres confirma que la línia <code>Block size</code> és de 8192 bytes.</p>
-      <img src="../captura5pim.png" alt="Verificació de la mida de bloc amb tune2fs">
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>tune2fs -l /dev/sdb1 | grep Block</code></p>
+        <p><strong>Descripció:</strong> Es verifiquen les metadades del sistema de fitxers per assegurar que el valor Block size s'ha configurat efectivament en 8192 bytes.</p>
+        <img src="../captura5pim.png" alt="Verificació de la mida de bloc amb tune2fs">
+      </div>
 
-      <h3>2.4 Muntatge manual i comprovació de dades</h3>
-      <p>Per poder utilitzar el volum, he creat el directori de muntatge <code>/mnt/particio1</code>:</p>
-      <pre><code># cd /mnt
-# mkdir particio1</code></pre>
-      <img src="../captura6pim.png" alt="Creació del directori particio1 a /mnt">
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>cd /mnt</code> i <code>mkdir particio1</code></p>
+        <p><strong>Descripció:</strong> Es crea el directori <code>particio1</code> dins de <code>/mnt</code> per utilitzar-lo com a punt d'accés al nou volum.</p>
+        <img src="../captura6pim.png" alt="Creació del directori particio1 a /mnt">
+      </div>
 
-      <p>He muntat la partició manualment i hi he creat un directori <code>prova</code> i un fitxer <code>prova2</code> per validar que es podien escriure dades:</p>
-      <pre><code># mount -t ext4 /dev/sdb1 /mnt/particio1/
-# cd particio1/
-# mkdir prova
-# touch prova2
-# ls -l</code></pre>
-      <p>El directori mostra la carpeta per defecte <code>lost+found</code> juntament amb els nous elements creats.</p>
-      <img src="../captura7pim.png" alt="Muntatge manual i verificació d'escriptura">
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>mount -t ext4 /dev/sdb1 /mnt/particio1/</code>, <code>mkdir prova</code>, <code>touch prova2</code> i <code>ls -l</code></p>
+        <p><strong>Descripció:</strong> Es munta manualment la partició, s'accedeix al directori i es comprova la capacitat d'escriptura creant una carpeta i un fitxer de prova.</p>
+        <img src="../captura7pim.png" alt="Muntatge manual i verificació d'escriptura">
+      </div>
 
-      <p>Per assegurar-me que les dades persistien al disc i no a la memòria, he desmuntat la partició, n'he comprovat el buidatge del directori i l'he tornada a muntar:</p>
-      <pre><code># cd ..
-# umount /dev/sdb1
-# ls particio1/
-# mount /dev/sdb1 /mnt/particio1/
-# ls particio1/</code></pre>
-      <p>En remuntar, el contingut <code>prova</code> i <code>prova2</code> s'ha mantingut accessible.</p>
-      <img src="../captura8pim.png" alt="Comprovació de desmuntatge i remuntatge del volum">
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>umount /dev/sdb1</code>, <code>ls particio1/</code>, <code>mount /dev/sdb1 /mnt/particio1/</code> i <code>ls particio1/</code></p>
+        <p><strong>Descripció:</strong> Es desmunta el dispositiu per comprovar que el directori queda buit i es torna a muntar per confirmar que el contingut es manté intacte.</p>
+        <img src="../captura8pim.png" alt="Comprovació de desmuntatge i remuntatge del volum">
+      </div>
 
-      <h3>2.5 Muntatge automàtic a <code>/etc/fstab</code></h3>
-      <p>Per a un muntatge permanent i segur, he identificat l meva partició mitjançant el seu UUID amb <code>blkid</code>:</p>
-      <pre><code># blkid | grep sdb1</code></pre>
-      <p>L'UUID obtingut és <code>ec74310d-2673-4e8c-a9b4-a95580ebbc65</code>.</p>
-      <img src="../captura9pim.png" alt="Obtenció del UUID de sdb1 amb blkid">
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>blkid | grep sdb1</code></p>
+        <p><strong>Descripció:</strong> S'obté l'identificador únic de la partició (UUID: <code>ec74310d-2673-4e8c-a9b4-a95580ebbc65</code>) per configurar un muntatge persistent.</p>
+        <img src="../captura9pim.png" alt="Obtenció del UUID de sdb1 amb blkid">
+      </div>
 
-      <p>He editat el fitxer de configuració del sistema <code>/etc/fstab</code> per registrar el muntatge automàtic en cada arrencada:</p>
-      <pre><code># sudo nano /etc/fstab</code></pre>
-      <p>Hi he afegit la línia següent al final del fitxer:</p>
-      <pre><code>UUID=ec74310d-2673-4e8c-a9b4-a95580ebbc65 /mnt/particio1 ext4 defaults 0 0</code></pre>
-      <img src="../captura10pim.png" alt="Configuració del muntatge permanent a etc fstab">
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>sudo nano /etc/fstab</code></p>
+        <p><strong>Descripció:</strong> S'afegeix la línia de muntatge automàtic al fitxer <code>/etc/fstab</code> associant el UUID de la partició al punt de muntatge <code>/mnt/particio1</code>.</p>
+        <img src="../captura10pim.png" alt="Configuració del muntatge permanent a etc fstab">
+      </div>
 
-      <p>Finalment, des del terminal d'usuari he comprovat que es pot veure el contingut del muntatge sense problemes:</p>
-      <pre><code>$ ls /mnt/particio1/</code></pre>
-      <p>L'ordre llista correctament els fitxers i directori del volum muntat.</p>
-      <img src="../captura11pim.png" alt="Comprovació final del contingut del muntatge">
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>ls /mnt/particio1/</code></p>
+        <p><strong>Descripció:</strong> Es comprova finalment des de la sessió d'usuari que la partició és correctament accessible i que mostra els fitxers creats.</p>
+        <img src="../captura11pim.png" alt="Comprovació final del contingut del muntatge">
+      </div>
 
       <h4>------------------------------------------------------------------------------------------------------------</h4>
 
@@ -199,76 +199,95 @@
     <article class="apartat" id="apartat3">
       <h2>3. Gestió de processos</h2>
 
-      <h3>Nivell 0 · Preparar el cas</h3>
-      <p>He donat permisos d'execució als scripts de la pràctica i n'he comprovat l'estat amb <code>ls -l</code>:</p>
-      <pre><code>$ chmod +x backup_nocturn espia descarrega.sh sospitosos.sh
-$ ls -l</code></pre>
-      <img src="../Captura1gdp.png" alt="Assignació de permisos d'execució amb chmod i verificació amb ls -l">
+      <!-- NIVELL 0: PREPARAR EL CAS -->
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>chmod +x backup_nocturn espia descarrega.sh sospitosos.sh</code> i <code>ls -l</code></p>
+        <p><strong>Descripció:</strong> Executem la comanda <code>chmod +x</code> per donar permisos d'execució als scripts de la pràctica i després comprovem amb <code>ls -l</code> que ja apareixen amb els permisos corresponents.</p>
+        <img src="../Captura1gdp.png" alt="Assignació de permisos d'execució amb chmod i verificació amb ls -l">
+      </div>
 
-      <p>Després he posat en marxa tots els processos en segon pla executant el script principal:</p>
-      <pre><code>$ ./sospitosos.sh</code></pre>
-      <img src="../Captura1_2gdp.png" alt="Execució del script sospitosos.sh a la terminal">
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>./sospitosos.sh</code></p>
+        <p><strong>Descripció:</strong> Executem el script <code>./sospitosos.sh</code> per posar en marxa tots els processos en segon pla que hem d'analitzar.</p>
+        <img src="../Captura1_2gdp.png" alt="Execució del script sospitosos.sh a la terminal">
+      </div>
 
-      <h3>Nivell 1 · Reconeixement</h3>
-      <p>He consultat l'arbre de processos del meu usuari per veure quins processos s'han generat:</p>
-      <pre><code>$ pstree -p $USER</code></pre>
-      <img src="../Captura2pdg.png" alt="Visualització de l'arbre de processos amb pstree -p">
+      <!-- NIVELL 1: RECONEIXEMENT -->
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>pstree -p $USER</code></p>
+        <p><strong>Descripció:</strong> Executem la comanda <code>pstree -p $USER</code> per veure l'arbre de processos del nostre usuari i identificar d'on pengen els processos creats.</p>
+        <img src="../Captura2pdg.png" alt="Visualització de l'arbre de processos amb pstree -p">
+      </div>
 
-      <p>A través de la sortida de <code>pstree</code>, he identificat els PIDs associats als processos anomenats <code>minador</code>:</p>
-      <img src="../Captura2_2pdg.png" alt="Detall dels processos minador identificats a la sortida de pstree">
+      <div class="bloc-imatge">
+        <p><strong>Descripció:</strong> Mirant la sortida de <code>pstree</code>, identificuem els PIDs dels dos processos <code>minador</code> que s'estan executant.</p>
+        <img src="../Captura2_2pdg.png" alt="Detall dels processos minador identificats a la sortida de pstree">
+      </div>
 
-      <h3>Nivell 2 · Consum de recursos</h3>
-      <p>He utilitzat l'eina <code>top</code> per analitzar quin procés està fent un ús intensiu de la CPU:</p>
-      <pre><code>$ top</code></pre>
-      <p>Es comprova que els dos processos <code>minador</code> són els que consumeixen pràcticament tota la capacitat del processador.</p>
-      <img src="../Captura3gdp.png" alt="Monitorització de recursos del sistema mitjançant top">
+      <!-- NIVELL 2: QUI CONSUMEIX MÉS? -->
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>top</code></p>
+        <p><strong>Descripció:</strong> Executem la comanda <code>top</code> per veure l'ús de recursos en temps real i comprovem que els dos processos <code>minador</code> són els que s'estan menjant la CPU.</p>
+        <img src="../Captura3gdp.png" alt="Monitorització de recursos del sistema mitjançant top">
+      </div>
 
-      <h3>Nivell 3 · Anàlisi detallada amb <code>ps</code></h3>
-      <p>He utilitzat <code>pgrep</code> i <code>ps</code> amb opcions personalitzades de format per obtenir el detall d'estat, temps d'execució i procés pare (PPID):</p>
-      <pre><code>$ pgrep -l 'minador|espia|backup'
-$ ps -o pid,ppid,user,stat,etime,%cpu,comm -C minador,espia,backup_nocturn</code></pre>
-      <img src="../Captura4.gdp.png" alt="Filtratge de PIDs i taula d'estat de processos amb pgrep i ps">
+      <!-- NIVELL 3: INTERROGATORI AMB PS -->
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>pgrep -l 'minador|espia|backup'</code> i <code>ps -o pid,ppid,user,stat,etime,%cpu,comm -C minador,espia,backup_nocturn</code></p>
+        <p><strong>Descripció:</strong> Executem <code>pgrep</code> per trobar els PIDs i després fem servir <code>ps</code> amb diferents opcions per veure l'estat exactament de cada procés i quin és el seu procés pare.</p>
+        <img src="../Captura4.gdp.png" alt="Filtratge de PIDs i taula d'estat de processos amb pgrep i ps">
+      </div>
 
-      <h3>Nivell 4 · Gestió de la descàrrega</h3>
-      <p>He iniciat la descàrrega, la he aturat amb <code>Ctrl+Z</code> i n'he gestionat el pas entre primer i segon pla fent servir <code>jobs</code>, <code>bg</code> i <code>fg</code>:</p>
-      <pre><code>$ ./descarrega.sh
-[Ctrl+Z]
-$ jobs -l
-$ bg %1
-$ fg %1</code></pre>
-      <img src="../Captura5gdp.png" alt="Gestió de tasques en segon i primer pla amb Ctrl+Z, jobs, bg i fg">
+      <!-- NIVELL 4: LA DESCÀRREGA URGENT -->
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>./descarrega.sh</code>, <code>Ctrl+Z</code>, <code>jobs -l</code>, <code>bg %1</code> i <code>fg %1</code></p>
+        <p><strong>Descripció:</strong> Executem la descàrrega, la pausem amb <code>Ctrl+Z</code>, comprovem el seu estat amb <code>jobs -l</code> i la passem a segon pla amb <code>bg</code> i a primer pla amb <code>fg</code>.</p>
+        <img src="../Captura5gdp.png" alt="Gestió de tasques en segon i primer pla amb Ctrl+Z, jobs, bg i fg">
+      </div>
 
-      <p>Des d'una segona finestra de terminal, he fet un seguiment en temps real de l'avanç del fitxer amb <code>watch</code>:</p>
-      <pre><code>$ watch -n 1 cat progres.txt</code></pre>
-      <img src="../Captura5_2gdp.png" alt="Monitorització continuada del fitxer de progrés amb watch">
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>watch -n 1 cat progres.txt</code></p>
+        <p><strong>Descripció:</strong> Executem la comanda <code>watch -n 1 cat progres.txt</code> des d'una altra terminal per anar veient com avança el fitxer de descàrrega cada segon.</p>
+        <img src="../Captura5_2gdp.png" alt="Monitorització continuada del fitxer de progrés amb watch">
+      </div>
 
-      <h3>Nivell 5 · Modificació de la prioritat</h3>
-      <p>He canviat la prioritat d'execució del procés de descàrrega donant-li més preferència de CPU mitjançant <code>renice</code>:</p>
-      <pre><code>$ sudo renice -n -10 -p 8756</code></pre>
-      <p>A <code>top</code> es comprova que el valor <code>NI</code> (nice) passa a ser negatiu (-10).</p>
-      <img src="../Captura6gdp.png" alt="Verificació de la prioritat modificada al top amb valor NI negatiu">
+      <!-- NIVELL 5: PRIORITAT A LA DESCÀRREGA -->
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>sudo renice -n -10 -p 8756</code></p>
+        <p><strong>Descripció:</strong> Executem la comanda <code>sudo renice -n -10</code> per donar-li més prioritat de CPU al procés de descàrrega i comprovem el canvi de valor <code>NI</code> al <code>top</code>.</p>
+        <img src="../Captura6gdp.png" alt="Verificació de la prioritat modificada al top amb valor NI negatiu">
+      </div>
 
-      <h3>Nivell 6 · Control de senyals de processos</h3>
-      <p>He intentat aturar el procés <code>espia</code> amb una senyal <code>SIGTERM</code> normal i, en veure que no responia, l'he finalitzat de forma forçada amb <code>SIGKILL</code> (-9):</p>
-      <pre><code>$ kill 6318
-$ kill -9 6318</code></pre>
-      <img src="../Captura7gdp.png" alt="Resistència a SIGTERM i finalització amb SIGKILL -9">
+      <!-- NIVELL 6: NEUTRALITZAR ELS INTRUSOS -->
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>kill 6318</code> i <code>kill -9 6318</code></p>
+        <p><strong>Descripció:</strong> Executem primer <code>kill</code> normal per intentar tancar el procés espia i, com que no es tanca, executem <code>kill -9</code> per matar-lo de forma forçada.</p>
+        <img src="../Captura7gdp.png" alt="Resistència a SIGTERM i finalització amb SIGKILL -9">
+      </div>
 
-      <p>He pausat temporalment l'execució de la còpia de seguretat enviant el senyal <code>SIGSTOP</code>:</p>
-      <pre><code>$ kill -STOP 4985</code></pre>
-      <img src="../Captura7_2gdp.png" alt="Enviament del senyal SIGSTOP a un procés amb kill">
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>kill -STOP 4985</code></p>
+        <p><strong>Descripció:</strong> Executem <code>kill -STOP</code> sobre el procés de la còpia de seguretat per pausar la seva execució momentàniament.</p>
+        <img src="../Captura7_2gdp.png" alt="Enviament del senyal SIGSTOP a un procés amb kill">
+      </div>
 
-      <p>I posteriorment he après a reprendre'l enviant el senyal <code>SIGCONT</code>:</p>
-      <pre><code>$ kill -CONT 4985</code></pre>
-      <img src="../Captura7_3gdp.png" alt="Represa d'un procés aturat enviant el senyal SIGCONT">
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>kill -CONT 4985</code></p>
+        <p><strong>Descripció:</strong> Executem <code>kill -CONT</code> per reprendre l'execució del procés de backup que teníem aturat.</p>
+        <img src="../Captura7_3gdp.png" alt="Represa d'un procés aturat enviant el senyal SIGCONT">
+      </div>
 
-      <h3>Nivell 7 · Finalització i ascendència</h3>
-      <p>A la pantalla del <code>watch</code> he confirmat que la descàrrega s'ha completat al 100%:</p>
-      <img src="../Captura8gdp.png" alt="Finestra de watch confirmant que la descàrrega ha finalitzat amb èxit">
+      <!-- NIVELL 7: QUE LA DESCÀRREGA NO ES PERDI -->
+      <div class="bloc-imatge">
+        <p><strong>Descripció:</strong> Comprovem a la pantalla del <code>watch</code> que la descàrrega s'ha completat correctament al 100%.</p>
+        <img src="../Captura8gdp.png" alt="Finestra de watch confirmant que la descàrrega ha finalitzat amb èxit">
+      </div>
 
-      <p>Finalment, he analitzat tot l'arbre de jerarquia del procés fins arribar al procés pare original <code>systemd</code>:</p>
-      <pre><code>$ pstree -ps $(pgrep descarrega)</code></pre>
-      <img src="../Captura8_2gdp.png" alt="Línia d'ascendència completa d'un procés amb pstree -ps">
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>pstree -ps $(pgrep descarrega)</code></p>
+        <p><strong>Descripció:</strong> Executem <code>pstree -ps</code> per veure toda la línia de pares del procés de descàrrega fins arribar a <code>systemd</code>.</p>
+        <img src="../Captura8_2gdp.png" alt="Línia d'ascendència completa d'un procés amb pstree -ps">
+      </div>
 
       <h4>------------------------------------------------------------------------------------------------------------</h4>
 
@@ -288,107 +307,127 @@ $ kill -9 6318</code></pre>
     <article class="apartat" id="apartat5">
       <h2>5. Gestió d'usuaris, grups i permisos (Part 1) - Missió PixelForge</h2>
 
-      <h3>Nivell 0 · Inspecció del sistema</h3>
-      <p>He comprovat la meva identitat actual i els grups als quals pertanyo amb <code>whoami</code> i <code>id</code>:</p>
-      <pre><code>$ whoami
-$ id</code></pre>
-      <img src="../Captura1gdu.png" alt="Comprovació d'identitat amb whoami i id">
+      <!-- NIVELL 0: CONÈIXER EL SISTEMA -->
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>whoami</code> i <code>id</code></p>
+        <p><strong>Descripció:</strong> Executem les comandes <code>whoami</code> i <code>id</code> per saber quin usuari som exactament al sistema i veure a quins grups pertanyem, juntament amb els nostres UID i GID.</p>
+        <img src="../Captura1gdu.png" alt="Comprovació d'identitat amb whoami i id">
+      </div>
 
-      <p>He consultat la informació del meu usuari al fitxer de comptes del sistema <code>/etc/passwd</code>:</p>
-      <pre><code>$ grep $USER /etc/passwd</code></pre>
-      <img src="../Captura1_2gdu.png" alt="Consulta del registre d'usuari a /etc/passwd">
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>grep $USER /etc/passwd</code></p>
+        <p><strong>Descripció:</strong> Executem la comanda <code>grep $USER /etc/passwd</code> per consultar la línia del nostre usuari al fitxer de comptes del sistema, on veiem la carpeta personal i la shell assignada.</p>
+        <img src="../Captura1_2gdu.png" alt="Consulta del registre d'usuari a /etc/passwd">
+      </div>
 
-      <p>He intentat llegir el fitxer de contrasenyes <code>/etc/shadow</code> directament com a usuari <code>root</code>:</p>
-      <pre><code># cat /etc/shadow</code></pre>
-      <img src="../Captura1_3gdu.png" alt="Consulta de les primeres línies del fitxer /etc/shadow com a root">
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>cat /etc/shadow</code></p>
+        <p><strong>Descripció:</strong> Executem la comanda <code>cat /etc/shadow</code> directament com a usuari <code>root</code> per poder veure el contingut del fitxer de contrasenyes del sistema sense restriccions de permisos.</p>
+        <img src="../Captura1_3gdu.png" alt="Consulta de les primeres línies del fitxer /etc/shadow com a root">
+      </div>
 
-      <p>I també he verificat com fer la cerca amb permisos <code>sudo</code>:</p>
-      <pre><code>$ sudo grep $USER /etc/shadow</code></pre>
-      <img src="../Captura1_3_2.png" alt="Consulta amb sudo del registre d'usuari a /etc/shadow">
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>sudo grep $USER /etc/shadow</code></p>
+        <p><strong>Descripció:</strong> Executem la comanda <code>sudo grep $USER /etc/shadow</code> amb root per veure la diferència respecte al pas anterior, ja que com a usuari normal no teníem permisos per veure el hash de la contrasenya.</p>
+        <img src="../Captura1_3_2.png" alt="Consulta amb sudo del registre d'usuari a /etc/shadow">
+      </div>
 
-      <p>He llistat els usuaris que pertanyen al grup d'administradors <code>sudo</code>:</p>
-      <pre><code>$ getent group sudo</code></pre>
-      <img src="../Captura1_4.png" alt="Verificació dels usuaris del grup sudo amb getent">
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>getent group sudo</code></p>
+        <p><strong>Descripció:</strong> Executem <code>getent group sudo</code> per veure quins usuaris del sistema tenen permisos d'administrador i pertanyen al grup sudo.</p>
+        <img src="../Captura1_4.png" alt="Verificació dels usuaris del grup sudo amb getent">
+      </div>
 
-      <h3>Nivell 1 · Creació d'usuaris</h3>
-      <p>He verificat la creació dels usuaris de l'estudi (<code>nuria</code>, <code>pau</code>, <code>marc</code> i <code>laia</code>) i la presència dels seus directoris personals a <code>/home</code>:</p>
-      <pre><code>$ getent passwd nuria pau marc laia
-$ ls /home</code></pre>
-      <img src="../Captura2gdu.png" alt="Llistat dels usuaris creats i comprovació de carpetes a /home">
+      <!-- NIVELL 1: CONTRACTACIONS -->
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>getent passwd nuria pau marc laia</code> i <code>ls /home</code></p>
+        <p><strong>Descripció:</strong> Executem <code>getent passwd</code> i <code>ls /home</code> per comprovar que tots els usuaris de l'estudi (<code>nuria</code>, <code>pau</code>, <code>marc</code> i <code>laia</code>) s'han creat correctament amb la seva carpeta a <code>/home</code>.</p>
+        <img src="../Captura2gdu.png" alt="Llistat dels usuaris creats i comprovació de carpetes a /home">
+      </div>
 
-      <h3>Nivell 2 · Canvi de context d'usuari</h3>
-      <p>He canviat a la sessió de l'usuari <code>nuria</code> carregant el seu entorn i comprat el directori de treball actual:</p>
-      <pre><code>$ su - nuria
-$ whoami
-$ pwd</code></pre>
-      <img src="../Captura3gdu.png" alt="Inici de sessió d'usuari amb su - i comprovació de directori">
+      <!-- NIVELL 2: PRIMER DIA -->
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>su - nuria</code>, <code>whoami</code> i <code>pwd</code></p>
+        <p><strong>Descripció:</strong> Executem <code>su - nuria</code> per canviar a la usuària Núria i comprovem amb <code>whoami</code> i <code>pwd</code> que s'ha carregat el seu entorn i estem a <code>/home/nuria</code>.</p>
+        <img src="../Captura3gdu.png" alt="Inici de sessió d'usuari amb su - i comprovació de directori">
+      </div>
 
-      <p>He creat un fitxer com a l'usuària Núria per verificar-ne la propietat de grup i usuari:</p>
-      <pre><code>$ touch primer_dia.txt
-$ ls -l</code></pre>
-      <img src="../Captura3_2gdu.png" alt="Creació de fitxer de treball i comprovació de propietaris">
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>touch primer_dia.txt</code> i <code>ls -l</code></p>
+        <p><strong>Descripció:</strong> Executem <code>touch primer_dia.txt</code> per crear un fitxer nou com a <code>nuria</code> i verifiquem amb <code>ls -l</code> que ella en queda registrada com a propietària.</p>
+        <img src="../Captura3_2gdu.png" alt="Creació de fitxer de treball i comprovació de propietaris">
+      </div>
 
-      <h3>Nivell 3 · Gestió de grups</h3>
-      <p>He creat els grups de treball simulant un error de mecanografia en el nom d'un d'ells:</p>
-      <pre><code>$ sudo groupadd progamadors
-$ tail -5 /etc/group</code></pre>
-      <img src="../Captura4gdu.png" alt="Llistat dels grups nous a /etc/group incloent el grup erroni">
+      <!-- NIVELL 3: DEPARTAMENTS -->
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>sudo groupadd progamadors</code> i <code>tail -5 /etc/group</code></p>
+        <p><strong>Descripció:</strong> Executem <code>groupadd</code> per crear els grups de treball i creem a la vegada el grup <code>progamadors</code> amb una erra de mecanografia per veure com el corregim després.</p>
+        <img src="../Captura4gdu.png" alt="Llistat dels grups nous a /etc/group incloent el grup erroni">
+      </div>
 
-      <p>He esborrat el grup mal escrit utilitzant <code>groupdel</code>:</p>
-      <pre><code>$ sudo groupdel progamadors
-$ getent group progamadors</code></pre>
-      <img src="../Captura4_2gdu.png" alt="Eliminació de grup amb groupdel i comprovació amb getent">
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>sudo groupdel progamadors</code> i <code>getent group progamadors</code></p>
+        <p><strong>Descripció:</strong> Executem <code>sudo groupdel progamadors</code> per esborrar el grup mal escrit i comprovem amb <code>getent</code> que ja ha hagut estat eliminat del sistema.</p>
+        <img src="../Captura4_2gdu.png" alt="Eliminació de grup amb groupdel i comprovació amb getent">
+      </div>
 
-      <h3>Nivell 4 · Assignació de grups secundaris</h3>
-      <p>He comprovat el comportament de l'opció <code>usermod -G</code> quan no s'inclou el flag d'afegiment <code>-a</code>, observant que sobreescriu la resta de grups secundaris:</p>
-      <pre><code>$ sudo usermod -G testers nuria
-$ groups nuria</code></pre>
-      <img src="../Captura5gdu.png" alt="Demostració de la pèrdua de grups en utilitzar usermod -G sense el flag -a">
+      <!-- NIVELL 4: EQUIPS -->
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>sudo usermod -G testers nuria</code> i <code>groups nuria</code></p>
+        <p><strong>Descripció:</strong> Executem <code>usermod -G testers nuria</code> sense el flag <code>-a</code> per veure l'error típic on s'afegeix el nou grup però s'esborren els altres grups secundaris que teníem.</p>
+        <img src="../Captura5gdu.png" alt="Demostració de la pèrdua de grups en utilitzar usermod -G sense el flag -a">
+      </div>
 
-      <p>He afegit correctament l'usuari a un grup secundari mantenint els existents amb <code>usermod -aG</code>:</p>
-      <pre><code>$ sudo usermod -aG programadors nuria
-$ groups nuria</code></pre>
-      <img src="../Captura5antesgdu.png" alt="Reassignació correcta de grups secundaris amb usermod -aG">
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>sudo usermod -aG programadors nuria</code> i <code>groups nuria</code></p>
+        <p><strong>Descripció:</strong> Executem <code>usermod -aG programadors nuria</code> amb el flag <code>-aG</code> per afegir la Núria al grup de programadors de forma segura sense perdre la resta de grups.</p>
+        <img src="../Captura5antesgdu.png" alt="Reassignació correcta de grups secundaris amb usermod -aG">
+      </div>
 
-      <p>He comprovat la composició final de tots els equips de treball:</p>
-      <pre><code>$ getent group programadors artistes testers becaris</code></pre>
-      <img src="../Captura5_2gdu.png" alt="Comprovació final dels grups de treball i els seus usuaris assignats">
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>getent group programadors artistes testers becaris</code></p>
+        <p><strong>Descripció:</strong> Executem aquesta comanda per llistar els departaments creats i comprovar que tots els usuaris han quedat ben assignats als seus grups.</p>
+        <img src="../Captura5_2gdu.png" alt="Comprovació final dels grups de treball i els seus usuaris assignats">
+      </div>
 
-      <h3>Nivell 5 · Canvi de grup principal</h3>
-      <p>He modificat el grup principal d'un usuari amb l'opció <code>-g</code> de <code>usermod</code> i verificat quin grup s'assigna als seus nous fitxers:</p>
-      <pre><code>$ sudo usermod -g programadors pau
-$ id pau
-$ ls -l</code></pre>
-      <img src="../Captura6gdu.png" alt="Demostració de canvi de grup principal i el seu efecte en la creació de fitxers">
+      <!-- NIVELL 5: CANVI DE DEPARTAMENT -->
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>sudo usermod -g programadors pau</code>, <code>id pau</code> i <code>ls -l</code></p>
+        <p><strong>Descripció:</strong> Executem <code>usermod -g programadors pau</code> per canviar el grup principal d'en Pau i comprovem que els nous fitxers que crea passen a pertànyer a aquest nou grup.</p>
+        <img src="../Captura6gdu.png" alt="Demostració de canvi de grup principal i el seu efecte en la creació de fitxers">
+      </div>
 
-      <h3>Nivell 6 · Bloqueig i activació de comptes</h3>
-      <p>He comprovat l'estat del compte de l'usuari <code>marc</code> al fitxer de seguretat <code>/etc/shadow</code>:</p>
-      <pre><code>$ sudo grep marc /etc/shadow</code></pre>
-      <img src="../Captura5_3gdu.png" alt="Verificació del hash xifrat de la contrasenya a shadow">
+      <!-- NIVELL 6: EL TRÀILER FILTRAT -->
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>sudo grep marc /etc/shadow</code></p>
+        <p><strong>Descripció:</strong> Executem <code>sudo grep marc /etc/shadow</code> per inspeccionar la contrasenya xifrada d'en Marc abans d'aplicar-ne el bloqueig de seguretat.</p>
+        <img src="../Captura5_3gdu.png" alt="Verificació del hash xifrat de la contrasenya a shadow">
+      </div>
 
-      <p>En intentar iniciar sessió en un compte desactivat, el sistema denega l'autenticació:</p>
-      <pre><code>$ su - marc</code></pre>
-      <img src="../Captura7gdu.png" alt="Bloqueig d'autenticació en intentar accedir a un compte desactivat">
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>su - marc</code></p>
+        <p><strong>Descripció:</strong> Executem <code>su - marc</code> per intentar accedir al compte bloquejat d'en Marc i comprovem que el sistema ens mostra directament un fallo d'autenticació.</p>
+        <img src="../Captura7gdu.png" alt="Bloqueig d'autenticació en intentar accedir a un compte desactivat">
+      </div>
 
-      <p>He desbloquejat el compte de l'usuari amb <code>passwd -u</code> i verificat el seu funcionament:</p>
-      <pre><code>$ sudo passwd -u marc
-$ sudo passwd -S marc
-$ su - marc</code></pre>
-      <img src="../Captura7_3.png" alt="Desbloqueig de compte amb passwd -u i inici de sessió d'èxit">
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>sudo passwd -u marc</code>, <code>sudo passwd -S marc</code> i <code>su - marc</code></p>
+        <p><strong>Descripció:</strong> Executem <code>sudo passwd -u marc</code> per treure el bloqueig de la contrasenya d'en Marc, verifiquem l'estat amb <code>passwd -S</code> i comprovem que ara ja pot tornar a iniciar sessió normalment.</p>
+        <img src="../Captura7_3.png" alt="Desbloqueig de compte amb passwd -u i inici de sessió d'èxit">
+      </div>
 
-      <h3>Nivell 7 · Modificació de noms d'usuari i migració</h3>
-      <p>He modificat el nom d'usuari de <code>nuria</code> a <code>nvidal</code> mantenint l'identificador únic (UID):</p>
-      <pre><code>$ sudo usermod -l nvidal nuria
-$ id nvidal
-$ grep nvidal /etc/passwd</code></pre>
-      <img src="../Captura8gdu.png" alt="Modificació de nom d'usuari amb usermod -l">
+      <!-- NIVELL 7: NOVA NORMA DE NOMS -->
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>sudo usermod -l nvidal nuria</code>, <code>id nvidal</code> i <code>grep nvidal /etc/passwd</code></p>
+        <p><strong>Descripció:</strong> Executem <code>usermod -l nvidal nuria</code> per canviar el nom d'usuari de <code>nuria</code> a <code>nvidal</code> i verifiquem amb <code>id</code> i <code>/etc/passwd</code> que manté el mateix UID (1001).</p>
+        <img src="../Captura8gdu.png" alt="Modificació de nom d'usuari amb usermod -l">
+      </div>
 
-      <p>He rebatejat el seu grup personal i traslladat la seva carpeta de l'antic al nou nom amb <code>usermod -d -m</code>:</p>
-      <pre><code>$ sudo groupmod -n nvidal nuria
-$ sudo usermod -d /home/nvidal -m nvidal
-$ ls -l /home/nvidal
-$ su - nvidal</code></pre>
-      <img src="../Captura8_2gdu.png" alt="Migració de carpeta personal i verificació del nou nom d'usuari">
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>sudo groupmod -n nvidal nuria</code>, <code>sudo usermod -d /home/nvidal -m nvidal</code>, <code>ls -l /home/nvidal</code> i <code>su - nvidal</code></p>
+        <p><strong>Descripció:</strong> Executem <code>groupmod -n</code> per canviar el nom del seu grup personal, <code>usermod -d -m</code> per traslladar la seva carpeta personal a <code>/home/nvidal</code> i comprovem que pot iniciar sessió correctament.</p>
+        <img src="../Captura8_2gdu.png" alt="Migració de carpeta personal i verificació del nou nom d'usuari">
+      </div>
 
       <h4>------------------------------------------------------------------------------------------------------------</h4>
 
@@ -399,129 +438,143 @@ $ su - nvidal</code></pre>
     <article class="apartat" id="apartat6">
       <h2>6. Gestió d'usuaris, grups i permisos (Part 2)</h2>
 
+      <!-- NIVELL 0 -->
       <h3>Nivell 0 · Muntar l'estudi</h3>
-      <p>He creat l'estructura inicial de directori i subcarpetes de treball per a l'estudi PixelForge:</p>
-      <pre><code># sudo mkdir -p /srv/pixelforge
-# cd /srv/pixelforge
-# sudo mkdir codi art proves compartit
-# sudo touch codi/joc.py art/logo.png proves/informe.txt
-# ls -l /srv/pixelforge</code></pre>
-      <img src="../Captura1gdu2.png" alt="Creació de l'estructura inicial a /srv/pixelforge">
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>sudo mkdir -p /srv/pixelforge</code>, <code>cd /srv/pixelforge</code>, <code>sudo mkdir codi art proves compartit</code>, <code>sudo touch codi/joc.py art/logo.png proves/informe.txt</code> i <code>ls -l /srv/pixelforge</code></p>
+        <p><strong>Descripció:</strong> Es crea la carpeta principal de l'estudi i les subcarpetes per a cada departament, verificant amb <code>ls -l</code> que inicialment la propietat pertany a l'usuari <code>root</code>.</p>
+        <img src="../Captura1gdu2.png" alt="Creació de l'estructura inicial a /srv/pixelforge">
+      </div>
 
+      <!-- NIVELL 1 -->
       <h3>Nivell 1 · Llegir els permisos</h3>
-      <p>He inspeccionat els permisos per defecte assignats al fitxer <code>joc.py</code>:</p>
-      <pre><code>$ ls -l /srv/pixelforge/codi/joc.py</code></pre>
-      <img src="../Captura2gdu2.png" alt="Consulta dels permisos del fitxer joc.py amb ls -l">
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>ls -l /srv/pixelforge/codi/joc.py</code></p>
+        <p><strong>Descripció:</strong> Es comprova la sortida del fitxer inicial, mostrant els permisos de lectura i escriptura per al propietari i de lectura per al grup i altres (<code>-rw-r--r--</code>).</p>
+        <img src="../Captura2gdu2.png" alt="Consulta dels permisos del fitxer joc.py amb ls -l">
+      </div>
 
-      <p>He consultat la informació del directori i les metadades en format octal utilitzant <code>stat</code>:</p>
-      <pre><code>$ ls -ld /srv/pixelforge/codi
-$ stat /srv/pixelforge/codi/joc.py</code></pre>
-      <img src="../Captura2_2gdu2.png" alt="Consulta de permisos del directori amb ls -ld i metadades amb stat">
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>ls -ld /srv/pixelforge/codi</code> i <code>stat /srv/pixelforge/codi/joc.py</code></p>
+        <p><strong>Descripció:</strong> S'inspecciona el directori amb <code>ls -ld</code> per visualitzar els permisos de la carpeta i es comprova amb <code>stat</code> la representació en mode octal (<code>0644</code>) i simbòlic (<code>-rw-r--r--</code>).</p>
+        <img src="../Captura2_2gdu2.png" alt="Consulta de permisos del directori amb ls -ld i metadades amb stat">
+      </div>
 
-      <h3>Nivell 2 · Permisos octals amb <code>chmod</code></h3>
-      <p>He establert permisos <code>750</code> de manera recursiva a la carpeta de codi:</p>
-      <pre><code># sudo chmod -R 750 /srv/pixelforge/codi
-# ls -ld /srv/pixelforge/codi
-# sudo ls -l /srv/pixelforge/codi</code></pre>
-      <img src="../Captura3gdu2.png" alt="Aplicació de permisos 750 al directori codi">
+      <!-- NIVELL 2 -->
+      <h3>Nivell 2 · chmod numèric</h3>
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>sudo chmod -R 750 /srv/pixelforge/codi</code>, <code>ls -ld /srv/pixelforge/codi</code> i <code>sudo ls -l /srv/pixelforge/codi</code></p>
+        <p><strong>Descripció:</strong> S'estableixen els permisos <code>750</code> (<code>rwxr-x---</code>) de forma recursiva a la carpeta <code>codi</code> i al seu contingut.</p>
+        <img src="../Captura3gdu2.png" alt="Aplicació de permisos 750 al directori codi">
+      </div>
 
-      <p>He configurat permisos <code>755</code> per a la carpeta d'art i <code>640</code> per a l'informe de proves:</p>
-      <pre><code># sudo chmod 755 /srv/pixelforge/art
-# sudo chmod 640 /srv/pixelforge/proves/informe.txt
-# ls -l /srv/pixelforge/proves</code></pre>
-      <img src="../Captura3_2gdu2.png" alt="Assignació de permisos 755 a art i 640 a informe.txt">
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>sudo chmod 755 /srv/pixelforge/art</code>, <code>sudo chmod 640 /srv/pixelforge/proves/informe.txt</code> i <code>ls -l /srv/pixelforge/proves</code></p>
+        <p><strong>Descripció:</strong> Es permet l'accés públic de lectura a la carpeta <code>art</code> (<code>755</code>) i es restrringeix l'informe de proves a mode privat per al grup (<code>640</code>).</p>
+        <img src="../Captura3_2gdu2.png" alt="Assignació de permisos 755 a art i 640 a informe.txt">
+      </div>
 
-      <h3>Nivell 3 · Permisos simbòlics</h3>
-      <p>He tret el permís d'escriptura a l'usuari propietari mitjançant sintaxi simbòlica (<code>u-w</code>):</p>
-      <pre><code># sudo chmod u-w /srv/pixelforge/art
-# ls -ld /srv/pixelforge/art</code></pre>
-      <img src="../Captura4gdu2.png" alt="Treure permís d'escriptura al propietari amb chmod u-w">
+      <!-- NIVELL 3 -->
+      <h3>Nivell 3 · chmod simbòlic</h3>
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>sudo chmod u-w /srv/pixelforge/art</code> i <code>ls -ld /srv/pixelforge/art</code></p>
+        <p><strong>Descripció:</strong> S'extreu el permís d'escriptura a l'usuari propietari mitjançant <code>u-w</code>, passant els permisos a <code>dr-xr-xr-x</code>.</p>
+        <img src="../Captura4gdu2.png" alt="Treure permís d'escriptura al propietari amb chmod u-w">
+      </div>
 
-      <p>He afegit de nou l'escriptura al propietari i eliminat tots els permisos per als altres usuaris (<code>o=</code>):</p>
-      <pre><code># sudo chmod u+w /srv/pixelforge/art
-# sudo chmod o= /srv/pixelforge/art
-# ls -ld /srv/pixelforge/art</code></pre>
-      <img src="../Captura4_2gdu2.png" alt="Ajust de permisos simbòlics amb u+w i o=">
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>sudo chmod u+w /srv/pixelforge/art</code>, <code>sudo chmod o= /srv/pixelforge/art</code> i <code>ls -ld /srv/pixelforge/art</code></p>
+        <p><strong>Descripció:</strong> Es torna a afegir l'escriptura al propietari i s'eliminen tots els permisos per a la resta d'usuaris (<code>o=</code>), deixant el directori amb <code>drwxr-x---</code>.</p>
+        <img src="../Captura4_2gdu2.png" alt="Ajust de permisos simbòlics amb u+w i o=">
+      </div>
 
-      <h3>Nivell 4 · Propietats d'usuari i grup amb <code>chown</code> i <code>chgrp</code></h3>
-      <p>He assignat l'usuari <code>pau</code> i el grup <code>programadors</code> com a propietaris del directori de codi:</p>
-      <pre><code># sudo chown -R pau:programadors /srv/pixelforge/codi
-# ls -l /srv/pixelforge</code></pre>
-      <img src="../Captura5gdu2.png" alt="Canvi de propietari i grup a pau:programadors">
+      <!-- NIVELL 4 -->
+      <h3>Nivell 4 · chown i chgrp · Donar les carpetes als equips</h3>
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>sudo chown -R pau:programadors /srv/pixelforge/codi</code> i <code>ls -l /srv/pixelforge</code></p>
+        <p><strong>Descripció:</strong> S'assigna recursivament l'usuari <code>pau</code> i el grup <code>programadors</code> com a propietaris del directori <code>codi</code>.</p>
+        <img src="../Captura5gdu2.png" alt="Canvi de propietari i grup a pau:programadors">
+      </div>
 
-      <p>He comprovat des de la sessió de l'usuari Pau que es poden crear fitxers dins la carpeta assignada:</p>
-      <pre><code>$ su - pau
-$ cd /srv/pixelforge/codi
-$ touch nivell1.py
-$ ls -l</code></pre>
-      <img src="../Captura5_2gdu2.png" alt="Creació de fitxer per l'usuari Pau a la seva carpeta">
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>su - pau</code>, <code>cd /srv/pixelforge/codi</code>, <code>touch nivell1.py</code> i <code>ls -l</code></p>
+        <p><strong>Descripció:</strong> Es comprova que l'usuari <code>pau</code> pot crear fitxers correctament a la seva carpeta de treball.</p>
+        <img src="../Captura5_2gdu2.png" alt="Creació de fitxer per l'usuari Pau a la seva carpeta">
+      </div>
 
-      <p>He comprovat que l'accés a carpetes d'altres equips queda totalment denegat pel sistema:</p>
-      <pre><code>$ touch /srv/pixelforge/proves/intrus.txt</code></pre>
-      <img src="../Captura5_3gdu2.png" alt="Error de permís denegat en intentar escriure en directori d'un altre equip">
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>touch /srv/pixelforge/proves/intrus.txt</code></p>
+        <p><strong>Descripció:</strong> Es confirma que el sistema bloqueja l'intent d'escriptura de l'usuari <code>pau</code> a la carpeta <code>proves</code> (<code>Permission denied</code>).</p>
+        <img src="../Captura5_3gdu2.png" alt="Error de permís denegat en intentar escriure en directori d'un altre equip">
+      </div>
 
-      <h3>Nivell 5 · Permís especial SGID</h3>
-      <p>En crear un fitxer sense SGID, el grup assignat és el grup primari de l'usuari:</p>
-      <pre><code>$ su - nvidal
-$ touch /srv/pixelforge/codi/mapa.py
-$ ls -l /srv/pixelforge/codi/mapa.py</code></pre>
-      <img src="../Captura6gdu2.png" alt="Fitxer creat amb el grup primari de l'usuari sense SGID">
+      <!-- NIVELL 5 -->
+      <h3>Nivell 5 · SGID · Que els fitxers nous siguin de l'equip</h3>
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>su - nvidal</code>, <code>touch /srv/pixelforge/codi/mapa.py</code> i <code>ls -l /srv/pixelforge/codi/mapa.py</code></p>
+        <p><strong>Descripció:</strong> En crear el fitxer <code>mapa.py</code>, aquest adopta el grup primari de l'usuari (<code>nvidal</code>) en comptes del grup del directori.</p>
+        <img src="../Captura6gdu2.png" alt="Fitxer creat amb el grup primari de l'usuari sense SGID">
+      </div>
 
-      <p>He activat el bit SGID a la carpeta de codi amb <code>chmod g+s</code>:</p>
-      <pre><code># sudo chmod g+s /srv/pixelforge/codi
-# ls -ld /srv/pixelforge/codi</code></pre>
-      <img src="../Captura6_2gdu2.png" alt="Activació del bit SGID a la carpeta de codi">
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>sudo chmod g+s /srv/pixelforge/codi</code> i <code>ls -ld /srv/pixelforge/codi</code></p>
+        <p><strong>Descripció:</strong> S'activa el bit SGID (<code>g+s</code>), visible amb la lletra <code>s</code> a la posició de permisos de grup (<code>drwxrws---</code>).</p>
+        <img src="../Captura6_2gdu2.png" alt="Activació del bit SGID a la carpeta de codi">
+      </div>
 
-      <p>He comprovat que els nous fitxers hereten automàticament el grup <code>programadors</code> del directori pare:</p>
-      <pre><code>$ su - nvidal
-$ touch /srv/pixelforge/codi/so.py
-$ ls -l /srv/pixelforge/codi</code></pre>
-      <img src="../Captura6_3gdu2.png" alt="Fitxer nou heretant el grup programadors gràcies al SGID">
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>su - nvidal</code>, <code>touch /srv/pixelforge/codi/so.py</code> i <code>ls -l /srv/pixelforge/codi</code></p>
+        <p><strong>Descripció:</strong> Es comprova que el nou fitxer <code>so.py</code> hereta automàticament el grup <code>programadors</code> del directori pare.</p>
+        <img src="../Captura6_3gdu2.png" alt="Fitxer nou heretant el grup programadors gràcies al SGID">
+      </div>
 
-      <h3>Nivell 6 · Directori compartit i Sticky Bit</h3>
-      <p>He configurat el permís especial Sticky Bit (<code>+t</code>) a la carpeta compartida:</p>
-      <pre><code># sudo chmod +t /srv/pixelforge/compartit
-# ls -ld /srv/pixelforge/compartit</code></pre>
-      <img src="../Captura7gdu2.png" alt="Activació del Sticky Bit al directori compartit">
+      <!-- NIVELL 6 -->
+      <h3>Nivell 6 · Sticky Bit · La carpeta compartida</h3>
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>sudo chmod +t /srv/pixelforge/compartit</code> i <code>ls -ld /srv/pixelforge/compartit</code></p>
+        <p><strong>Descripció:</strong> S'aplica el permís <code>+t</code> sobre la carpeta amb permisos 777, mostrant la lletra <code>t</code> al final (<code>drwxrwxrwt</code>).</p>
+        <img src="../Captura7gdu2.png" alt="Activació del Sticky Bit al directori compartit">
+      </div>
 
-      <p>He comprovat que cap usuari pot esborrar fitxers creats per altres usuaris dins la carpeta compartida:</p>
-      <pre><code>$ su - pau
-$ touch /srv/pixelforge/compartit/de_pau.txt
-$ su - marc
-$ rm /srv/pixelforge/compartit/de_pau.txt</code></pre>
-      <img src="../Captura7_2gdu2.png" alt="Denegació d'esborrat de fitxer alien per Sticky Bit">
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>su - pau</code>, <code>touch /srv/pixelforge/compartit/de_pau.txt</code>, <code>su - marc</code> i <code>rm /srv/pixelforge/compartit/de_pau.txt</code></p>
+        <p><strong>Descripció:</strong> En intentar esborrar el fitxer creat per en Pau, l'usuari Marc rep l'error <code>Operación no permitida / Operation not permitted</code> gràcies a la protecció del Sticky Bit.</p>
+        <img src="../Captura7_2gdu2.png" alt="Denegació d'esborrat de fitxer alien per Sticky Bit">
+      </div>
 
-      <h3>Nivell 7 · Llistes de control d'accés (ACL)</h3>
-      <p>Inicialment l'usuari <code>marc</code> no té permís per accedir al directori de codi:</p>
-      <pre><code>$ su - marc
-$ ls /srv/pixelforge/codi</code></pre>
-      <img src="../Captura8gdu2.png" alt="Accés denegat a l'usuari Marc al directori de codi">
+      <!-- NIVELL 7 -->
+      <h3>Nivell 7 · ACL · Accés per a una persona de fora</h3>
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>su - marc</code> i <code>ls /srv/pixelforge/codi</code></p>
+        <p><strong>Descripció:</strong> Es comprova que l'usuari <code>marc</code> no pot accedir ni veure el contingut del directori <code>codi</code> (<code>Permission denied</code>).</p>
+        <img src="../Captura8gdu2.png" alt="Accés denegat a l'usuari Marc al directori de codi">
+      </div>
 
-      <p>He concedit accés específic de lectura i execució a l'usuari amb <code>setfacl</code>:</p>
-      <pre><code># sudo setfacl -m u:marc:rx /srv/pixelforge/codi
-# ls -ld /srv/pixelforge/codi
-# getfacl /srv/pixelforge/codi</code></pre>
-      <img src="../Captura8_2gdu2.png" alt="Assignació d'ACL amb setfacl i verificació amb getfacl">
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>sudo setfacl -m u:marc:rx /srv/pixelforge/codi</code>, <code>ls -ld /srv/pixelforge/codi</code> i <code>getfacl /srv/pixelforge/codi</code></p>
+        <p><strong>Descripció:</strong> S'assigna la regla ACL <code>u:marc:rx</code>. El directori mostra el signe <code>+</code> als permisos i <code>getfacl</code> confirma la línia <code>user:marc:r-x</code>.</p>
+        <img src="../Captura8_2gdu2.png" alt="Assignació d'ACL amb setfacl i verificació amb getfacl">
+      </div>
 
-      <p>He comprovat que l'usuari té accés i posteriorment he suprimit la regla ACL amb <code>setfacl -x</code>:</p>
-      <pre><code>$ su - marc
-$ ls /srv/pixelforge/codi
-# sudo setfacl -x u:marc /srv/pixelforge/codi
-# getfacl /srv/pixelforge/codi</code></pre>
-      <img src="../Captura8_3gdu2.png" alt="Accés efectiu i eliminació de la regla ACL amb setfacl -x">
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>su - marc</code>, <code>ls /srv/pixelforge/codi</code>, <code>sudo setfacl -x u:marc /srv/pixelforge/codi</code> i <code>getfacl /srv/pixelforge/codi</code></p>
+        <p><strong>Descripció:</strong> Comprovació d'accés efectiu de l'usuari i posterior eliminació de la regla d'accés individual per a en Marc, verificant amb <code>getfacl</code> que la línia ha estat suprimida.</p>
+        <img src="../Captura8_3gdu2.png" alt="Accés efectiu i eliminació de la regla ACL amb setfacl -x">
+      </div>
 
-      <h3>Nivell 8 · Màscara <code>umask</code> i permís SUID</h3>
-      <p>He configurat la màscara per defecte a <code>027</code> i comprovat els permisos resultants en nous fitxers i carpetes:</p>
-      <pre><code>$ umask 027
-$ touch prova2.txt
-$ mkdir prova2_dir
-$ ls -ld prova2.txt prova2_dir</code></pre>
-      <img src="../Captura9gdu2.png" alt="Verificació dels permisos resultants amb umask 027">
+      <!-- NIVELL 8 -->
+      <h3>Nivell 8 · umask i SUID</h3>
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>umask 027</code>, <code>touch prova2.txt</code>, <code>mkdir prova2_dir</code> i <code>ls -ld prova2.txt prova2_dir</code></p>
+        <p><strong>Descripció:</strong> En establir la màscara <code>027</code>, els nous fitxers es creen amb permisos <code>640</code> (<code>rw-r-----</code>) i els directoris amb <code>750</code> (<code>rwxr-x---</code>), restringint l'accés a la resta d'usuaris.</p>
+        <img src="../Captura9gdu2.png" alt="Verificació dels permisos resultants amb umask 027">
+      </div>
 
-      <p>He identificat els programes executables del sistema que tenen actiu el bit SUID (<code>-4000</code>):</p>
-      <pre><code>$ ls -l /usr/bin/passwd
-$ find /usr/bin -perm -4000 2>/dev/null</code></pre>
-      <img src="../Captura9_2gdu2.png" alt="Cerca de binaris executables amb permís SUID">
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>ls -l /usr/bin/passwd</code> i <code>find /usr/bin -perm -4000 2>/dev/null</code></p>
+        <p><strong>Descripció:</strong> Es visualitza la lletra <code>s</code> a la posició d'execució de l'usuari propietari a <code>/usr/bin/passwd</code> i es cerca la llista d'executables del sistema amb el bit SUID (<code>-4000</code>) actiu.</p>
+        <img src="../Captura9_2gdu2.png" alt="Cerca de binaris executables amb permís SUID">
+      </div>
 
       <h4>------------------------------------------------------------------------------------------------------------</h4>
 
