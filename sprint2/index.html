@@ -25,6 +25,15 @@
   .bloc-imatge p {
     margin: 4px 0;
   }
+  pre {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 4px;
+    overflow-x: auto;
+  }
+  code {
+    font-family: monospace;
+  }
 </style>
 </head>
 <body>
@@ -123,83 +132,108 @@
     <article class="apartat" id="apartat2">
       <h2>2. Particions i muntatge</h2>
 
-      <p>En aquest apartat es detalla el procediment pràctic per a la identificació, creació de particions, aplicació de sistemes de fitxers i configuració del muntatge tant manual com permanent al fitxer de configuració del sistema.</p>
+      <p>En aquesta pràctica he realitzat tot el procés d'identificació, particionament, formatatge amb paràmetres personalitzats de bloc i configuració del muntatge permanent d'un disc secundari al sistema Linux.</p>
 
+      <h3>2.1 Comprovació inicial del disc</h3>
+      <p>Abans de modificar la taula de particions, he identificat el disc secundari afegit al sistema mitjançant la comanda <code>fdisk</code>:</p>
+      <pre><code># fdisk -l | grep sdb</code></pre>
+      <p>La sortida de l'ordre confirma la presència del dispositiu <code>/dev/sdb</code> amb una capacitat total de 25 GiB (524.288.000 sectors).</p>
       <figure class="bloc-imatge">
-        <figcaption><strong>Captura 1:</strong> Inspecció i llistat inicial dels discs del sistema.</figcaption>
-        <p><strong>Comandes executades:</strong> <code>lsblk</code> i <code>sudo fdisk -l</code></p>
-        <p><strong>Descripció:</strong> Comprovem els dispositius d'emmagatzematge detectats pel kernel, identificant el disc secundari i el seu estat actual abans de realitzar qualsevol modificació.</p>
-        <img src="../captura1pim.png" alt="Llistat inicial de dispositius amb lsblk i fdisk">
+        <figcaption>Comprovació del disc secundari <code>/dev/sdb</code> detectat pel sistema.</figcaption>
+        <img src="../captura1pim.png" alt="Comprovació del disc sdb amb fdisk -l">
       </figure>
 
+      <h3>2.2 Creació de la partició amb <code>fdisk</code></h3>
+      <p>Per crear la primera partició, he iniciat l'eina interactiva de particionament sobre la unitat <code>/dev/sdb</code>:</p>
+      <pre><code># fdisk /dev/sdb</code></pre>
+      <p>Dins de la consola de <code>fdisk</code>, he utilitzat l'opció <code>n</code> per crear una nova partició primària. Com que el disc no tenia taula prèvia, s'ha creat una etiqueta DOS (MBR) per defecte. He especificat el sector final <code>200000</code> per definir una partició d'aproximadament 96,7 MiB i he guardat els canvis al disc amb l'opció <code>w</code>:</p>
       <figure class="bloc-imatge">
-        <figcaption><strong>Captura 2:</strong> Inici de l'eina de particionament sobre el disc secundari.</figcaption>
-        <p><strong>Comanda executada:</strong> <code>sudo fdisk /dev/sdb</code></p>
-        <p><strong>Descripció:</strong> Obrim la consola interactiva de <code>fdisk</code> sobre la unitat de disc seleccionada per començar a gestionar l'esquema de particions.</p>
-        <img src="../captura2pim.png" alt="Inici de la consola de fdisk per al disc /dev/sdb">
+        <figcaption>Creació d'una partició primària a <code>fdisk</code> i escriptura de la taula al disc.</figcaption>
+        <img src="../captura2pim.png" alt="Creació de la partició amb fdisk">
       </figure>
 
+      <p>A continuació, he verificat que la nova partició s'hagués enregistrat correctament a la taula del sistema:</p>
+      <pre><code># fdisk -l | grep sdb</code></pre>
+      <p>La llista confirma la creació del dispositiu de bloc <code>/dev/sdb1</code>, que comença al sector 2048, acaba al sector 200000 i té una mida de 96,7M amb l'identificador de tipus 83 (Linux).</p>
       <figure class="bloc-imatge">
-        <figcaption><strong>Captura 3:</strong> Creació d'una nova taula de particions.</figcaption>
-        <p><strong>Comanda executada:</strong> Opció <code>g</code> dins de <code>fdisk</code></p>
-        <p><strong>Descripció:</strong> Establim un nou esquema de particionament GPT (GUID Partition Table) sobre el disc per suportar particions modernes i grans capacitats.</p>
-        <img src="../captura3pim.png" alt="Creació de la taula de particions GPT en fdisk">
+        <figcaption>Verificació de la taula de particions actualitzada amb <code>/dev/sdb1</code>.</figcaption>
+        <img src="../captura3pim.png" alt="Verificació de la partició sdb1 creada amb fdisk -l">
       </figure>
 
+      <h3>2.3 Formatatge amb mida de bloc personalitzada i verificació</h3>
+      <p>Un cop creada la partició, li he donat format amb el sistema de fitxers <code>ext4</code>. Per complir el requisit de la pràctica, he definit una mida de bloc personalitzada de 8192 bytes (8 KiB) mitjançant el paràmetre <code>-b 8192</code>:</p>
+      <pre><code># mkfs.ext4 -b 8192 /dev/sdb1</code></pre>
+      <p>Durant el formatatge, el sistema mostra un avís indicant que els blocs de 8192 bytes superen el límit estàndard de 4096 bytes habitual en la majoria d'arquitectures Linux. He confirmat l'operació premant <code>s</code> i el procés ha finalitzat generant 12.372 blocs de 8 KiB i 12.384 inodes.</p>
       <figure class="bloc-imatge">
-        <figcaption><strong>Captura 4:</strong> Creació de la primera partició del disc.</figcaption>
-        <p><strong>Comanda executada:</strong> Opció <code>n</code> dins de <code>fdisk</code></p>
-        <p><strong>Descripció:</strong> Afegim una nova partició indicant el número de partició, el primer sector de disc i la mida desitjada per al primer volum.</p>
-        <img src="../captura4pim.png" alt="Creació de la primera partició amb l'opció n">
+        <figcaption>Creació del sistema de fitxers <code>ext4</code> forçant una mida de bloc de 8 KiB.</figcaption>
+        <img src="../captura4pim.png" alt="Formatatge de sdb1 amb mkfs.ext4">
       </figure>
 
+      <p>Per comprovar que el sistema de fitxers s'havia creat realment amb la mida de bloc demanada, he utilitzat l'ordre <code>tune2fs</code>:</p>
+      <pre><code># tune2fs -l /dev/sdb1 | grep Block</code></pre>
+      <p>La sortida de <code>tune2fs</code> confirma que el camp <code>Block size</code> és efectivament de 8192 bytes.</p>
       <figure class="bloc-imatge">
-        <figcaption><strong>Captura 5:</strong> Creació de particions addicionals.</figcaption>
-        <p><strong>Comanda executada:</strong> Opció <code>n</code> dins de <code>fdisk</code></p>
-        <p><strong>Descripció:</strong> Definim la resta de particions del disc segons l'esquema planificat per organitzar l'espai d'emmagatzematge.</p>
-        <img src="../captura5pim.png" alt="Creació de particions addicionals en el disc">
+        <figcaption>Verificació del paràmetre <code>Block size</code> amb <code>tune2fs</code>.</figcaption>
+        <img src="../captura5pim.png" alt="Verificació de la mida de bloc amb tune2fs">
       </figure>
 
+      <h3>2.4 Muntatge manual i verificació de persistència</h3>
+      <p>Per poder utilitzar el nou volum, primer he creat la carpeta que farà de punt de muntatge al directori <code>/mnt</code>:</p>
+      <pre><code># cd /mnt
+# mkdir particio1</code></pre>
       <figure class="bloc-imatge">
-        <figcaption><strong>Captura 6:</strong> Verificació de la taula de particions a la memòria.</figcaption>
-        <p><strong>Comanda executada:</strong> Opció <code>p</code> dins de <code>fdisk</code></p>
-        <p><strong>Descripció:</strong> Llistem el resum de totes les particions creades per comprovar la mida, el tipus i els sectors d'inici i final abans de guardar els canvis.</p>
-        <img src="../captura6pim.png" alt="Visualització del resum de particions creades">
+        <figcaption>Creació del directori <code>particio1</code> a <code>/mnt</code>.</figcaption>
+        <img src="../captura6pim.png" alt="Creació del directori particio1 a /mnt">
       </figure>
 
+      <p>Després he muntat manualment la partició i hi he creat un directori anomenat <code>prova</code> i un fitxer de text buit anomenat <code>prova2</code> per comprovar que es podia escriure al volum sense problemes:</p>
+      <pre><code># mount -t ext4 /dev/sdb1 /mnt/particio1/
+# cd particio1/
+# mkdir prova
+# touch prova2
+# ls -l</code></pre>
+      <p>La llista del directori mostra la carpeta de sistema <code>lost+found</code> i els dos elements nous creats per l'usuari <code>root</code>.</p>
       <figure class="bloc-imatge">
-        <figcaption><strong>Captura 7:</strong> Escriptura definitiva dels canvis al disc.</figcaption>
-        <p><strong>Comanda executada:</strong> Opció <code>w</code> dins de <code>fdisk</code></p>
-        <p><strong>Descripció:</strong> Guardem la nova taula de particions al disc físic i sortim de l'eina <code>fdisk</code>, fent que el kernel actualitzi la taula de dispositius.</p>
-        <img src="../captura7pim.png" alt="Escriptura de la taula de particions al disc amb w">
+        <figcaption>Muntatge manual del volum i creació d'elements de prova.</figcaption>
+        <img src="../captura7pim.png" alt="Muntatge manual i verificació d'escriptura">
       </figure>
 
+      <p>Per verificar que les dades s'emmagatzemaven realment al disc dur i no a la memòria temporal, he desmuntat la partició amb <code>umount</code>, he comprovat que el directori <code>/mnt/particio1</code> quedava buit i l'he tornada a muntar:</p>
+      <pre><code># cd ..
+# umount /dev/sdb1
+# ls particio1/
+# mount /dev/sdb1 /mnt/particio1/
+# ls particio1/</code></pre>
+      <p>En tornar a muntar el dispositiu, els elements <code>prova</code> i <code>prova2</code> han tornat a aparèixer immediatament, confirmant la correcta persistència de les dades al disc físic.</p>
       <figure class="bloc-imatge">
-        <figcaption><strong>Captura 8:</strong> Aplicació del sistema de fitxers (formatatge).</figcaption>
-        <p><strong>Comanda executada:</strong> <code>sudo mkfs.ext4 /dev/sdb1</code></p>
-        <p><strong>Descripció:</strong> Formatem la partició amb el sistema de fitxers <code>ext4</code>, creant l'estructura d'inodes, blocs i metadades necessària per emmagatzemar dades.</p>
-        <img src="../captura8pim.png" alt="Formatatge de la partició amb sistema de fitxers ext4">
+        <figcaption>Comprovació de la persistència de fitxers en desmuntar i remuntar la partició.</figcaption>
+        <img src="../captura8pim.png" alt="Comprovació de desmuntatge i remuntatge del volum">
       </figure>
 
+      <h3>2.5 Configuració del muntatge automàtic a <code>/etc/fstab</code></h3>
+      <p>Per evitar haver de realitzar el muntatge manualment cada vegada que s'inicia el sistema, he optat per configurar un muntatge persistent basat en l'UUID del volum. Primer he obtingut l'identificador únic amb <code>blkid</code>:</p>
+      <pre><code># blkid | grep sdb1</code></pre>
+      <p>L'ordre retorna el valor <code>UUID="ec74310d-2673-4e8c-a9b4-a95580ebbc65"</code>.</p>
       <figure class="bloc-imatge">
-        <figcaption><strong>Captura 9:</strong> Creació del punt de muntatge i muntatge manual.</figcaption>
-        <p><strong>Comandes executades:</strong> <code>sudo mkdir -p /mnt/dades</code> i <code>sudo mount /dev/sdb1 /mnt/dades</code></p>
-        <p><strong>Descripció:</strong> Creem el directori on s'enllaçarà el volum i realitzem el muntatge manual de la partició, verificant-ho amb l'ordre <code>df -h</code>.</p>
-        <img src="../captura9pim.png" alt="Creació del punt de muntatge i execució de la comanda mount">
+        <figcaption>Obtenció de l'UUID de la partició amb l'eina <code>blkid</code>.</figcaption>
+        <img src="../captura9pim.png" alt="Obtenció del UUID de sdb1 amb blkid">
       </figure>
 
+      <p>A continuació, he editat el fitxer de configuració del sistema amb l'editor <code>nano</code>:</p>
+      <pre><code># sudo nano /etc/fstab</code></pre>
+      <p>Al final del fitxer hi he afegit la línia següent per definir el muntatge permanent:</p>
+      <pre><code>UUID=ec74310d-2673-4e8c-a9b4-a95580ebbc65 /mnt/particio1 ext4 defaults 0 0</code></pre>
       <figure class="bloc-imatge">
-        <figcaption><strong>Captura 10:</strong> Obtenció del UUID de la partició.</figcaption>
-        <p><strong>Comanda executada:</strong> <code>sudo blkid /dev/sdb1</code></p>
-        <p><strong>Descripció:</strong> Obtenim l'identificador únic universal (UUID) de la partició per poder configurar un muntatge persistent i segur al sistema.</p>
-        <img src="../captura10pim.png" alt="Obtenció del UUID de la partició amb blkid">
+        <figcaption>Edició del fitxer <code>/etc/fstab</code> amb l'UUID de la nova partició.</figcaption>
+        <img src="../captura10pim.png" alt="Configuració del muntatge permanent a etc fstab">
       </figure>
 
+      <p>Finalment, he accedit des de la consola de l'usuari estàndard (<code>jianwei</code>) per verificar que el punt de muntatge <code>/mnt/particio1/</code> s'integrava correctament a l'arbre de directoris del sistema i era accessible per a la lectura:</p>
+      <pre><code>$ ls /mnt/particio1/</code></pre>
+      <p>La comanda llista correctament les carpetes i fitxers del volum muntat.</p>
       <figure class="bloc-imatge">
-        <figcaption><strong>Captura 11:</strong> Configuració del muntatge automàtic a <code>/etc/fstab</code> i comprovació.</figcaption>
-        <p><strong>Comandes executades:</strong> <code>sudo nano /etc/fstab</code> i <code>sudo mount -a</code></p>
-        <p><strong>Descripció:</strong> Afegim la línia corresponent amb el UUID, punt de muntatge, sistema de fitxers i opcions per defecte a <code>/etc/fstab</code>, verificant amb <code>mount -a</code> que no hi ha errors de sintaxi.</p>
-        <img src="../captura11pim.png" alt="Configuració del muntatge automàtic a etc fstab i verificació">
+        <figcaption>Verificació final de l'accés al directori muntat des de l'entorn d'usuari.</figcaption>
+        <img src="../captura11pim.png" alt="Comprovació final del contingut del muntatge">
       </figure>
 
       <h4>------------------------------------------------------------------------------------------------------------</h4>
@@ -598,4 +632,75 @@
       <figure class="bloc-imatge">
         <figcaption><strong>Figura 6.15 (Nivell 6 - Captura 2):</strong> Bloqueig d'esborrat de fitxers d'altres usuaris per Sticky Bit.</figcaption>
         <p><strong>Comandes executades:</strong> <code>su - pau</code>, <code>touch /srv/pixelforge/compartit/de_pau.txt</code>, <code>su - marc</code> i <code>rm /srv/pixelforge/compartit/de_pau.txt</code></p>
-        <p><strong>Descripció
+        <p><strong>Descripció:</strong> En intentar esborrar el fitxer creat per en Pau, l'usuari Marc rep l'error <code>Operación no permitida / Operation not permitted</code> gràcies a la protecció del Sticky Bit.</p>
+        <img src="../Captura7_2gdu2.png" alt="Denegació d'esborrat de fitxer alien per Sticky Bit">
+      </figure>
+
+      <!-- NIVELL 7 -->
+      <h3>Nivell 7 · ACL · Accés per a una persona de fora</h3>
+      <figure class="bloc-imatge">
+        <figcaption><strong>Figura 6.16 (Nivell 7 - Captura 1):</strong> Accés inicial denegat a l'usuari tester.</figcaption>
+        <p><strong>Comandes executades:</strong> <code>su - marc</code> i <code>ls /srv/pixelforge/codi</code></p>
+        <p><strong>Descripció:</strong> Es comprova que l'usuari <code>marc</code> no pot accedir ni veure el contingut del directori <code>codi</code> (<code>Permission denied</code>).</p>
+        <img src="../Captura8gdu2.png" alt="Accés denegat a l'usuari Marc al directori de codi">
+      </figure>
+
+      <figure class="bloc-imatge">
+        <figcaption><strong>Figura 6.17 (Nivell 7 - Captura 2):</strong> Assignació d'ACL de lectura i execució amb <code>setfacl</code>.</figcaption>
+        <p><strong>Comandes executades:</strong> <code>sudo setfacl -m u:marc:rx /srv/pixelforge/codi</code>, <code>ls -ld /srv/pixelforge/codi</code> i <code>getfacl /srv/pixelforge/codi</code></p>
+        <p><strong>Descripció:</strong> S'assigna la regla ACL <code>u:marc:rx</code>. El directori mostra el signe <code>+</code> als permisos i <code>getfacl</code> confirma la línia <code>user:marc:r-x</code>.</p>
+        <img src="../Captura8_2gdu2.png" alt="Assignació d'ACL amb setfacl i verificació amb getfacl">
+      </figure>
+
+      <figure class="bloc-imatge">
+        <figcaption><strong>Figura 6.18 (Nivell 7 - Captura 3):</strong> Accés efectiu de l'usuari Marc i revocació de la regla ACL amb <code>setfacl -x</code>.</figcaption>
+        <p><strong>Comandes executades:</strong> <code>su - marc</code>, <code>ls /srv/pixelforge/codi</code>, <code>sudo setfacl -x u:marc /srv/pixelforge/codi</code> i <code>getfacl /srv/pixelforge/codi</code></p>
+        <p><strong>Descripció:</strong> Comprovació d'accés efectiu de l'usuari i posterior eliminació de la regla d'accés individual per a en Marc, verificant amb <code>getfacl</code> que la línia ha estat suprimida.</p>
+        <img src="../Captura8_3gdu2.png" alt="Accés efectiu i eliminació de la regla ACL amb setfacl -x">
+      </figure>
+
+      <!-- NIVELL 8 -->
+      <h3>Nivell 8 · umask i SUID</h3>
+      <figure class="bloc-imatge">
+        <figcaption><strong>Figura 6.19 (Nivell 8 - Captura 1):</strong> Configuració de la màscara <code>umask 027</code>.</figcaption>
+        <p><strong>Comandes executades:</strong> <code>umask 027</code>, <code>touch prova2.txt</code>, <code>mkdir prova2_dir</code> i <code>ls -ld prova2.txt prova2_dir</code></p>
+        <p><strong>Descripció:</strong> En establir la màscara <code>027</code>, els nous fitxers es creen amb permisos <code>640</code> (<code>rw-r-----</code>) i els directoris amb <code>750</code> (<code>rwxr-x---</code>), restringint l'accés a la resta d'usuaris.</p>
+        <img src="../Captura9gdu2.png" alt="Verificació dels permisos resultants amb umask 027">
+      </figure>
+
+      <figure class="bloc-imatge">
+        <figcaption><strong>Figura 6.20 (Nivell 8 - Captura 2):</strong> Identificació del bit SUID en programes executables.</figcaption>
+        <p><strong>Comandes executades:</strong> <code>ls -l /usr/bin/passwd</code> i <code>find /usr/bin -perm -4000 2>/dev/null</code></p>
+        <p><strong>Descripció:</strong> Es visualitza la lletra <code>s</code> a la posició d'execució de l'usuari propietari a <code>/usr/bin/passwd</code> i es cerca la llista d'executables del sistema amb el bit SUID (<code>-4000</code>) actiu.</p>
+        <img src="../Captura9_2gdu2.png" alt="Cerca de binaris executables amb permís SUID">
+      </figure>
+
+      <h4>------------------------------------------------------------------------------------------------------------</h4>
+
+      <p class="tornar-index"><a href="#index-apartats">↑ Tornar a l'índex</a></p>
+    </article>
+
+    <!-- APARTAT 7 -->
+    <article class="apartat" id="apartat7">
+      <h2>7. Quotes de disc</h2>
+
+      <h4>------------------------------------------------------------------------------------------------------------</h4>
+
+      <p class="tornar-index"><a href="#index-apartats">↑ Tornar a l'índex</a></p>
+    </article>
+
+  </section>
+</main>
+
+<footer class="peu">
+  <p class="peu-llicencia">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ca" target="_blank" rel="license noopener">
+      <img src="https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png" alt="Llicència Creative Commons Reconeixement-NoComercial-CompartirIgual 4.0" width="88" height="31">
+    </a>
+    <span>Contingut sota llicència <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ca" target="_blank" rel="license noopener">CC BY-NC-SA 4.0</a></span>
+  </p>
+  <p class="autoria">Autor/a: <strong>Nom Cognom1 Cognom2</strong> · Pràctica 0 · Sistemes Operatius (ISOPJ1)</p>
+</footer>
+
+</body>
+</html>
