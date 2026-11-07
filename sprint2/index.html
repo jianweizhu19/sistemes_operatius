@@ -402,19 +402,19 @@
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>sudo grep marc /etc/shadow</code></p>
         <p><strong>Descripció:</strong> Executem <code>sudo grep marc /etc/shadow</code> per inspeccionar la contrasenya xifrada d'en Marc abans d'aplicar-ne el bloqueig de seguretat.</p>
-        <img src="../Captura6_2gdu.png" alt="Verificació del hash xifrat de la contrasenya a shadow">
+        <img src="../Captura7gdu.png" alt="Verificació del hash xifrat de la contrasenya a shadow">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>su - marc</code></p>
         <p><strong>Descripció:</strong> Executem <code>su - marc</code> per intentar accedir al compte bloquejat d'en Marc i comprovem que el sistema ens mostra directament un fallo d'autenticació.</p>
-        <img src="../Captura6_3gdu.png" alt="Bloqueig d'autenticació en intentar accedir a un compte desactivat">
+        <img src="../Captura7_2gdu.png" alt="Bloqueig d'autenticació en intentar accedir a un compte desactivat">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comandes executades:</strong> <code>sudo passwd -u marc</code>, <code>sudo passwd -S marc</code> i <code>su - marc</code></p>
         <p><strong>Descripció:</strong> Executem <code>sudo passwd -u marc</code> per treure el bloqueig de la contrasenya d'en Marc, verifiquem l'estat amb <code>passwd -S</code> i comprovem que ara ja pot tornar a iniciar sessió normalment.</p>
-        <img src="../Captura7.png" alt="Desbloqueig de compte amb passwd -u i inici de sessió d'èxit">
+        <img src="../Captura7_3.png" alt="Desbloqueig de compte amb passwd -u i inici de sessió d'èxit">
       </div>
 
       <h3>Nivell 7 · Nova norma de noms</h3>
