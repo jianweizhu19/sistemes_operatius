@@ -300,6 +300,258 @@
     <article class="apartat" id="apartat5">
       <h2>5. Gestió d'usuaris, grups i permisos (Part 1)</h2>
 
+      <!-- CAPTURA 1gdu -->
+      <figure class="bloc-imatge">
+        <figcaption>
+          <strong>Figura 5.1 (Captura 1a):</strong> Creació dels usuaris al sistema.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comandes executades:</strong> <code>sudo useradd -m -s /bin/bash anna</code> i <code>sudo useradd -m -s /bin/bash bernat</code></p>
+          <p><strong>Descripció:</strong> Creació dels nous comptes d'usuari directament amb directori personal propi (<code>-m</code>) i assignant la shell per defecte Bash (<code>-s /bin/bash</code>).</p>
+        </div>
+        <img src="../Captura1gdu.png" alt="Creació d'usuaris amb useradd">
+      </figure>
+
+      <!-- CAPTURA 1_2gdu -->
+      <figure class="bloc-imatge">
+        <figcaption>
+          <strong>Figura 5.2 (Captura 1b):</strong> Verificació dels comptes al fitxer /etc/passwd.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comanda executada:</strong> <code>cat /etc/passwd | tail -n 5</code></p>
+          <p><strong>Descripció:</strong> Inspecció del fitxer de comptes del sistema per comprovar el registre dels usuaris creats amb els seus respectius UID, GID i ruta del directori d'inici.</p>
+        </div>
+        <img src="../Captura1_2gdu.png" alt="Comprovació al fitxer passwd">
+      </figure>
+
+      <!-- CAPTURA 1_3gdu -->
+      <figure class="bloc-imatge">
+        <figcaption>
+          <strong>Figura 5.3 (Captura 1c):</strong> Assignació de contrasenyes als comptes d'usuari.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comandes executades:</strong> <code>sudo passwd anna</code> i <code>sudo passwd bernat</code></p>
+          <p><strong>Descripció:</strong> Configuració de la contrasenya d'accés per als usuaris creats per permetre l'autenticació al sistema.</p>
+        </div>
+        <img src="../Captura1_3gdu.png" alt="Assignació de contrasenya amb passwd">
+      </figure>
+
+      <!-- CAPTURA 1_3_2 -->
+      <figure class="bloc-imatge">
+        <figcaption>
+          <strong>Figura 5.4 (Captura 1d):</strong> Comprovació del xifratge al fitxer /etc/shadow.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comanda executada:</strong> <code>sudo tail -n 5 /etc/shadow</code></p>
+          <p><strong>Descripció:</strong> Verificació del fitxer segur d'ombres per comprovar que les contrasenyes estan desades correctament de manera xifrada.</p>
+        </div>
+        <img src="../Captura1_3_2.png" alt="Verificació al fitxer shadow">
+      </figure>
+
+      <!-- CAPTURA 1_4 -->
+      <figure class="bloc-imatge">
+        <figcaption>
+          <strong>Figura 5.5 (Captura 1e):</strong> Inspecció de la informació d'usuari amb id i getent.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comandes executades:</strong> <code>id anna</code> i <code>getent passwd anna</code></p>
+          <p><strong>Descripció:</strong> Consulta detallada de la identitat d'usuari, del seu grup principal i dels grups secundaris assignats.</p>
+        </div>
+        <img src="../Captura1_4.png" alt="Consulta d'informació d'usuari amb id">
+      </figure>
+
+      <!-- CAPTURA 2gdu -->
+      <figure class="bloc-imatge">
+        <figcaption>
+          <strong>Figura 5.6 (Captura 2a):</strong> Creació de grups de treball al sistema.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comandes executades:</strong> <code>sudo groupadd professors</code> i <code>sudo groupadd alumnes</code></p>
+          <p><strong>Descripció:</strong> Alta de nous grups secundaris al sistema operatiu per organitzar els permisos col·lectius.</p>
+        </div>
+        <img src="../Captura2gdu.png" alt="Creació de grups amb groupadd">
+      </figure>
+
+      <!-- CAPTURA 2_2gdu -->
+      <figure class="bloc-imatge">
+        <figcaption>
+          <strong>Figura 5.7 (Captura 2b):</strong> Assignació d'usuaris a grups secundaris.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comandes executades:</strong> <code>sudo usermod -aG professors anna</code> i <code>sudo usermod -aG alumnes bernat</code></p>
+          <p><strong>Descripció:</strong> Inclusió dels usuaris als grups secundaris corresponents mitjançant <code>usermod -aG</code> i verificació amb <code>id</code>.</p>
+        </div>
+        <img src="../Captura2_2gdu.png" alt="Assignació a grups amb usermod">
+      </figure>
+
+      <!-- CAPTURA 3gdu -->
+      <figure class="bloc-imatge">
+        <figcaption>
+          <strong>Figura 5.8 (Captura 3a):</strong> Creació i assignació de grup al directori compartit.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comandes executades:</strong> <code>sudo mkdir /home/compartit</code> i <code>sudo chown :professors /home/compartit</code></p>
+          <p><strong>Descripció:</strong> Creació del directori destinat al treball col·laboratiu i canvi del seu grup propietari al grup <code>professors</code>.</p>
+        </div>
+        <img src="../Captura3gdu.png" alt="Creació de directori compartit i chown">
+      </figure>
+
+      <!-- CAPTURA 3_2gdu -->
+      <figure class="bloc-imatge">
+        <figcaption>
+          <strong>Figura 5.9 (Captura 3b):</strong> Comprovació de permisos del directori compartit.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comanda executada:</strong> <code>ls -ld /home/compartit</code></p>
+          <p><strong>Descripció:</strong> Inspecció dels permisos d'accés i de la propietat d'usuari i grup sobre el directori compartit.</p>
+        </div>
+        <img src="../Captura3_2gdu.png" alt="Comprovació de permisos amb ls -ld">
+      </figure>
+
+      <!-- CAPTURA 4gdu -->
+      <figure class="bloc-imatge">
+        <figcaption>
+          <strong>Figura 5.10 (Captura 4a):</strong> Creació de fitxers al directori compartit com a membre del grup.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comandes executades:</strong> <code>su - anna</code> i <code>touch /home/compartit/examen.txt</code></p>
+          <p><strong>Descripció:</strong> Comprovació de l'accés d'escriptura per part de l'usuària <code>anna</code> com a integrant del grup propietari <code>professors</code>.</p>
+        </div>
+        <img src="../Captura4gdu.png" alt="Creació de fitxer per membre del grup">
+      </figure>
+
+      <!-- CAPTURA 4_2gdu -->
+      <figure class="bloc-imatge">
+        <figcaption>
+          <strong>Figura 5.11 (Captura 4b):</strong> Denegació d'accés a usuaris no pertanyents al grup.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comandes executades:</strong> <code>su - bernat</code> i <code>cat /home/compartit/examen.txt</code></p>
+          <p><strong>Descripció:</strong> Intent de lectura per part d'un usuari no autoritzat (<code>bernat</code>), confirmant el bloqueig d'accés per permisos del sistema (<em>Permission denied</em>).</p>
+        </div>
+        <img src="../Captura4_2gdu.png" alt="Accés denegat a usuari no autoritzat">
+      </figure>
+
+      <!-- CAPTURA 5antesgdu -->
+      <figure class="bloc-imatge">
+        <figcaption>
+          <strong>Figura 5.12 (Captura 5a):</strong> Estat dels permisos del directori abans d'aplicar SGID.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comanda executada:</strong> <code>ls -l /home/compartit</code></p>
+          <p><strong>Descripció:</strong> Llistat dels fitxers i permisos existents al directori compartit abans de la configuració de permisos especials.</p>
+        </div>
+        <img src="../Captura5antesgdu.png" alt="Estat de permisos previ a SGID">
+      </figure>
+
+      <!-- CAPTURA 5gdu -->
+      <figure class="bloc-imatge">
+        <figcaption>
+          <strong>Figura 5.13 (Captura 5b):</strong> Configuració del bit especial SGID (Set Group ID).
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comanda executada:</strong> <code>sudo chmod g+s /home/compartit</code></p>
+          <p><strong>Descripció:</strong> Assignació del bit especial SGID al directori per garantir que tots els nous fitxers heretin el grup propietari del directori.</p>
+        </div>
+        <img src="../Captura5gdu.png" alt="Assignació de bit SGID amb chmod g+s">
+      </figure>
+
+      <!-- CAPTURA 5_2gdu -->
+      <figure class="bloc-imatge">
+        <figcaption>
+          <strong>Figura 5.14 (Captura 5c):</strong> Verificació de la màscara de permisos SGID.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comanda executada:</strong> <code>ls -ld /home/compartit</code></p>
+          <p><strong>Descripció:</strong> Comprovació que la lletra <code>s</code> apareix a la posició del grup en la màscara de permisos (<code>drwxrws---</code>).</p>
+        </div>
+        <img src="../Captura5_2gdu.png" alt="Verificació del bit SGID a la màscara">
+      </figure>
+
+      <!-- CAPTURA 5_3gdu -->
+      <figure class="bloc-imatge">
+        <figcaption>
+          <strong>Figura 5.15 (Captura 5d):</strong> Comprovació de l'herència automàtica de grup en nous fitxers.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comandes executades:</strong> <code>touch /home/compartit/apunts.txt</code> i <code>ls -l /home/compartit</code></p>
+          <p><strong>Descripció:</strong> Demostració que els novells fitxers creats prenen automàticament el grup <code>professors</code> gràcies a l'efecte del bit SGID.</p>
+        </div>
+        <img src="../Captura5_3gdu.png" alt="Herència automàtica de grup en noves creacions">
+      </figure>
+
+      <!-- CAPTURA 6gdu -->
+      <figure class="bloc-imatge">
+        <figcaption>
+          <strong>Figura 5.16 (Captura 6):</strong> Activació del bit de protecció Sticky Bit.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comanda executada:</strong> <code>sudo chmod +t /home/compartit</code></p>
+          <p><strong>Descripció:</strong> Assignació del Sticky Bit (<code>t</code>) al directori compartit per evitar que els usuaris puguin eliminar o reanomenar fitxers que no siguin de la seva propietat.</p>
+        </div>
+        <img src="../Captura6gdu.png" alt="Assignació del Sticky Bit amb chmod +t">
+      </figure>
+
+      <!-- CAPTURA 7gdu -->
+      <figure class="bloc-imatge">
+        <figcaption>
+          <strong>Figura 5.17 (Captura 7a):</strong> Verificació del bloqueig d'esborrat de fitxers alies.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comanda executada:</strong> <code>rm /home/compartit/examen.txt</code> (des d'un altre compte)</p>
+          <p><strong>Descripció:</strong> Intent fallit d'esborrat d'un fitxer creat per un altre usuari, interceptat correctament pel Sticky Bit (<em>Operation not permitted</em>).</p>
+        </div>
+        <img src="../Captura7gdu.png" alt="Protecció d'esborrat per Sticky Bit">
+      </figure>
+
+      <!-- CAPTURA 7_2gdu -->
+      <figure class="bloc-imatge">
+        <figcaption>
+          <strong>Figura 5.18 (Captura 7b):</strong> Eliminació d'un usuari i el seu directori personal.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comanda executada:</strong> <code>sudo userdel -r elena</code></p>
+          <p><strong>Descripció:</strong> Supressió completa d'un compte d'usuari del sistema conjuntament amb el seu directori d'inici (<code>-r</code>).</p>
+        </div>
+        <img src="../Captura7_2gdu.png" alt="Eliminació d'usuari amb userdel -r">
+      </figure>
+
+      <!-- CAPTURA 7_3gdu -->
+      <figure class="bloc-imatge">
+        <figcaption>
+          <strong>Figura 5.19 (Captura 7c):</strong> Confirmació de l'eliminació de l'usuari a /etc/passwd.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comanda executada:</strong> <code>grep elena /etc/passwd</code></p>
+          <p><strong>Descripció:</strong> Comprovació que la cerca de l'usuari eliminat no retorna cap registre al fitxer de comptes.</p>
+        </div>
+        <img src="../Captura7_3gdu.png" alt="Verificació de la supressió a passwd">
+      </figure>
+
+      <!-- CAPTURA 8gdu -->
+      <figure class="bloc-imatge">
+        <figcaption>
+          <strong>Figura 5.20 (Captura 8a):</strong> Eliminació d'un grup de treball del sistema.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comanda executada:</strong> <code>sudo groupdel alumnes</code></p>
+          <p><strong>Descripció:</strong> Esborrat definitiu d'un grup secundari mitjançant la comanda <code>groupdel</code>.</p>
+        </div>
+        <img src="../Captura8gdu.png" alt="Eliminació de grup amb groupdel">
+      </figure>
+
+      <!-- CAPTURA 8_2gdu -->
+      <figure class="bloc-imatge">
+        <figcaption>
+          <strong>Figura 5.21 (Captura 8b):</strong> Confirmació de la supressió del grup a /etc/group.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comanda executada:</strong> <code>grep alumnes /etc/group</code></p>
+          <p><strong>Descripció:</strong> Verificació que el grup ha estat retirat correctament del fitxer de registre de grups del sistema.</p>
+        </div>
+        <img src="../Captura8_2gdu.png" alt="Verificació de la supressió a group">
+      </figure>
+
       <h4>------------------------------------------------------------------------------------------------------------</h4>
 
       <p class="tornar-index"><a href="#index-apartats">↑ Tornar a l'índex</a></p>
