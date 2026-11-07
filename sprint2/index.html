@@ -22,6 +22,16 @@
     margin: 12px auto;
     border-radius: 4px;
   }
+  .documentacio-imatge {
+    background-color: #f8f9fa;
+    border-left: 4px solid #0056b3;
+    padding: 12px 16px;
+    margin: 8px 0 12px 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .documentacio-imatge p {
+    margin: 4px 0;
+  }
 </style>
 </head>
 <body>
@@ -129,7 +139,7 @@
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comandes executades:</strong> <code>chmod +x backup_nocturn espia descarrega.sh sospitosos.sh</code> i <code>ls -l</code></p>
-          <p><strong>Descripció:</strong> Després de crear els cinc scripts de la missió (<code>minador</code>, <code>backup_nocturn</code>, <code>espia</code>, <code>descarrega.sh</code> i <code>sospitosos.sh</code>), s'assignen els permisos d'execució (<code>+x</code>). Amb la comanda <code>ls -l</code> es comprova que la màscara de permisos conté el bit d'execució (<code>-rwxrwxr-x</code>) per a tots els fitxers creats.</p>
+          <p><strong>Descripció:</strong> Assignació dels permisos d'execució (<code>+x</code>) als scripts i verificació mitjançant <code>ls -l</code> que contenen el bit d'execució (<code>-rwxrwxr-x</code>).</p>
         </div>
         <img src="../Captura1gdp.png" alt="Assignació de permisos d'execució amb chmod i verificació amb ls -l">
       </figure>
@@ -140,7 +150,7 @@
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comanda executada:</strong> <code>./sospitosos.sh</code></p>
-          <p><strong>Descripció:</strong> Execució del script d'inici encarregat de llançar en segon pla els processos <code>minador</code>, <code>backup_nocturn</code> i <code>espia</code>. La terminal confirma l'execució amb el missatge «Fet. El servidor comença a anar lent...».</p>
+          <p><strong>Descripció:</strong> Execució del script d'inici encarregat de llançar en segon pla els processos <code>minador</code>, <code>backup_nocturn</code> i <code>espia</code>.</p>
         </div>
         <img src="../Captura1_2gdp.png" alt="Execució del script sospitosos.sh a la terminal">
       </figure>
@@ -152,7 +162,7 @@
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comanda executada:</strong> <code>pstree -p $USER</code></p>
-          <p><strong>Descripció:</strong> Visualització de la jerarquia de processos de l'usuari. Un cop finalitzat el script <code>sospitosos.sh</code>, els processos fills queden orfes i són adoptats pel procés <code>systemd</code>.</p>
+          <p><strong>Descripció:</strong> Visualització de la jerarquia de processos de l'usuari, identificant la dependència dels processos orfes adoptats per <code>systemd</code>.</p>
         </div>
         <img src="../Captura2pdg.png" alt="Visualització de l'arbre de processos amb pstree -p">
       </figure>
@@ -162,7 +172,7 @@
           <strong>Figura 3.4 (Nivell 1 - Captura 2b):</strong> Identificació dels PIDs dels processos minador.
         </figcaption>
         <div class="documentacio-imatge">
-          <p><strong>Descripció:</strong> Detall de la sortida de <code>pstree</code> on s'identifiquen els PIDs dels dos processos <code>minador</code> (6315 i 6316) executant-se de manera independent.</p>
+          <p><strong>Descripció:</strong> Detall de la sortida de <code>pstree</code> on s'identifiquen els PIDs dels dos processos <code>minador</code> (6315 i 6316) executant-se en segon pla.</p>
         </div>
         <img src="../Captura2_2pdg.png" alt="Detall dels processos minador identificats a la sortida de pstree">
       </figure>
@@ -174,7 +184,7 @@
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comanda executada:</strong> <code>top</code> (ordenat per CPU amb la tecla <code>P</code>).</p>
-          <p><strong>Descripció:</strong> Anàlisi de consum de CPU. Es comprova que els dos processos <code>minador</code> (PIDs 6316 i 6315) consumeixen el 50,5% i 49,2% de la CPU en estat d'execució (<code>R</code>).</p>
+          <p><strong>Descripció:</strong> Comprovació de l'ús intensiu de CPU dels dos processos <code>minador</code> (PIDs 6316 i 6315), consumint entorn al 50% cada un.</p>
         </div>
         <img src="../Captura3gdp.png" alt="Monitorització de recursos del sistema mitjançant top">
       </figure>
@@ -186,7 +196,7 @@
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comandes executades:</strong> <code>pgrep -l 'minador|espia|backup'</code>, <code>ps -o pid,ppid,user,stat,etime,%cpu,comm -C minador,espia,backup_nocturn</code> i <code>ps -o pid,comm -p 2674</code>.</p>
-          <p><strong>Descripció:</strong> Cerca de PIDs per nom i llistat de camps específics. Es verifica l'estat dels processos (<code>R</code> per als minadors, <code>S</code> per a backup i espia) i es confirma que el seu PPID comú (2674) pertany a <code>systemd</code>.</p>
+          <p><strong>Descripció:</strong> Filtratge de processos per nom i taula detallada d'estat (<code>R</code> en minadors, <code>S</code> en backup i espia) i identificació del seu PPID pare (2674).</p>
         </div>
         <img src="../Captura4.gdp.png" alt="Filtratge de PIDs i taula d'estat de processos amb pgrep i ps">
       </figure>
@@ -198,7 +208,7 @@
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comandes executades:</strong> <code>./descarrega.sh</code>, <code>Ctrl+Z</code>, <code>jobs -l</code>, <code>bg %1</code>, <code>fg %1</code>, <code>Ctrl+Z</code>, <code>bg %1</code>.</p>
-          <p><strong>Descripció:</strong> Manipulació del procés de descàrrega: aturada temporal amb <code>Ctrl+Z</code> (estat <code>T</code> / Stopped), comprovació amb <code>jobs -l</code>, enviament a segon pla amb <code>bg %1</code> i retorn a primer pla amb <code>fg %1</code>.</p>
+          <p><strong>Descripció:</strong> Manipulació del procés de descàrrega: pausa amb <code>Ctrl+Z</code> (estat <code>T</code>), llistat amb <code>jobs -l</code> i enviament a segon pla amb <code>bg %1</code>.</p>
         </div>
         <img src="../Captura5gdp.png" alt="Gestió de tasques en segon i primer pla amb Ctrl+Z, jobs, bg i fg">
       </figure>
@@ -209,7 +219,7 @@
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comanda executada:</strong> <code>watch -n 1 cat progres.txt</code></p>
-          <p><strong>Descripció:</strong> Seguiment del fitxer <code>progres.txt</code> a la terminal T2, mostrant com el percentatge s'atura quan el procés està en pausa i avança quan s'executa en segon pla.</p>
+          <p><strong>Descripció:</strong> Monitorització del progrés del fitxer de descàrrega en temps real a la terminal T2.</p>
         </div>
         <img src="../Captura5_2gdp.png" alt="Monitorització continuada del fitxer de progrés amb watch">
       </figure>
@@ -220,8 +230,8 @@
           <strong>Figura 3.9 (Nivell 5 - Captura 6):</strong> Canvi de prioritat de CPU amb <code>renice</code>.
         </figcaption>
         <div class="documentacio-imatge">
-          <p><strong>Comandes executades:</strong> <code>renice -n -10 -p 8756</code> (denegat sense privilegis), <code>sudo renice -n -10 -p 8756</code> i <code>top -p $(pgrep -d, 'minador|descarrega')</code>.</p>
-          <p><strong>Descripció:</strong> Intent de reducció del valor <em>nice</em>. Es comprova que un usuari estàndard no pot assignar valors negatius sense privilegis. Amb <code>sudo</code> s'assigna <code>NI -10</code> a <code>descarrega.sh</code>, augmentant el seu ús de CPU fins al 71,2%.</p>
+          <p><strong>Comandes executades:</strong> <code>renice -n -10 -p 8756</code>, <code>sudo renice -n -10 -p 8756</code> i <code>top -p $(pgrep -d, 'minador|descarrega')</code>.</p>
+          <p><strong>Descripció:</strong> Modificació de la prioritat del procés <code>descarrega.sh</code> amb <code>sudo renice</code> assignant <code>NI -10</code> per prioritza-ne la CPU.</p>
         </div>
         <img src="../Captura6gdp.png" alt="Verificació de la prioritat modificada al top amb valor NI negatiu">
       </figure>
@@ -233,7 +243,7 @@
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comandes executades:</strong> <code>pgrep -l espia</code>, <code>kill 6318</code>, <code>kill -9 6318</code>, <code>pgrep -l espia</code>.</p>
-          <p><strong>Descripció:</strong> Enviament del senyal <code>SIGTERM</code> (15) al procés <code>espia</code>, el qual el captura i mostra el missatge «[espia] SIGTERM? Ni parlar-ne!». Posteriorment s'envia el senyal <code>SIGKILL</code> (<code>kill -9</code>) per forçar-ne l'eliminació immediata.</p>
+          <p><strong>Descripció:</strong> Demostració de la resistència del procés <code>espia</code> al senyal <code>SIGTERM</code> i eliminació definitiva forçada mitjançant <code>SIGKILL</code> (<code>kill -9</code>).</p>
         </div>
         <img src="../Captura7gdp.png" alt="Resistència a SIGTERM i finalització amb SIGKILL -9">
       </figure>
@@ -244,7 +254,7 @@
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comandes executades:</strong> <code>pgrep -l backup</code>, <code>kill -STOP 4985</code>, <code>ps -o pid,stat,comm -p 4985</code>.</p>
-          <p><strong>Descripció:</strong> Enviament del senyal <code>SIGSTOP</code> (19) al procés <code>backup_nocturn</code> (PID 4985). Es comprova amb <code>ps</code> que l'estat ha passat a <code>T</code> (Stopped / Aturat).</p>
+          <p><strong>Descripció:</strong> Aturada temporal del procés <code>backup_nocturn</code> enviant el senyal <code>SIGSTOP</code> (19), canviant l'estat a <code>T</code>.</p>
         </div>
         <img src="../Captura7_2gdp.png" alt="Enviament del senyal SIGSTOP a un procés amb kill">
       </figure>
@@ -255,7 +265,7 @@
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comandes executades:</strong> <code>kill -CONT 4985</code>, <code>ps -o pid,stat,comm -p 4985</code>.</p>
-          <p><strong>Descripció:</strong> Represa de l'execució del procés de backup mitjançant el senyal <code>SIGCONT</code> (18). La comanda <code>ps</code> mostra que l'estat torna a ser <code>S</code> (Sleeping / En espera).</p>
+          <p><strong>Descripció:</strong> Represa de l'execució del procés enviant el senyal <code>SIGCONT</code> (18), tornant l'estat a <code>S</code>.</p>
         </div>
         <img src="../Captura7_3gdp.png" alt="Represa d'un procés aturat enviant el senyal SIGCONT">
       </figure>
@@ -266,7 +276,7 @@
           <strong>Figura 3.13 (Nivell 7 - Captura 8a):</strong> Confirmació de finalització de la tasca a la terminal T2.
         </figcaption>
         <div class="documentacio-imatge">
-          <p><strong>Descripció:</strong> Monitorització a la terminal T2 confirmant que la descàrrega simulada ha finalitzat correctament amb el missatge «ubuntu.iso COMPLETADA en 245 s».</p>
+          <p><strong>Descripció:</strong> Pantalla de <code>watch</code> confirmant la finalització satisfactòria de la descàrrega simulada d'Ubuntu ISO.</p>
         </div>
         <img src="../Captura8gdp.png" alt="Finestra de watch confirmant que la descàrrega ha finalitzat amb èxit">
       </figure>
@@ -277,7 +287,7 @@
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comanda executada:</strong> <code>pstree -ps $(pgrep descarrega)</code></p>
-          <p><strong>Descripció:</strong> Execució de <code>pstree -ps</code> per mostrar la cadena jeràrquica completa de PIDs associada al procés <code>descarrega.sh</code> des de la shell <code>bash</code> fins al procés inicial <code>systemd</code>.</p>
+          <p><strong>Descripció:</strong> Llistat en arbre de la línia d'ascendència completa des de <code>systemd</code> fins al procés de descàrrega.</p>
         </div>
         <img src="../Captura8_2gdp.png" alt="Línia d'ascendència completa d'un procés amb pstree -ps">
       </figure>
@@ -303,67 +313,78 @@
       <!-- NIVELL 0: CONÈIXER EL SISTEMA -->
       <figure class="bloc-imatge">
         <figcaption>
-          <strong>Figura 5.1 (Nivell 0):</strong> Identificació de l'usuari actual a <code>/etc/passwd</code>.
-        </figcaption>
-        <div class="documentacio-imatge">
-          <p><strong>Comanda executada:</strong> <code>grep $USER /etc/passwd</code></p>
-          <p><strong>Descripció:</strong> Consulta del fitxer <code>/etc/passwd</code> per identificar la línia corresponent a l'usuari administrador del sistema, verificant el nom d'usuari, UID (1000), GID (1000), directori d'inici i shell per defecte.</p>
-        </div>
-        <img src="../Captura1gdu.png" alt="Consulta del registre d'usuari a /etc/passwd">
-      </figure>
-
-      <figure class="bloc-imatge">
-        <figcaption>
-          <strong>Figura 5.2 (Nivell 0):</strong> Identitat d'usuari i comprovació dels grups de sistema.
+          <strong>Figura 5.1 (Nivell 0):</strong> Identificació de l'usuari actiu i comprovació dels grups de sistema.
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comandes executades:</strong> <code>whoami</code> i <code>id</code></p>
-          <p><strong>Descripció:</strong> Comprovació del nom d'usuari actiu i del conjunt de grups als quals pertany, incloent-hi el grup <code>sudo</code> (GID 27) que li atorga privilegis administratius.</p>
+          <p><strong>Descripció:</strong> Comprovació de la identitat de l'usuari administrador actiu i del conjunt de grups als quals pertany (UID 1000, GID 1000).</p>
         </div>
-        <img src="../Captura1_4.png" alt="Comprovació d'identitat amb whoami i id">
+        <img src="../Captura1gdu.png" alt="Comprovació d'identitat amb whoami i id">
       </figure>
 
       <figure class="bloc-imatge">
         <figcaption>
-          <strong>Figura 5.3 (Nivell 0):</strong> Intenció d'accés no permès al fitxer d'ombres <code>/etc/shadow</code>.
+          <strong>Figura 5.2 (Nivell 0):</strong> Identificació del registre de l'usuari actual a <code>/etc/passwd</code>.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comanda executada:</strong> <code>grep $USER /etc/passwd</code></p>
+          <p><strong>Descripció:</strong> Consulta del fitxer <code>/etc/passwd</code> per verificar el nom d'usuari, UID, GID, directori personal i la shell Bash assignada per defecte.</p>
+        </div>
+        <img src="../Captura1_2gdu.png" alt="Consulta del registre d'usuari a /etc/passwd">
+      </figure>
+
+      <figure class="bloc-imatge">
+        <figcaption>
+          <strong>Figura 5.3 (Nivell 0):</strong> Intenció de lectura directa del fitxer d'ombres <code>/etc/shadow</code>.
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comanda executada:</strong> <code>cat /etc/shadow</code></p>
-          <p><strong>Descripció:</strong> Verificació del sistema de seguretat de Linux, confirmant que els usuaris sense privilegis no tenen permís de lectura sobre el fitxer <code>/etc/shadow</code> (<em>Permission denied</em>).</p>
+          <p><strong>Descripció:</strong> Verificació de la seguretat del sistema comprovant el contingut del fitxer d'ombres on s'emmagatzemen els hashes de les contrasenyes.</p>
         </div>
-        <img src="../Captura1_3_2.png" alt="Intent de lectura denegat del fitxer /etc/shadow">
+        <img src="../Captura1_3gdu.png" alt="Consulta de les primeres línies del fitxer /etc/shadow">
       </figure>
 
       <figure class="bloc-imatge">
         <figcaption>
-          <strong>Figura 5.4 (Nivell 0):</strong> Consulta dels usuaris membres del grup <code>sudo</code>.
+          <strong>Figura 5.4 (Nivell 0):</strong> Consulta del registre xifrat de l'usuari a <code>/etc/shadow</code> amb privilegis.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comanda executada:</strong> <code>sudo grep $USER /etc/shadow</code></p>
+          <p><strong>Descripció:</strong> Accés elevat mitjançant <code>sudo</code> per inspeccionar la línia xifrada de l'usuari administrador al fitxer <code>/etc/shadow</code>.</p>
+        </div>
+        <img src="../Captura1_3_2.png" alt="Consulta amb sudo del registre d'usuari a /etc/shadow">
+      </figure>
+
+      <figure class="bloc-imatge">
+        <figcaption>
+          <strong>Figura 5.5 (Nivell 0):</strong> Consulta dels usuaris membres del grup <code>sudo</code>.
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comanda executada:</strong> <code>getent group sudo</code></p>
-          <p><strong>Descripció:</strong> Consulta del fitxer de grups del sistema per verificar quins usuaris tenen permís d'execució de comandes amb privilegis de root.</p>
+          <p><strong>Descripció:</strong> Inspecció del fitxer de grups per identificar quins usuaris tenen permís per executar comandes amb privilegis de root.</p>
         </div>
-        <img src="../Captura1_3gdu.png" alt="Verificació dels usuaris sudo amb getent group sudo">
+        <img src="../Captura1_4.png" alt="Verificació dels usuaris del grup sudo amb getent">
       </figure>
 
       <!-- NIVELL 1: CONTRACTACIONS -->
       <figure class="bloc-imatge">
         <figcaption>
-          <strong>Figura 5.5 (Nivell 1 - Repte 1):</strong> Creació de la usuària <code>sara</code> i verificació del seu directori d'inici.
+          <strong>Figura 5.6 (Nivell 1 - Repte 1):</strong> Creació de la usuària <code>sara</code> i verificació de la carpeta personal.
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comandes executades:</strong> <code>cat /etc/passwd | grep sara</code> i <code>ls /home/</code></p>
-          <p><strong>Descripció:</strong> Resolució del Repte 1 mitjançant la incorporació de la nova dissenyadora de so (<code>sara</code>) i la comprovació de la generació del seu directori personal a <code>/home/sara</code>.</p>
+          <p><strong>Descripció:</strong> Incorporació de la nova dissenyadora de so (<code>sara</code>) i comprovació de la creació automàtica del seu directori a <code>/home/sara</code>.</p>
         </div>
-        <img src="../Captura1_2gdu.png" alt="Verificació del compte de Sara a passwd i directori a /home">
+        <img src="../Captura2_2gdu.png" alt="Verificació del compte de Sara a passwd i directori a /home">
       </figure>
 
       <figure class="bloc-imatge">
         <figcaption>
-          <strong>Figura 5.6 (Nivell 1 - Captura 2):</strong> Confirmació de l'equip inicial de treballadors de PixelForge.
+          <strong>Figura 5.7 (Nivell 1 - Captura 2):</strong> Confirmació de l'equip inicial de treballadors de PixelForge.
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comandes executades:</strong> <code>getent passwd nuria pau marc laia</code> i <code>ls /home</code></p>
-          <p><strong>Descripció:</strong> Verificació del registre complet dels quatre integrants inicials de l'estudi (<code>nuria</code>, <code>pau</code>, <code>marc</code> i <code>laia</code>) amb UID superior a 1000, shell Bash assignada i carpeta pròpia creada a <code>/home</code>.</p>
+          <p><strong>Descripció:</strong> Verificació del registre complet dels quatre integrants inicials de l'estudi (<code>nuria</code>, <code>pau</code>, <code>marc</code> i <code>laia</code>) amb UID > 1000 i carpetes personals creades.</p>
         </div>
         <img src="../Captura2gdu.png" alt="Llistat dels usuaris creats i comprovació de carpetes a /home">
       </figure>
@@ -371,173 +392,162 @@
       <!-- NIVELL 2: PRIMER DIA -->
       <figure class="bloc-imatge">
         <figcaption>
-          <strong>Figura 5.7 (Nivell 2):</strong> Primer inici de sessió per terminal com a l'usuària <code>nuria</code>.
+          <strong>Figura 5.8 (Nivell 2):</strong> Primer inici de sessió per terminal com a l'usuària <code>nuria</code>.
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comandes executades:</strong> <code>su - nuria</code>, <code>whoami</code> i <code>pwd</code></p>
-          <p><strong>Descripció:</strong> Accés com a usuària <code>nuria</code> mitjançant la comanda <code>su -</code>, carregant el seu entorn de treball personalitzat i confirmant la ubicació a <code>/home/nuria</code>.</p>
+          <p><strong>Descripció:</strong> Canvi d'usuari a <code>nuria</code> carregant l'entorn de treball i confirmant la ubicació al seu directori <code>/home/nuria</code>.</p>
         </div>
-        <img src="../Captura2_2gdu.png" alt="Inici de sessió d'usuari amb su - i comprovació de directori">
+        <img src="../Captura3gdu.png" alt="Inici de sessió d'usuari amb su - i comprovació de directori">
       </figure>
 
       <figure class="bloc-imatge">
         <figcaption>
-          <strong>Figura 5.8 (Nivell 2 - Captura 3):</strong> Creació d'un fitxer de treball i inspecció de propietat.
+          <strong>Figura 5.9 (Nivell 2 - Captura 3):</strong> Creació d'un fitxer de treball i inspecció de propietat.
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comandes executades:</strong> <code>touch primer_dia.txt</code> i <code>ls -l</code></p>
-          <p><strong>Descripció:</strong> Creació del primer fitxer dins de la carpeta personal de l'usuària, comprovant que pertany tant a l'usuari <code>nuria</code> com al seu grup principal <code>nuria</code>.</p>
+          <p><strong>Descripció:</strong> Generació del primer fitxer de l'usuària al seu directori personal, comprovant que s'assigna per defecte al seu usuari i grup principal.</p>
         </div>
-        <img src="../Captura3gdu.png" alt="Creació de fitxer de treball i comprovació de propietaris">
+        <img src="../Captura3_2gdu.png" alt="Creació de fitxer de treball i comprovació de propietaris">
       </figure>
 
       <!-- NIVELL 3: DEPARTAMENTS -->
       <figure class="bloc-imatge">
         <figcaption>
-          <strong>Figura 5.9 (Nivell 3):</strong> Creació de grups de treball i simulació d'error de mecanografia.
+          <strong>Figura 5.10 (Nivell 3):</strong> Creació dels grups de treball i simulació d'error tipogràfic.
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comandes executades:</strong> <code>sudo groupadd progamadors</code> i <code>tail -5 /etc/group</code></p>
-          <p><strong>Descripció:</strong> Alta dels departaments de l'estudi (<code>programadors</code>, <code>artistes</code>, <code>testers</code>, <code>becaris</code>) i creació expressa d'un grup amb error tipogràfic (<code>progamadors</code>) per provar-ne la posterior correcció.</p>
+          <p><strong>Descripció:</strong> Creació dels departaments de l'estudi i donada d'alta d'un grup amb errada tipogràfica (<code>progamadors</code>) per posar a prova el procediment de correcció.</p>
         </div>
-        <img src="../Captura3_2gdu.png" alt="Llistat dels grups nous a /etc/group incloent el grup erroni">
+        <img src="../Captura4gdu.png" alt="Llistat dels grups nous a /etc/group incloent el grup erroni">
       </figure>
 
       <figure class="bloc-imatge">
         <figcaption>
-          <strong>Figura 5.10 (Nivell 3 - Captura 4):</strong> Eliminació del grup erroni amb <code>groupdel</code>.
+          <strong>Figura 5.11 (Nivell 3 - Captura 4):</strong> Eliminació del grup mal escrit mitjançant <code>groupdel</code>.
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comandes executades:</strong> <code>getent group progamadors</code>, <code>sudo groupdel progamadors</code> i <code>getent group progamadors</code></p>
-          <p><strong>Descripció:</strong> Supressió del grup mal escrit mitjançant la comanda <code>groupdel</code> i verificació de la seva eliminació definitiva del fitxer <code>/etc/group</code>.</p>
+          <p><strong>Descripció:</strong> Supressió del grup erroni amb <code>groupdel</code> i verificació que ja no consta a la base de dades de grups del sistema.</p>
         </div>
-        <img src="../Captura4gdu.png" alt="Eliminació de grup amb groupdel i comprovació amb getent">
+        <img src="../Captura4_2gdu.png" alt="Eliminació de grup amb groupdel i comprovació amb getent">
       </figure>
 
       <!-- NIVELL 4: EQUIPS -->
       <figure class="bloc-imatge">
         <figcaption>
-          <strong>Figura 5.11 (Nivell 4):</strong> Demostració de l'error habitual al modificar grups amb <code>usermod -G</code>.
+          <strong>Figura 5.12 (Nivell 4):</strong> Demostració de l'error habitual al modificar grups secundaris amb <code>usermod -G</code>.
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comandes executades:</strong> <code>sudo gpasswd -a laia artistes</code>, <code>sudo usermod -G testers nuria</code> i <code>groups nuria</code></p>
-          <p><strong>Descripció:</strong> Assignació d'usuaris als departaments i simulació de l'error ometent l'opció <code>-a</code> en utilitzar <code>usermod -G</code>, provocant la pèrdua dels grups secundaris anteriors de la Núria.</p>
+          <p><strong>Descripció:</strong> Demostració teòrica i pràctica del perill de no utilitzar el flag d'afegiment (<code>-a</code>), provocant que la Núria quedi fora del grup <code>programadors</code>.</p>
         </div>
-        <img src="../Captura4_2gdu.png" alt="Demostració de la pèrdua de grups en utilitzar usermod -G sense el flag -a">
+        <img src="../Captura5gdu.png" alt="Demostració de la pèrdua de grups en utilitzar usermod -G sense el flag -a">
       </figure>
 
       <figure class="bloc-imatge">
         <figcaption>
-          <strong>Figura 5.12 (Nivell 4):</strong> Correcció de grups secundaris mitjançant <code>usermod -aG</code>.
+          <strong>Figura 5.13 (Nivell 4):</strong> Correcció i afegiment segur de grups secundaris amb <code>usermod -aG</code>.
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comandes executades:</strong> <code>sudo usermod -aG programadors nuria</code> i <code>groups nuria</code></p>
-          <p><strong>Descripció:</strong> Resolució de l'error anterior reincorporant l'usuària al grup <code>programadors</code> de manera segura amb <code>-aG</code> per no treure-la dels altres grups.</p>
+          <p><strong>Descripció:</strong> Reincorporació correcta de la Núria al grup <code>programadors</code> mitjançant l'opció acumulativa <code>-aG</code>.</p>
         </div>
         <img src="../Captura5antesgdu.png" alt="Reassignació correcta de grups secundaris amb usermod -aG">
       </figure>
 
       <figure class="bloc-imatge">
         <figcaption>
-          <strong>Figura 5.13 (Nivell 4 - Captura 5):</strong> Verificació dels membres de tots els departaments.
+          <strong>Figura 5.14 (Nivell 4 - Captura 5):</strong> Verificació de la composició final dels departaments.
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comanda executada:</strong> <code>getent group programadors artistes testers becaris</code></p>
-          <p><strong>Descripció:</strong> Inspecció del fitxer de grups per confirmar l'assignació correcta de cada integrant al seu departament de treball corresponent.</p>
+          <p><strong>Descripció:</strong> Comprovació del llistat de membres associats a cadascun dels grups de treball de l'empresa.</p>
         </div>
-        <img src="../Captura5gdu.png" alt="Comprovació final dels grups de treball i els seus usuaris assignats">
+        <img src="../Captura5_2gdu.png" alt="Comprovació final dels grups de treball i els seus usuaris assignats">
       </figure>
 
       <!-- NIVELL 5: CANVI DE DEPARTAMENT -->
       <figure class="bloc-imatge">
         <figcaption>
-          <strong>Figura 5.14 (Nivell 5 - Captura 6):</strong> Modificació del grup principal d'un usuari amb <code>usermod -g</code>.
+          <strong>Figura 5.15 (Nivell 5 - Captura 6):</strong> Canvi de grup principal i herència de permisos en nous fitxers.
         </figcaption>
         <div class="documentacio-imatge">
-          <p><strong>Comandes executades:</strong> <code>id pau</code>, <code>su - pau</code>, <code>touch dibuix_abans.png</code>, <code>sudo usermod -g programadors pau</code>, <code>id pau</code>, <code>su - pau</code>, <code>touch codi_despres.py</code> i <code>ls -l</code></p>
-          <p><strong>Descripció:</strong> Canvi del grup principal de Pau de <code>pau</code> a <code>programadors</code>. Es demostra que els fitxers creats posteriorment hereten el nou grup principal (<code>programadors</code>), mentre que els fitxers anteriors conserven el seu grup original.</p>
+          <p><strong>Comandes executades:</strong> <code>id pau</code>, <code>su - pau</code>, <code>touch dibuix_abans.png</code>, <code>sudo usermod -g programadors pau</code>, <code>id pau</code>, <code>touch codi_despres.py</code> i <code>ls -l</code></p>
+          <p><strong>Descripció:</strong> Reassignació del grup principal d'en Pau a <code>programadors</code> amb <code>usermod -g</code>, observant com els nous fitxers s'assignen al nou grup primari.</p>
         </div>
-        <img src="../Captura5_2gdu.png" alt="Demostració de canvi de grup principal i el seu efecte en la creació de fitxers">
+        <img src="../Captura6gdu.png" alt="Demostració de canvi de grup principal i el seu efecte en la creació de fitxers">
       </figure>
 
       <!-- NIVELL 6: EL TRÀILER FILTRAT -->
       <figure class="bloc-imatge">
         <figcaption>
-          <strong>Figura 5.15 (Nivell 6):</strong> Bloqueig de compte per seguretat i verificació a <code>/etc/shadow</code>.
+          <strong>Figura 5.16 (Nivell 6):</strong> Inspecció del hash del compte de Marc al fitxer <code>/etc/shadow</code>.
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comanda executada:</strong> <code>sudo grep marc /etc/shadow</code></p>
-          <p><strong>Descripció:</strong> Bloqueig preventiu del compte d'en Marc amb <code>sudo passwd -l marc</code> i comprovació de la presència del signe d'exclamació (<code>!</code>) al capdavant del hash de la contrasenya a <code>/etc/shadow</code>.</p>
+          <p><strong>Descripció:</strong> Consulta preventiva de l'estat de la contrasenya d'en Marc a <code>/etc/shadow</code> abans i després d'aplicar el bloqueig de seguretat.</p>
         </div>
-        <img src="../Captura5_3gdu.png" alt="Verificació del hash xifrat bloquejat amb el caràcter d'exclamació a shadow">
+        <img src="../Captura5_3gdu.png" alt="Verificació del hash xifrat de la contrasenya a shadow">
       </figure>
 
       <figure class="bloc-imatge">
         <figcaption>
-          <strong>Figura 5.16 (Nivell 6):</strong> Comprovació de la impossibilitat d'accés a un compte bloquejat.
+          <strong>Figura 5.17 (Nivell 6):</strong> Comprovació del bloqueig d'accés per terminal.
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comanda executada:</strong> <code>su - marc</code></p>
-          <p><strong>Descripció:</strong> Intent d'inici de sessió al compte bloquejat d'en Marc, confirmant el bloqueig immediat per part del sistema amb el missatge <em>su: Fallo de autenticación</em>.</p>
+          <p><strong>Descripció:</strong> Intent de connexió com a l'usuari <code>marc</code> amb el compte inhabilitat, verificant la resposta de la shell (<em>su: Fallo de autenticación</em>).</p>
         </div>
-        <img src="../Captura6gdu.png" alt="Bloqueig d'autenticació en intentar accedir a un compte desactivat">
+        <img src="../Captura7gdu.png" alt="Bloqueig d'autenticació en intentar accedir a un compte desactivat">
       </figure>
 
       <figure class="bloc-imatge">
         <figcaption>
-          <strong>Figura 5.17 (Nivell 6 - Captura 7):</strong> Desbloqueig del compte i restabliment de l'accés.
+          <strong>Figura 5.18 (Nivell 6 - Captura 7):</strong> Desbloqueig del compte d'usuari amb <code>passwd -u</code>.
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comandes executades:</strong> <code>sudo passwd -u marc</code>, <code>sudo passwd -S marc</code> i <code>su - marc</code></p>
-          <p><strong>Descripció:</strong> Desbloqueig del compte amb <code>passwd -u</code>, comprovació que l'estat torna a indicar <code>P</code> (Password vàlida) i verificació que l'usuari pot tornar a entrar correctament.</p>
+          <p><strong>Descripció:</strong> Reactivació de l'accés d'en Marc eliminant el bloqueig de contrasenya i comprovant el restabliment del seu inici de sessió.</p>
         </div>
-        <img src="../Captura7gdu.png" alt="Desbloqueig de compte amb passwd -u i inici de sessió d'èxit">
+        <img src="../Captura7_2gdu.png" alt="Desbloqueig de compte amb passwd -u i inici de sessió d'èxit">
       </figure>
 
       <!-- NIVELL 7: NOVA NORMA DE NOMS -->
       <figure class="bloc-imatge">
         <figcaption>
-          <strong>Figura 5.18 (Nivell 7):</strong> Canvi de nom d'usuari mantenint l'UID del compte.
+          <strong>Figura 5.19 (Nivell 7):</strong> Redefinició del nom d'usuari mantenint la identitat digital (UID).
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comandes executades:</strong> <code>sudo usermod -l nvidal nuria</code>, <code>id nvidal</code> i <code>grep nvidal /etc/passwd</code></p>
-          <p><strong>Descripció:</strong> Reanomenament de l'usuària <code>nuria</code> a <code>nvidal</code> d'acord amb les noves directives de l'estudi, conservant intactes l'UID (1001) i els seus permisos existents.</p>
+          <p><strong>Descripció:</strong> Canvi del nom d'usuari de <code>nuria</code> a <code>nvidal</code> mitjançant <code>usermod -l</code>, conservant l'UID 1001 i la configuració prèvia.</p>
         </div>
-        <img src="../Captura7_2gdu.png" alt="Modificació de nom d'usuari amb usermod -l">
+        <img src="../Captura7_3.png" alt="Modificació de nom d'usuari amb usermod -l">
       </figure>
 
       <figure class="bloc-imatge">
         <figcaption>
-          <strong>Figura 5.19 (Nivell 7 - Captura 8):</strong> Actualització del grup personal i migració de la carpeta <code>/home</code>.
+          <strong>Figura 5.20 (Nivell 7 - Captura 8):</strong> Actualització del nom de grup personal i migració del directori personal.
         </figcaption>
         <div class="documentacio-imatge">
-          <p><strong>Comandes executades:</strong> <code>sudo groupmod -n nvidal nuria</code>, <code>sudo usermod -d /home/nvidal -m nvidal</code>, <code>ls -l /home/nvidal/</code>, <code>su - nvidal</code> i <code>whoami</code></p>
-          <p><strong>Descripció:</strong> Canvi de nom del grup personal amb <code>groupmod -n</code> i reubicació física del directori d'inici a <code>/home/nvidal</code> amb <code>usermod -d -m</code>, comprovant l'accés final amb la nova identitat.</p>
+          <p><strong>Comandes executades:</strong> <code>sudo groupmod -n nvidal nuria</code>, <code>sudo usermod -d /home/nvidal -m nvidal</code>, <code>ls -l /home/nvidal/</code> i <code>su - nvidal</code></p>
+          <p><strong>Descripció:</strong> Reanomenament del grup personal amb <code>groupmod -n</code> i trasllat físic del directori personal a <code>/home/nvidal</code> amb <code>usermod -d -m</code>.</p>
         </div>
-        <img src="../Captura7_3.png" alt="Migració de carpeta personal i verificació del nou nom d'usuari">
+        <img src="../Captura8gdu.png" alt="Migració de carpeta personal i verificació del nou nom d'usuari">
       </figure>
 
       <!-- NIVELL 8: FI DE LES PRÀCTIQUES -->
       <figure class="bloc-imatge">
         <figcaption>
-          <strong>Figura 5.20 (Nivell 8):</strong> Esborrat d'usuari i detecció de directori personal orfe.
+          <strong>Figura 5.21 (Nivell 8 - Captura 9):</strong> Supressió del compte de la usuària i detecció de directori orfe.
         </figcaption>
         <div class="documentacio-imatge">
           <p><strong>Comandes executades:</strong> <code>sudo userdel laia</code> i <code>ls -l /home</code></p>
-          <p><strong>Descripció:</strong> Supressió del compte de la usuària becària sense eliminar-ne la carpeta, observant com la carpeta <code>laia</code> queda associada directament al seu antic UID numèric (<code>1004</code>).</p>
+          <p><strong>Descripció:</strong> Baixa de la usuària <code>laia</code> sense l'opció <code>-r</code>, observant com la carpeta queda desvinculada i mostrant únicament l'UID numèric orfe (1004).</p>
         </div>
-        <img src="../Captura8gdu.png" alt="Esborrat d'usuari sense -r i presència de directori orfe amb UID numèric">
-      </figure>
-
-      <figure class="bloc-imatge">
-        <figcaption>
-          <strong>Figura 5.21 (Nivell 8 - Captura 9):</strong> Neteja de carpetes orfes i comprovació de l'estat final de PixelForge.
-        </figcaption>
-        <div class="documentacio-imatge">
-          <p><strong>Comandes executades:</strong> <code>sudo rm -r /home/laia</code>, <code>sudo delgroup becaris</code>, <code>getent passwd nvidal pau marc</code> i <code>getent group programadors artistes testers</code></p>
-          <p><strong>Descripció:</strong> Eliminació definitiva de la carpeta orfe, supressió del grup <code>becaris</code> i verificació final de la plantilla activa i els grups consolidats de PixelForge.</p>
-        </div>
-        <img src="../Captura8_2gdu.png" alt="Comprovació final dels usuaris i grups actius de l'estudi PixelForge">
+        <img src="../Captura8_2gdu.png" alt="Esborrat d'usuari sense -r i presència de directori orfe amb UID numèric">
       </figure>
 
       <h4>------------------------------------------------------------------------------------------------------------</h4>
