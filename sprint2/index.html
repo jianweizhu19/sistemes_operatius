@@ -104,6 +104,158 @@
     <article class="apartat" id="apartat3">
       <h2>3. Gestió de processos</h2>
 
+      <figure class="bloc-imatge">
+        <img src="../Captura1gdp.png" alt="Assignació de permisos d'execució amb chmod i verificació amb ls -l">
+        <figcaption>
+          <strong>Figura 3.1:</strong> Assignació de permisos d'execució als scripts.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comandes executades:</strong> <code>chmod +x backup_nocturn espia descarrega.sh sospitosos.sh</code> i <code>ls -l</code></p>
+          <p><strong>Descripció:</strong> S'atorguen permisos d'execució (<code>+x</code>) als scripts ubicats al directori de treball. Mitjançant <code>ls -l</code> es comprova que la màscara de permisos ha canviat a <code>-rwxrwxr-x</code>.</p>
+        </div>
+      </figure>
+
+      <figure class="bloc-imatge">
+        <img src="../Captura1_2gdp.png" alt="Execució del script sospitosos.sh a la terminal">
+        <figcaption>
+          <strong>Figura 3.2:</strong> Posada en marxa dels processos de prova.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comanda executada:</strong> <code>./sospitosos.sh</code></p>
+          <p><strong>Descripció:</strong> Execució del script d'inicialització encarregat de llançar en segon pla els processos que simularan la càrrega de treball al servidor.</p>
+        </div>
+      </figure>
+
+      <figure class="bloc-imatge">
+        <img src="../Captura2pdg.png" alt="Visualització de l'arbre de processos amb pstree -p">
+        <figcaption>
+          <strong>Figura 3.3:</strong> Inspecció de l'arbre de processos de l'usuari.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comanda executada:</strong> <code>pstree -p $USER</code></p>
+          <p><strong>Descripció:</strong> Visualització de la jerarquia completa de processos pertanyents a l'usuari actual, mostrant els seus respectius PIDs (Process Identifiers).</p>
+        </div>
+      </figure>
+
+      <figure class="bloc-imatge">
+        <img src="../Captura2_2pdg.png" alt="Detall dels processos minador identificats a la sortida de pstree">
+        <figcaption>
+          <strong>Figura 3.4:</strong> Identificació dels processos fills de càrrega de CPU.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Descripció:</strong> Ampliació de la sortida de <code>pstree</code> on s'aprecien específicament els dos processos <code>minador</code> actius amb els PIDs 6315 i 6316.</p>
+        </div>
+      </figure>
+
+      <figure class="bloc-imatge">
+        <img src="../Captura3gdp.png" alt="Monitorització de recursos del sistema mitjançant top">
+        <figcaption>
+          <strong>Figura 3.5:</strong> Anàlisi de consum de recursos en temps real amb <code>top</code>.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comanda executada:</strong> <code>top</code></p>
+          <p><strong>Descripció:</strong> Es detecta que els dos processos <code>minador</code> (PIDs 6316 i 6315) estan monopolitzant la CPU amb un consum del 50,5% i 49,2% respectivament en estat d'execució (<code>R</code>).</p>
+        </div>
+      </figure>
+
+      <figure class="bloc-imatge">
+        <img src="../Captura4.gdp.png" alt="Filtratge de PIDs i taula d'estat de processos amb pgrep i ps">
+        <figcaption>
+          <strong>Figura 3.6:</strong> Cerca de PIDs i identificació del procés pare.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comandes executades:</strong> <code>pgrep -l 'minador|espia|backup'</code>, <code>ps -o pid,ppid,user,stat,etime,%cpu,comm -C minador,espia,backup_nocturn</code> i <code>ps -o pid,comm -p 2674</code></p>
+          <p><strong>Descripció:</strong> Cerca específica de PIDs per nom de procés i taula de propietats detallada. S'identifica que el PPID comú (2674) pertany al dimoni principal <code>systemd</code>.</p>
+        </div>
+      </figure>
+
+      <figure class="bloc-imatge">
+        <img src="../Captura5gdp.png" alt="Gestió de tasques en segon i primer pla amb Ctrl+Z, jobs, bg i fg">
+        <figcaption>
+          <strong>Figura 3.7:</strong> Control de treballs (Foreground / Background).
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comandes executades:</strong> <code>./descarrega.sh</code>, <code>Ctrl+Z</code>, <code>jobs -l</code>, <code>bg %1</code>, <code>fg %1</code></p>
+          <p><strong>Descripció:</strong> Aturada temporal d'un procés en primer pla amb <code>Ctrl+Z</code>, comprovació del número de treball amb <code>jobs -l</code>, enviament a segon pla amb <code>bg %1</code> i posterior retorn a primer pla amb <code>fg %1</code>.</p>
+        </div>
+      </figure>
+
+      <figure class="bloc-imatge">
+        <img src="../Captura5_2gdp.png" alt="Monitorització continuada del fitxer de progrés amb watch">
+        <figcaption>
+          <strong>Figura 3.8:</strong> Monitorització del progrés d'un procés en segon pla.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comanda executada:</strong> <code>watch -n 1 cat progres.txt</code></p>
+          <p><strong>Descripció:</strong> Execució iterativa cada segon per visualitzar l'estat d'avanç de la descàrrega reflectit al fitxer <code>progres.txt</code>.</p>
+        </div>
+      </figure>
+
+      <figure class="bloc-imatge">
+        <img src="../Captura6gdp.png" alt="Verificació de la prioritat modificada al top amb valor NI negatiu">
+        <figcaption>
+          <strong>Figura 3.9:</strong> Modificació de la prioritat d'execució (Niceness).
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comanda executada:</strong> <code>top</code></p>
+          <p><strong>Descripció:</strong> S'observa l'efecte d'assignar una major prioritat al procés <code>descarrega.sh</code> (PID 8756) mitjançant un valor de <em>niceness</em> negatiu (<code>NI -10</code>, <code>PR 10</code>), aconseguint destinar-hi el 71,2% de la CPU.</p>
+        </div>
+      </figure>
+
+      <figure class="bloc-imatge">
+        <img src="../Captura7_2gdp.png" alt="Enviament del senyal SIGSTOP a un procés amb kill">
+        <figcaption>
+          <strong>Figura 3.10:</strong> Suspensió d'un procés mitjançant el senyal <code>SIGSTOP</code>.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comandes executades:</strong> <code>pgrep -l backup</code>, <code>kill -STOP 4985</code>, <code>ps -o pid,stat,comm -p 4985</code></p>
+          <p><strong>Descripció:</strong> Aturada forçada del procés <code>backup_nocturn</code> (PID 4985) enviant el senyal <code>SIGSTOP</code> (19). La columna <code>STAT</code> confirma que l'estat ha passat a <code>T</code> (Stopped).</p>
+        </div>
+      </figure>
+
+      <figure class="bloc-imatge">
+        <img src="../Captura7_3gdp.png" alt="Represa d'un procés aturat enviant el senyal SIGCONT">
+        <figcaption>
+          <strong>Figura 3.11:</strong> Represa d'un procés suspès amb el senyal <code>SIGCONT</code>.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comandes executades:</strong> <code>kill -CONT 4985</code>, <code>ps -o pid,stat,comm -p 4985</code></p>
+          <p><strong>Descripció:</strong> Represa de l'execució del procés aturat enviant el senyal <code>SIGCONT</code> (18). Mitjançant <code>ps</code> es comprova que l'estat torna a ser <code>S</code> (Sleeping/Dormint).</p>
+        </div>
+      </figure>
+
+      <figure class="bloc-imatge">
+        <img src="../Captura7gdp.png" alt="Resistència a SIGTERM i finalització amb SIGKILL -9">
+        <figcaption>
+          <strong>Figura 3.12:</strong> Intercepció de senyals ordinaris i finalització incondicional (<code>SIGKILL</code>).
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comandes executades:</strong> <code>kill 6318</code>, <code>kill -9 6318</code></p>
+          <p><strong>Descripció:</strong> Intent de tancament del procés <code>espia</code> amb <code>SIGTERM</code> (15), el qual és interceptat pel script. A continuació, s'enviar el senyal <code>SIGKILL</code> (<code>kill -9</code>), el qual no pot ser ignorat i finalitza immediatament el procés.</p>
+        </div>
+      </figure>
+
+      <figure class="bloc-imatge">
+        <img src="../Captura8gdp.png" alt="Finestra de watch confirmant que la descàrrega ha finalitzat amb èxit">
+        <figcaption>
+          <strong>Figura 3.13:</strong> Finalització de la tasca monitoritzada.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Descripció:</strong> La pantalla de <code>watch</code> mostra que la tasca <code>ubuntu.iso</code> s'ha completat satisfactòriament després de 245 segons d'execució.</p>
+        </div>
+      </figure>
+
+      <figure class="bloc-imatge">
+        <img src="../Captura8_2gdp.png" alt="Línia d'ascendència completa d'un procés amb pstree -ps">
+        <figcaption>
+          <strong>Figura 3.14:</strong> Arbre d'ascendència completa fins al procés arrel.
+        </figcaption>
+        <div class="documentacio-imatge">
+          <p><strong>Comanda executada:</strong> <code>pstree -ps $(pgrep descarrega)</code></p>
+          <p><strong>Descripció:</strong> Rastrejament de tota la línia d'ascendència del procés <code>descarrega.sh</code> (6616) fins al procés pare original del sistema <code>systemd(1)</code>.</p>
+        </div>
+      </figure>
+
       <h4>------------------------------------------------------------------------------------------------------------</h4>
 
       <p class="tornar-index"><a href="#index-apartats">↑ Tornar a l'índex</a></p>
@@ -115,7 +267,7 @@
 
       <h4>------------------------------------------------------------------------------------------------------------</h4>
 
-      <p class="tornar-index"><a href="#index-apartats">↑ Tornar a l'índex</a></p>
+      <p class="tornar-index"><a href="#index-apartats">↑ Tornar a l me l'índex</a></p>
     </article>
 
     <!-- APARTAT 5 -->
