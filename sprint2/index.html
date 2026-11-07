@@ -382,13 +382,13 @@
       <div class="bloc-imatge">
         <p><strong>Comandes executades:</strong> <code>sudo usermod -aG programadors nuria</code> i <code>groups nuria</code></p>
         <p><strong>Descripció:</strong> Executem <code>usermod -aG programadors nuria</code> amb el flag <code>-aG</code> per afegir la Núria al grup de programadors de forma segura sense perdre la resta de grups.</p>
-        <img src="../Captura5antesgdu.png" alt="Reassignació correcta de grups secundaris amb usermod -aG">
+        <img src="../Captura5_2gdu.png" alt="Reassignació correcta de grups secundaris amb usermod -aG">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>getent group programadors artistes testers becaris</code></p>
         <p><strong>Descripció:</strong> Executem aquesta comanda per llistar els departaments creats i comprovar que tots els usuaris han quedat ben assignats als seus grups.</p>
-        <img src="../Captura5_2gdu.png" alt="Comprovació final dels grups de treball i els seus usuaris assignats">
+        <img src="../Captura5_3gdu.png" alt="Comprovació final dels grups de treball i els seus usuaris assignats">
       </div>
 
       <h3>Nivell 5 · Canvi de departament</h3>
@@ -402,19 +402,19 @@
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>sudo grep marc /etc/shadow</code></p>
         <p><strong>Descripció:</strong> Executem <code>sudo grep marc /etc/shadow</code> per inspeccionar la contrasenya xifrada d'en Marc abans d'aplicar-ne el bloqueig de seguretat.</p>
-        <img src="../Captura5_3gdu.png" alt="Verificació del hash xifrat de la contrasenya a shadow">
+        <img src="../Captura6_2gdu.png" alt="Verificació del hash xifrat de la contrasenya a shadow">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>su - marc</code></p>
         <p><strong>Descripció:</strong> Executem <code>su - marc</code> per intentar accedir al compte bloquejat d'en Marc i comprovem que el sistema ens mostra directament un fallo d'autenticació.</p>
-        <img src="../Captura7gdu.png" alt="Bloqueig d'autenticació en intentar accedir a un compte desactivat">
+        <img src="../Captura6_3gdu.png" alt="Bloqueig d'autenticació en intentar accedir a un compte desactivat">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comandes executades:</strong> <code>sudo passwd -u marc</code>, <code>sudo passwd -S marc</code> i <code>su - marc</code></p>
         <p><strong>Descripció:</strong> Executem <code>sudo passwd -u marc</code> per treure el bloqueig de la contrasenya d'en Marc, verifiquem l'estat amb <code>passwd -S</code> i comprovem que ara ja pot tornar a iniciar sessió normalment.</p>
-        <img src="../Captura7_3.png" alt="Desbloqueig de compte amb passwd -u i inici de sessió d'èxit">
+        <img src="../Captura7.png" alt="Desbloqueig de compte amb passwd -u i inici de sessió d'èxit">
       </div>
 
       <h3>Nivell 7 · Nova norma de noms</h3>
