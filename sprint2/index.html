@@ -355,7 +355,7 @@
       <figure class="bloc-imatge">
         <figcaption><strong>Figura 5.15 (Nivell 6 - Captura 1):</strong> Consulta del compte de Marc a <code>/etc/shadow</code>.</figcaption>
         <p><strong>Comanda executada:</strong> <code>sudo grep marc /etc/shadow</code></p>
-        <p><strong>Descripció:</strong> Executem <code>sudo grep marc /etc/shadow</code> per inspeccionar la contrasenya xifrada d'en Marc abans i després d'aplicar-ne el bloqueig de seguretat.</p>
+        <p><strong>Descripció:</strong> Executem <code>sudo grep marc /etc/shadow</code> per inspeccionar la contrasenya xifrada d'en Marc abans d'aplicar-ne el bloqueig de seguretat.</p>
         <img src="../Captura5_3gdu.png" alt="Verificació del hash xifrat de la contrasenya a shadow">
       </figure>
 
@@ -367,7 +367,7 @@
       </figure>
 
       <figure class="bloc-imatge">
-        <figcaption><strong>Figura 5.17 (Nivell 6 - Captura 3):</strong> Desbloqueig del compte amb <code>passwd -u</code>.</figcaption>
+        <figcaption><strong>Figura 5.17 (Nivell 6 - Captura 3):</strong> Desbloqueig del compte amb <code>passwd -u</code> i inici de sessió d'èxit.</figcaption>
         <p><strong>Comandes executades:</strong> <code>sudo passwd -u marc</code> i <code>su - marc</code></p>
         <p><strong>Descripció:</strong> Executem <code>sudo passwd -u marc</code> per treure el bloqueig de la contrasenya d'en Marc i comprovem que ara ja pot tornar a iniciar sessió normalment.</p>
         <img src="../Captura7_2gdu.png" alt="Desbloqueig de compte amb passwd -u i inici de sessió d'èxit">
@@ -376,8 +376,8 @@
       <!-- NIVELL 7: NOVA NORMA DE NOMS -->
       <figure class="bloc-imatge">
         <figcaption><strong>Figura 5.18 (Nivell 7 - Captura 1):</strong> Canvi de nom d'usuari mantenint l'UID.</figcaption>
-        <p><strong>Comandes executades:</strong> <code>sudo usermod -l nvidal nuria</code> i <code>id nvidal</code></p>
-        <p><strong>Descripció:</strong> Executem <code>usermod -l nvidal nuria</code> per canviar el nom d'usuari de <code>nuria</code> a <code>nvidal</code> i verifiquem amb <code>id</code> que manté el mateix UID (1001).</p>
+        <p><strong>Comandes executades:</strong> <code>sudo usermod -l nvidal nuria</code>, <code>id nvidal</code> i <code>grep nvidal /etc/passwd</code></p>
+        <p><strong>Descripció:</strong> Executem <code>usermod -l nvidal nuria</code> per canviar el nom d'usuari de <code>nuria</code> a <code>nvidal</code> i verifiquem amb <code>id</code> i <code>/etc/passwd</code> que manté el mateix UID (1001).</p>
         <img src="../Captura7_3.png" alt="Modificació de nom d'usuari amb usermod -l">
       </figure>
 
