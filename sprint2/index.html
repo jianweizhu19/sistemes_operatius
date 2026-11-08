@@ -725,15 +725,15 @@
         </li>
         <li>
           <p><strong>Com pots demostrar que la foto recuperada és exactament la mateixa que l'original?</strong></p>
-          <p>Amb el hash SHA-256 que hem generat prèviament a <code>originals.sha</code>. Com que coincideix exactament amb el del fitxer recuperat, queda demostrat que tenen el mateix contingut byte a byte.</p>
+          <p>Amb el hash SHA-256 que hem generat prèviament a originals.sha. Com que coincideix exactament amb el del fitxer recuperat, queda demostrat que tenen el mateix contingut byte a byte.</p>
         </li>
         <li>
-          <p><strong>Per què el programa de recuperació ha trobat la foto i el PDF, però no el <code>notes.txt</code>? Com l'has trobat igualment?</strong></p>
-          <p>Ja que els fitxers <code>.txt</code> no tenen una capçalera binària estàndard que <code>photorec</code> pugui reconèixer. La informació està escrita en text pla al propi disc i l'hem trobat cercant la frase directament sobre la imatge binària amb les ordres <code>strings</code> i <code>grep</code>.</p>
+          <p><strong>Per què el programa de recuperació ha trobat la foto i el PDF, però no el notes.txt? Com l'has trobat igualment?</strong></p>
+          <p>Ja que els fitxers .txt no tenen una capçalera binària estàndard que <code>photorec</code> pugui reconèixer. La informació està escrita en text pla al propi disc i l'hem trobat cercant la frase directament sobre la imatge binària amb les ordres <code>strings</code> i <code>grep</code>.</p>
         </li>
         <li>
           <p><strong>Quin nivell de formateig has fet a la part 3 i quin a la part 5?</strong></p>
-          <p>Un formateig d'alt nivell a la part 3 (recreant el sistema de fitxers amb <code>nodiscard</code>) i un de baix nivell a la part 5 (sobreescrivint tot el disc amb zeros).</p>
+          <p>Un formateig d'alt nivell a la part 3 (recreant el sistema de fitxers amb nodiscard) i un de baix nivell a la part 5 (sobreescrivint tot el disc amb zeros).</p>
         </li>
         <li>
           <p><strong>Vols vendre un USB on tenies fotos personals. Quin formateig faries abans de vendre'l i per què?</strong></p>
