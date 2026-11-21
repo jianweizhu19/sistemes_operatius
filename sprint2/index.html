@@ -302,9 +302,9 @@
 
       <h3>4.1 Teoria de còpies de seguretat</h3>
       <ul>
-        <li><strong><code></code>Completa</code>:</strong> Copia totes les dades seleccionades cada vegada. Ocupa més espai i triga més a fer-se, però és la més ràpida i senzilla de restaurar.</li>
-        <li><strong><code>Diferencial</code>code>:</strong> Copia només els fitxers nous o modificats des de l'última còpia <em>completa</em>. Per restaurar-la només cal l'última completa i l'última diferencial.</li>
-        <li><strong><code>Incremental</code>code>:</strong> Copia només els canvis fets des de l'última còpia (sigui completa o incremental). És la més ràpida i la que ocupa menys espai, però per restaurar cal la completa i totes les incrementals següents en ordre.</li>
+        <li><strong><code>Completa</code>:</strong> Copia totes les dades seleccionades cada vegada. Ocupa més espai i triga més a fer-se, però és la més ràpida i senzilla de restaurar.</li>
+        <li><strong><code>Diferencial</code>:</strong> Copia només els fitxers nous o modificats des de l'última còpia <em>completa</em>. Per restaurar-la només cal l'última completa i l'última diferencial.</li>
+        <li><strong><code>Incremental</code>:</strong> Copia només els canvis fets des de l'última còpia (sigui completa o incremental). És la més ràpida i la que ocupa menys espai, però per restaurar cal la completa i totes les incrementals següents en ordre.</li>
       </ul>
 
       <h3>4.2 Comandes</h3>
@@ -316,8 +316,8 @@
 
       <h3>4.3 Programes</h3>
       <ul>
-        <li><strong><code>Déjà Dup</code>code>:</strong> Eina gràfica senzilla (habitual a Ubuntu) per fer i programar còpies de seguretat automàtiques i xifrades en local o al núvol. Per sota utilitza Duplicity.</li>
-        <li><strong><code>Duplicity</code>code>:</strong> Eina de terminal que permet fer còpies de seguretat incrementals, comprimides i xifrades, tant en discs locals com en servidors remots.</li>
+        <li><strong><code>Déjà Dup</code>:</strong> Eina gràfica senzilla (habitual a Ubuntu) per fer i programar còpies de seguretat automàtiques i xifrades en local o al núvol. Per sota utilitza Duplicity.</li>
+        <li><strong><code>Duplicity</code>:</strong> Eina de terminal que permet fer còpies de seguretat incrementals, comprimides i xifrades, tant en discs locals com en servidors remots.</li>
       </ul>
 
       <h3>4.4 Automatització</h3>
@@ -331,109 +331,111 @@
       <h4>Nivell 0 · Preparar l'arxiu</h4>
       <div class="bloc-imatge">
         <p><strong>Comandes executades:</strong> <code>./crea_sala.sh</code> i <code>lsblk -f /dev/sdc</code></p>
-        <p><strong>Descripció:</strong> Es prepara l'entorn del joc executant l'script inicial i es comprova que les dues particions del disc <code>/dev/sdc</code> (<code>copies</code> i <code>caixa</code>) estan formatades en <code>ext4</code> i muntades correctament.</p>
+        <p><strong>Descripció:</strong> S'executa l'script que genera les carpetes i fitxers del joc (<code>~/sala</code>) i es verifica amb <code>lsblk -f</code> que el nou disc <code>/dev/sdc</code> té les dues particions <code>ext4</code> creades i muntades correctament: <code>copies</code> (<code>/mnt/copies</code>) i <code>caixa</code> (<code>/mnt/caixa</code>).</p>
         <img src="../cps1.png" alt="Preparació de la sala i comprovació de les particions de /dev/sdc">
       </div>
 
       <h4>Nivell 1 · La còpia amb cp</h4>
       <div class="bloc-imatge">
         <p><strong>Comandes executades:</strong> <code>./desastre.sh 1</code> i <code>ls ~/sala</code></p>
-        <p><strong>Descripció:</strong> Després de provocar el primer desastre, es comprova amb <code>ls ~/sala</code> que la carpeta <code>expedients</code> ha desaparegut.</p>
+        <p><strong>Descripció:</strong> Un cop feta la còpia prèvia amb <code>cp -a</code>, es provoca el primer desastre i es comprova amb <code>ls ~/sala</code> que la carpeta <code>expedients</code> ha estat esborrada.</p>
         <img src="../cps2.png" alt="Comprovació de la pèrdua de la carpeta expedients després del desastre 1">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comandes executades:</strong> <code>cp -a /mnt/copies/sala_cp/expedients ~/sala/</code> i <code>cat ~/sala/expedients/clau1.txt</code></p>
-        <p><strong>Descripció:</strong> Es recupera la carpeta perduda des de la còpia feta amb <code>cp</code> i es llegeix la clau de la sala 1.</p>
+        <p><strong>Descripció:</strong> Es restaura la carpeta <code>expedients</code> des de la còpia de seguretat i, executant <code>cat</code>, es llegeix la clau de la sala 1 (<strong>UNA</strong>).</p>
         <img src="../cps2_2.png" alt="Recuperació dels expedients i lectura de la clau 1">
       </div>
 
       <h4>Nivell 2 · La còpia amb rsync</h4>
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>rsync -av --delete --dry-run ~/sala/ /mnt/copies/sala_rsync/</code></p>
-        <p><strong>Descripció:</strong> Després del segon desastre, es simula la sincronització amb <code>--dry-run</code> i es veu l'avís <code>deleting fotos/clau2.txt</code>, evitant així esborrar la clau també de la còpia.</p>
+        <p><strong>Descripció:</strong> Després que el segon desastre esborri <code>clau2.txt</code>, es fa una simulació amb <code>--dry-run</code> abans de sincronitzar. La sortida avisa que s'esborraria el fitxer de la còpia (<code>deleting fotos/clau2.txt</code>), permetent evitar el parany.</p>
         <img src="../cps3.png" alt="Simulació d'rsync amb --delete --dry-run">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comandes executades:</strong> <code>rsync -av /mnt/copies/sala_rsync/fotos/clau2.txt ~/sala/fotos/</code> i <code>cat ~/sala/fotos/clau2.txt</code></p>
-        <p><strong>Descripció:</strong> Es restaura el fitxer <code>clau2.txt</code> des de la còpia d'<code>rsync</code> i es mostra la clau de la sala 2.</p>
+        <p><strong>Descripció:</strong> S'ha restaurat el fitxer <code>clau2.txt</code> amb <code>rsync</code> des de la còpia de seguretat i, executant <code>cat</code>, es mostra la clau de la sala 2 (<strong>CÒPIA</strong>).</p>
         <img src="../cps3_2.png" alt="Recuperació i lectura de la clau 2 amb rsync">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>ls -R /mnt/copies/esborrats</code></p>
-        <p><strong>Descripció:</strong> Després de sincronitzar amb <code>rsync -av --delete --backup --backup-dir=/mnt/copies/esborrats</code>, es comprova que el fitxer eliminat <code>cita.txt</code> s'ha guardat dins de la carpeta de seguretat.</p>
+        <p><strong>Descripció:</strong> Després d'esborrar <code>cita.txt</code> i sincronitzar amb <code>rsync --delete --backup --backup-dir=/mnt/copies/esborrats</code>, es comprova amb <code>ls -R</code> que el fitxer eliminat s'ha mogut a la carpeta de seguretat en lloc de perdre's.</p>
         <img src="../cps3_3.png" alt="Verificació del contingut de /mnt/copies/esborrats amb ls -R">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>cat /mnt/copies/esborrats/notes/cita.txt</code></p>
-        <p><strong>Descripció:</strong> Es mostra el contingut del fitxer <code>cita.txt</code> per confirmar que s'ha conservat intacte dins de <code>/mnt/copies/esborrats</code>.</p>
+        <p><strong>Descripció:</strong> Es llegeix el contingut de <code>cita.txt</code> dins de <code>/mnt/copies/esborrats</code> per confirmar que s'ha conservat intacte.</p>
         <img src="../cps3_4.png" alt="Lectura del fitxer cita.txt dins de /mnt/copies/esborrats">
       </div>
 
       <h4>Nivell 3 · La imatge amb dd</h4>
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>sudo sha256sum /dev/sdc2 /mnt/copies/caixa.img</code></p>
-        <p><strong>Descripció:</strong> Després de clonar la partició amb <code>dd</code>, es verifica que el hash SHA-256 de <code>/dev/sdc2</code> i el de la imatge <code>caixa.img</code> són idèntics.</p>
+        <p><strong>Descripció:</strong> Un cop creada la imatge sector a sector de la partició desmuntada amb <code>dd</code>, es comparen els hashes SHA-256 i es comprova que són idèntics.</p>
         <img src="../cps4.png" alt="Comprovació dels hashes SHA-256 idèntics amb sha256sum">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comandes executades:</strong> <code>./desastre.sh 3</code> i <code>ls /mnt/caixa</code></p>
-        <p><strong>Descripció:</strong> El tercer desastre formata la partició sencera; en llistar <code>/mnt/caixa</code> només apareix <code>lost+found</code>.</p>
+        <p><strong>Descripció:</strong> El tercer desastre formata completament la partició <code>/dev/sdc2</code>. En llistar <code>/mnt/caixa</code> es comprova que està buida i només hi queda la carpeta <code>lost+found</code>.</p>
         <img src="../cps4_2.png" alt="Partició /mnt/caixa buida amb només lost+found">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comandes executades:</strong> <code>sudo dd if=/mnt/copies/caixa.img of=/dev/sdc2 bs=1M status=progress</code> i <code>cat /mnt/caixa/clau3.txt</code></p>
-        <p><strong>Descripció:</strong> Es restaura la imatge sector a sector sobre <code>/dev/sdc2</code>, es torna a muntar la caixa i es recupera la clau de la sala 3.</p>
+        <p><strong>Descripció:</strong> Es bolca la imatge <code>caixa.img</code> sobre la partició <code>/dev/sdc2</code>, es torna a muntar i, executant <code>cat</code>, es recupera la clau de la sala 3 (<strong>SENSE</strong>).</p>
         <img src="../cps4_3.png" alt="Restauració de la imatge amb dd i lectura de la clau 3">
       </div>
 
       <h4>Nivell 4 · Déjà Dup</h4>
       <div class="bloc-imatge">
-        <p><strong>Descripció:</strong> Configuració i realització de les còpies de seguretat (completa i incremental) de la carpeta <code>sala</code> mitjançant l'aplicació gràfica Déjà Dup.</p>
+        <p><strong>Descripció:</strong> Configuració de l'aplicació gràfica Déjà Dup per fer una còpia completa i una de segona incremental de la carpeta <code>~/sala</code> cap a <code>/mnt/copies/dejadup</code>.</p>
         <img src="../cps5.png" alt="Finestra de Déjà Dup amb les còpies realitzades">
       </div>
 
       <div class="bloc-imatge">
-        <p><strong>Descripció:</strong> Després del quart desastre, s'utilitza l'opció de restauració de Déjà Dup per recuperar el fitxer <code>clau4.txt</code>.</p>
+        <p><strong>Descripció:</strong> Després de provocar el quart desastre (que esborra <code>clau4.txt</code>), s'utilitza l'assistent de restauració de Déjà Dup per recuperar el fitxer perdut.</p>
         <img src="../cps5_2.png" alt="Procés de restauració de clau4.txt a Déjà Dup">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>cat ~/sala/notes/clau4.txt</code></p>
-        <p><strong>Descripció:</strong> Es comprova a la terminal que el fitxer s'ha restaurat correctament i es llegeix la clau de la sala 4.</p>
+        <p><strong>Descripció:</strong> Es verifica al terminal que <code>clau4.txt</code> torna a ser a la seva ubicació original i es mostra la clau de la sala 4 (<strong>PROVAR</strong>).</p>
         <img src="../cps5_3.png" alt="Lectura de la clau 4 recuperada">
       </div>
 
       <h4>Nivell 5 · La còpia de cada nit amb cron</h4>
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>cat ~/copies.log</code></p>
-        <p><strong>Descripció:</strong> Es consulta el registre de còpies i es verifica que <code>cron</code> ha executat l'script automàticament cada minut, fent aparèixer la clau de la sala 5.</p>
+        <p><strong>Descripció:</strong> Es comprova el registre generat per l'script <code>copia_nit.sh</code>. Quan l'executa <code>cron</code> automàticament en segon pla (sense terminal), escriu al registre la clau de la sala 5 (<strong>NO</strong>).</p>
         <img src="../cps6.png" alt="Registre ~/copies.log amb la clau de la sala 5">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>crontab -l</code></p>
-        <p><strong>Descripció:</strong> Es comprova la configuració final del <code>crontab</code> programada per executar la còpia cada nit a les 2:00 (<code>0 2 * * *</code>).</p>
+        <p><strong>Descripció:</strong> Un cop comprovat que funciona, es modifica la programació al <code>crontab</code> i es verifica que la còpia queda configurada per executar-se cada nit a les 2:00 (<code>0 2 * * *</code>).</p>
         <img src="../cps6_2.png" alt="Configuració final del crontab amb crontab -l">
       </div>
 
       <h4>Nivell 6 · L'informe diari amb anacron</h4>
       <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>cat /var/log/informe-sala.log</code> i <code>sudo cat /var/spool/anacron/cron.daily</code></p>
-        <p><strong>Descripció:</strong> Després de reiniciar la màquina, es comprova que <code>anacron</code> ha generat l'informe diari amb la clau de la sala 6 i ha actualitzat la marca de data d'avui.</p>
-        <img src="../cps7.png" alt="Informe diari d'anacron amb la clau 6 i marca de data">
+        <p><strong>Comanda executada:</strong> <code>cat /var/log/informe-sala.log</code></p>
+        <p><strong>Descripció:</strong> Després d'esborrar la marca d'execució i reiniciar la màquina, <code>anacron</code> executa l'script <code>/etc/cron.daily/informe-sala</code> automàticament i genera l'informe amb la clau de la sala 6 (<strong>SERVEIX</strong>).</p>
+        <img src="../cps7.png" alt="Informe diari d'anacron amb la clau 6">
       </div>
 
       <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>echo "..."</code></p>
-        <p><strong>Descripció:</strong> S'ajunten les sis claus recuperades al llarg de les sales i es mostra la frase secreta final al terminal.</p>
-        <img src="../cps7_2.png" alt="Frase secreta final escrita al terminal amb echo">
+        <p><strong>Comandes executades:</strong> <code>sudo cat /var/spool/anacron/cron.daily</code> i <code>echo "UNA CÒPIA SENSE PROVAR NO SERVEIX"</code></p>
+        <p><strong>Descripció:</strong> Es comprova que <code>anacron</code> ha actualitzat el fitxer de marca amb la data d'avui i s'escriu al terminal la frase secreta formada per les sis claus.</p>
+        <img src="../cps7_2.png" alt="Marca de data d'anacron i frase secreta final">
       </div>
+
+      <p><strong>Frase clau final:</strong> Ajuntant les sis claus recuperades al llarg de tots els nivells, la frase secreta de l'escape room és: <strong>«UNA CÒPIA SENSE PROVAR NO SERVEIX»</strong>.</p>
 
       <h4>------------------------------------------------------------------------------------------------------------</h4>
 
