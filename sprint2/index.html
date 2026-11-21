@@ -707,21 +707,21 @@
 
       <h3>Nivell 7 · Les regles d'adduser</h3>
       <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>grep -E '^#? ?[A-Z_]+=' /etc/adduser.conf</code></p>
+        <p><strong>Descripció:</strong> Es consulten totes les variables del fitxer <code>/etc/adduser.conf</code> per veure els valors per defecte que utilitza <code>adduser</code> (com <code>DSHELL</code>, <code>FIRST_UID</code> o <code>EXTRA_GROUPS</code>).</p>
+        <img src="../gdu8.png" alt="Consulta de les variables per defecte a /etc/adduser.conf">
+      </div>
+
+      <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>grep -v '^#' /etc/adduser.conf | grep -v '^$'</code></p>
-        <p><strong>Descripció:</strong> Es comproven les dues línies actives a <code>/etc/adduser.conf</code> (<code>EXTRA_GROUPS="pixelforge"</code> i <code>ADD_EXTRA_GROUPS=1</code>).</p>
-        <img src="../gdu8.png" alt="Línies actives de configuració a /etc/adduser.conf">
+        <p><strong>Descripció:</strong> Es comproven les dues línies actives a <code>/etc/adduser.conf</code> (<code>EXTRA_GROUPS="pixelforge"</code> i <code>ADD_EXTRA_GROUPS=1</code>) després de desactivar els comentaris.</p>
+        <img src="../gdu8_2.png" alt="Línies actives de configuració a /etc/adduser.conf">
       </div>
 
       <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>sudo adduser biel</code></p>
-        <p><strong>Descripció:</strong> En crear l'usuari <code>biel</code> amb <code>adduser</code>, la sortida mostra que s'afegeix automàticament al grup <code>pixelforge</code>.</p>
-        <img src="../gdu8_2.png" alt="Sortida d'adduser biel amb assignació al grup pixelforge">
-      </div>
-
-      <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>id biel</code> i <code>id ona</code></p>
-        <p><strong>Descripció:</strong> Es comparen els grups d'en Biel (que ja pertany a <code>pixelforge</code>) i de l'Ona (que no hi és perquè es va crear abans de canviar la regla).</p>
-        <img src="../gdu8_3.png" alt="Comparació dels grups d'en Biel i de l'Ona amb id">
+        <p><strong>Comandes executades:</strong> <code>sudo adduser biel</code>, <code>id biel</code> i <code>id ona</code></p>
+        <p><strong>Descripció:</strong> Es crea l'usuari <code>biel</code> i es comparen els seus grups amb els de l'<code>ona</code>, comprovant que en Biel entra automàticament al grup <code>pixelforge</code> mentre que l'Ona no (perquè es va crear abans del canvi).</p>
+        <img src="../gdu8_3.png" alt="Creació d'en Biel i comparació de grups amb l'Ona">
       </div>
 
       <h3>Nivell 8 · Les normes de l'empresa</h3>
@@ -732,15 +732,15 @@
       </div>
 
       <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>sudo chage -l jana</code></p>
-        <p><strong>Descripció:</strong> Es verifica que la nova usuària <code>jana</code> té aplicada la caducitat de 90 dies i l'avís de 14 dies.</p>
-        <img src="../gdu9_2.png" alt="Caducitat de contrasenya de jana amb 90 i 14 dies">
+        <p><strong>Comanda executada:</strong> <code>sudo adduser jana</code></p>
+        <p><strong>Descripció:</strong> Es crea la nova usuària <code>jana</code> (Jana Pons) després d'haver aplicat la nova normativa de contrasenyes a <code>/etc/login.defs</code>.</p>
+        <img src="../gdu9_2.png" alt="Creació de l'usuària jana amb adduser">
       </div>
 
       <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>sudo chage -l ona</code></p>
-        <p><strong>Descripció:</strong> Es comprova que l'<code>ona</code> manté els valors anteriors (99999 i 7) perquè <code>login.defs</code> només afecta els comptes creats a partir del canvi.</p>
-        <img src="../gdu9_3.png" alt="Caducitat de contrasenya d'ona amb 99999 i 7 dies">
+        <p><strong>Comandes executades:</strong> <code>sudo chage -l jana</code> i <code>sudo chage -l ona</code></p>
+        <p><strong>Descripció:</strong> Es comprova que la <code>jana</code> té aplicada la caducitat de 90 dies i l'avís de 14, mentre que l'<code>ona</code> manté els valors anteriors (99999 i 7) perquè ja existia abans del canvi.</p>
+        <img src="../gdu9_3.png" alt="Comparació de la caducitat de contrasenyes de jana i ona amb chage -l">
       </div>
 
       <h4>------------------------------------------------------------------------------------------------------------</h4>
