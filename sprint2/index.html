@@ -707,9 +707,9 @@
 
       <h3>Nivell 7 · Les regles d'adduser</h3>
       <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>grep -E '^#? ?[A-Z_]+=' /etc/adduser.conf</code></p>
-        <p><strong>Descripció:</strong> Es consulten totes les variables del fitxer <code>/etc/adduser.conf</code> per veure els valors per defecte que utilitza <code>adduser</code> (com <code>DSHELL</code>, <code>FIRST_UID</code> o <code>EXTRA_GROUPS</code>).</p>
-        <img src="../gdu8.png" alt="Consulta de les variables per defecte a /etc/adduser.conf">
+        <p><strong>Comanda executada:</strong> <code>sudo nano /etc/adduser.conf</code></p>
+        <p><strong>Descripció:</strong> S'obre el fitxer <code>/etc/adduser.conf</code> amb <code>nano</code> per descomentar i configurar <code>EXTRA_GROUPS="pixelforge"</code> i <code>ADD_EXTRA_GROUPS=1</code>.</p>
+        <img src="../gdu8.png" alt="Edició de /etc/adduser.conf amb nano">
       </div>
 
       <div class="bloc-imatge">
