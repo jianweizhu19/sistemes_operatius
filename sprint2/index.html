@@ -56,8 +56,8 @@
         <tr><td>4</td><td><a href="#apartat4">Còpies de seguretat i automatització de tasques</a></td></tr>
         <tr><td>5</td><td><a href="#apartat5">Gestió d'usuaris, grups i permisos (Part 1)</a></td></tr>
         <tr><td>6</td><td><a href="#apartat6">Gestió d'usuaris, grups i permisos (Part 2)</a></td></tr>
-        <tr><td>6b</td><td><a href="#entorn-usuari">Entorn d'usuari i valors per defecte</a></td></tr>
-        <tr><td>7</td><td><a href="#apartat7">Quotes de disc</a></td></tr>
+        <tr><td>7</td><td><a href="#apartat7">Gestió d'usuaris, grups i permisos (Part 3 · Entorn d'usuari i valors per defecte)</a></td></tr>
+        <tr><td>8</td><td><a href="#apartat8">Quotes de disc</a></td></tr>
         <tr><td>+</td><td><a href="#practica-extra">Pràctica extra · Recuperació de fitxers després d'un formatatge</a></td></tr>
       </tbody>
     </table>
@@ -574,9 +574,9 @@
       <p class="tornar-index"><a href="#index-apartats">↑ Tornar a l'índex</a></p>
     </article>
 
-    <!-- APARTAT 6B: ENTORN D'USUARI I VALORS PER DEFECTE -->
-    <article class="apartat" id="entorn-usuari">
-      <h2>6b. Entorn d'usuari i valors per defecte</h2>
+    <!-- APARTAT 7: GESTIÓ D'USUARIS, GRUPS I PERMISOS (PART 3) -->
+    <article class="apartat" id="apartat7">
+      <h2>7. Gestió d'usuaris, grups i permisos (Part 3 · Entorn d'usuari i valors per defecte)</h2>
 
       <h3>Nivell 0 · Els fitxers invisibles</h3>
       <div class="bloc-imatge">
@@ -586,59 +586,60 @@
       </div>
 
       <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>ls -la /etc/skel</code> i <code>sudo diff /etc/skel/.bashrc /home/pau/.bashrc</code></p>
-        <p><strong>Descripció:</strong> Es revisa el contingut de la carpeta model <code>/etc/skel</code> i es comprova amb <code>diff</code> que el <code>.bashrc</code> d'en Pau n'és una còpia exacta (no retorna cap diferència).</p>
-        <img src="../gdu1_2.png" alt="Contingut de /etc/skel i comprovació amb diff">
+        <p><strong>Comanda executada:</strong> <code>ls -la /etc/skel</code></p>
+        <p><strong>Descripció:</strong> Es revisa el contingut de la carpeta model <code>/etc/skel</code> on hi ha els tres fitxers ocults que es copien als usuaris nous.</p>
+        <img src="../gdu1_2.png" alt="Contingut de /etc/skel amb ls -la">
       </div>
 
       <div class="bloc-imatge">
-        <p><strong>Descripció:</strong> Visualització dels fitxers ocults de la carpeta personal des de l'aplicació gràfica Fitxers prement <code>Ctrl + H</code> (Repte 0).</p>
-        <img src="../gdu1_3.png" alt="Fitxers ocults visibles a l'explorador de fitxers">
+        <p><strong>Comanda executada:</strong> <code>sudo diff /etc/skel/.bashrc /home/pau/.bashrc</code></p>
+        <p><strong>Descripció:</strong> Es comprova amb <code>diff</code> que el <code>.bashrc</code> d'en Pau és una còpia exacta del model (no retorna cap diferència).</p>
+        <img src="../gdu1_3.png" alt="Comprovació amb diff sense resultat">
       </div>
 
       <h3>Nivell 1 · Llegir la configuració</h3>
       <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>grep -n alias ~/.bashrc</code> i <code>type ll</code></p>
-        <p><strong>Descripció:</strong> Es busquen els àlies definits dins del <code>.bashrc</code> i es comprova amb <code>type</code> que <code>ll</code> és un àlies de <code>ls -alF</code>.</p>
-        <img src="../gdu2.png" alt="Cerca d'àlies a .bashrc i comprovació de type ll">
+        <p><strong>Comanda executada:</strong> <code>grep -n alias ~/.bashrc</code></p>
+        <p><strong>Descripció:</strong> Es busquen els àlies definits dins del fitxer <code>.bashrc</code> i el número de línia on es troben.</p>
+        <img src="../gdu2.png" alt="Cerca d'àlies a .bashrc amb grep -n alias">
+      </div>
+
+      <div class="bloc-imatge">
+        <p><strong>Comanda executada:</strong> <code>type ll</code></p>
+        <p><strong>Descripció:</strong> Es comprova amb <code>type</code> que <code>ll</code> no és un programa, sinó un àlies de <code>ls -alF</code>.</p>
+        <img src="../gdu2_2.png" alt="Comprovació de l'àlies ll amb type">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>grep -n HIST ~/.bashrc</code></p>
         <p><strong>Descripció:</strong> Es consulta la configuració de l'historial d'ordres al <code>.bashrc</code> (<code>HISTSIZE</code> i <code>HISTFILESIZE</code>).</p>
-        <img src="../gdu2_2.png" alt="Configuració de l'historial a .bashrc">
-      </div>
-
-      <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>type la</code>, <code>type cd</code> i <code>type nano</code></p>
-        <p><strong>Descripció:</strong> Es classifica cada ordre segons el seu tipus: <code>la</code> és un àlies, <code>cd</code> és una ordre interna de bash (builtin) i <code>nano</code> és un programa extern (Repte 1).</p>
-        <img src="../gdu2_3.png" alt="Comprovació del tipus d'ordre per a la, cd i nano">
+        <img src="../gdu2_3.png" alt="Configuració de l'historial a .bashrc amb grep -n HIST">
       </div>
 
       <h3>Nivell 2 · El teu terminal, el teu estil</h3>
       <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>nous</code> i <code>echo $HISTSIZE</code></p>
-        <p><strong>Descripció:</strong> En obrir una pestanya nova, es carrega automàticament el missatge de benvinguda, el prompt personalitzat <code>[ADMIN]</code>, el nou àlies <code>nous</code> i l'historial ampliat a 5000 ordres.</p>
+        <p><strong>Comanda executada:</strong> <code>nous</code></p>
+        <p><strong>Descripció:</strong> En obrir una pestanya nova, es carrega automàticament el missatge de benvinguda, el prompt personalitzat <code>[ADMIN]</code> i la sortida del nou àlies <code>nous</code>.</p>
         <img src="../gdu3.png" alt="Terminal personalitzat amb prompt ADMIN i àlies nous">
       </div>
 
       <h3>Nivell 3 · Entrar i sortir</h3>
       <div class="bloc-imatge">
         <p><strong>Comandes executades:</strong> <code>su - pau</code> i <code>nous</code></p>
-        <p><strong>Descripció:</strong> S'inicia sessió com a <code>pau</code> i es comprova que l'àlies <code>nous</code> no existeix, demostrant que els canvis al <code>.bashrc</code> només afecten el nostre usuari.</p>
+        <p><strong>Descripció:</strong> S'inicia sessió com a <code>pau</code> i es comprova que l'àlies <code>nous</code> dona error perquè els canvis al <code>.bashrc</code> només afecten el nostre usuari.</p>
         <img src="../gdu4.png" alt="Error de l'àlies nous des de la sessió d'en Pau">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comandes executades:</strong> <code>shopt login_shell</code> i <code>bash -l</code></p>
         <p><strong>Descripció:</strong> Es comprova la diferència entre un terminal normal (<code>login_shell off</code>) i un shell de login obert amb <code>bash -l</code> (<code>login_shell on</code>).</p>
-        <img src="../gdu4_2.png" alt="Comprovació de shopt login_shell en terminal normal i shell de login">
+        <img src="../gdu4_2.png" alt="Comprovació de shopt login_shell off i on">
       </div>
 
       <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>exit</code> i <code>su pau</code></p>
-        <p><strong>Descripció:</strong> En sortir del shell de login s'executa el <code>.bash_logout</code> amb el missatge de comiat, i es compara <code>su pau</code> (sense guió) amb <code>su - pau</code> (Repte 3).</p>
-        <img src="../gdu4_3.png" alt="Missatge de comiat de .bash_logout i prova de su pau">
+        <p><strong>Comanda executada:</strong> <code>exit</code></p>
+        <p><strong>Descripció:</strong> En sortir del shell de login s'executa el fitxer <code>.bash_logout</code> i apareix el missatge de comiat configurat.</p>
+        <img src="../gdu4_3.png" alt="Missatge de comiat de .bash_logout després de l'exit">
       </div>
 
       <h3>Nivell 4 · El kit de benvinguda</h3>
@@ -650,96 +651,96 @@
 
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>diff ~/copies/skel_bashrc /etc/skel/.bashrc</code></p>
-        <p><strong>Descripció:</strong> Es compara el <code>.bashrc</code> model amb la còpia original per confirmar les línies afegides del kit (el prompt <code>[PixelForge]</code> i els àlies <code>projectes</code>, <code>ajuda</code> i <code>equip</code>).</p>
+        <p><strong>Descripció:</strong> Es compara el <code>.bashrc</code> model amb la còpia original per confirmar les línies afegides del kit (el prompt <code>[PixelForge]</code> i els àlies <code>projectes</code> i <code>ajuda</code>).</p>
         <img src="../gdu5_2.png" alt="Diferències al fitxer /etc/skel/.bashrc amb diff">
       </div>
 
       <h3>Nivell 5 · Primer dia de l'Ona</h3>
       <div class="bloc-imatge">
-        <p><strong>Comanda executada:</strong> <code>su - ona</code></p>
-        <p><strong>Descripció:</strong> En entrar com a la nova usuària <code>ona</code>, apareixen automàticament el missatge de benvinguda del <code>.profile</code> i el prompt <code>[PixelForge]</code> del <code>.bashrc</code>.</p>
-        <img src="../gdu6.png" alt="Inici de sessió de l'Ona amb el kit de benvinguda">
+        <p><strong>Comandes executades:</strong> <code>su - ona</code> i <code>ajuda</code></p>
+        <p><strong>Descripció:</strong> En entrar com a la nova usuària <code>ona</code>, apareixen automàticament el missatge de benvinguda, el prompt <code>[PixelForge]</code> i la sortida de l'àlies <code>ajuda</code>.</p>
+        <img src="../gdu6.png" alt="Inici de sessió de l'Ona amb el kit de benvinguda i l'àlies ajuda">
       </div>
 
       <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>ajuda</code>, <code>projectes</code>, <code>pwd</code> i <code>exit</code></p>
-        <p><strong>Descripció:</strong> Es proven els àlies del kit de PixelForge i es comprova el missatge de comiat en tancar la sessió.</p>
-        <img src="../gdu6_2.png" alt="Execució dels àlies ajuda i projectes i comiat en sortir">
+        <p><strong>Comandes executades:</strong> <code>projectes</code>, <code>pwd</code> i <code>exit</code></p>
+        <p><strong>Descripció:</strong> Es prova l'àlies <code>projectes</code> i es comprova el missatge de comiat en tancar la sessió amb <code>exit</code>.</p>
+        <img src="../gdu6_2.png" alt="Execució de projectes i missatge de comiat en sortir">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>sudo ls -a /home/nvidal</code></p>
-        <p><strong>Descripció:</strong> Es comprova que els usuaris antics com <code>nvidal</code> no reben el kit automàticament, ja que <code>/etc/skel</code> només es copia en crear el compte (i prova del Repte 5).</p>
+        <p><strong>Descripció:</strong> Es comprova que els usuaris antics com <code>nvidal</code> no tenen el kit, ja que <code>/etc/skel</code> només es copia en crear el compte.</p>
         <img src="../gdu6_3.png" alt="Comprovació de la carpeta de nvidal sense el kit">
       </div>
 
       <h3>Nivell 6 · Les regles d'useradd</h3>
       <div class="bloc-imatge">
         <p><strong>Comandes executades:</strong> <code>sudo useradd -m -c "Quim Roca" quim</code> i <code>getent passwd quim</code></p>
-        <p><strong>Descripció:</strong> En crear en Quim amb <code>useradd</code> sense indicar shell, el sistema li assigna per defecte <code>/bin/sh</code>.</p>
-        <img src="../gdu7.png" alt="Creació inicial d'en Quim amb /bin/sh">
+        <p><strong>Descripció:</strong> En crear en Quim amb <code>useradd</code> sense indicar shell, el primer <code>getent passwd quim</code> mostra que se li assigna <code>/bin/sh</code> per defecte.</p>
+        <img src="../gdu7.png" alt="Primer getent passwd quim amb /bin/sh">
       </div>
 
       <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>sudo useradd -D -s /bin/bash</code>, <code>useradd -D | grep SHELL</code> i <code>grep '^SHELL' /etc/default/useradd</code></p>
-        <p><strong>Descripció:</strong> Es canvia el shell per defecte de <code>useradd</code> a <code>/bin/bash</code> i es comprova que el canvi s'ha desat a <code>/etc/default/useradd</code>.</p>
-        <img src="../gdu7_2.png" alt="Canvi i verificació del shell per defecte a /etc/default/useradd">
+        <p><strong>Comanda executada:</strong> <code>sudo useradd -D -s /bin/bash</code></p>
+        <p><strong>Descripció:</strong> Es modifica el shell per defecte de <code>useradd</code> a <code>/bin/bash</code>.</p>
+        <img src="../gdu7_2.png" alt="Canvi del shell per defecte amb useradd -D">
+      </div>
+
+      <div class="bloc-imatge">
+        <p><strong>Comandes executades:</strong> <code>useradd -D | grep SHELL</code> i <code>grep '^SHELL' /etc/default/useradd</code></p>
+        <p><strong>Descripció:</strong> Es comprova que el nou valor <code>SHELL=/bin/bash</code> s'ha aplicat tant a l'ordre com al fitxer <code>/etc/default/useradd</code>.</p>
+        <img src="../gdu7_3.png" alt="Comprovació del nou shell per defecte a /etc/default/useradd">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comandes executades:</strong> <code>sudo useradd -m -c "Quim Roca" quim</code> i <code>getent passwd quim</code></p>
-        <p><strong>Descripció:</strong> Després d'esborrar i tornar a crear en Quim sense l'opció <code>-s</code>, ara ja rep <code>/bin/bash</code> automàticament.</p>
-        <img src="../gdu7_3.png" alt="Verificació d'en Quim creat amb /bin/bash">
+        <p><strong>Descripció:</strong> En tornar a crear en Quim sense l'opció <code>-s</code>, el segon <code>getent passwd quim</code> confirma que ara rep <code>/bin/bash</code> automàticament.</p>
+        <img src="../gdu7_4.png" alt="Segon getent passwd quim amb /bin/bash">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comandes executades:</strong> <code>su - quim</code> i <code>exit</code></p>
-        <p><strong>Descripció:</strong> Es comprova que en Quim inicia sessió correctament amb el kit de PixelForge complet i el missatge de comiat.</p>
-        <img src="../gdu7_4.png" alt="Sessió d'en Quim funcionant amb el kit">
-      </div>
-
-      <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>sudo useradd -m -k /etc/skel_becaris becari1</code> i <code>sudo ls -la /home/becari1</code></p>
-        <p><strong>Descripció:</strong> Es crea un usuari utilitzant una carpeta model alternativa (<code>/etc/skel_becaris</code>) i es verifica que només rep els fitxers d'aquesta nova carpeta (Repte 6).</p>
-        <img src="../gdu7_5.png" alt="Creació de becari1 amb carpeta model personalitzada">
+        <p><strong>Descripció:</strong> Es verifica que en Quim inicia sessió correctament amb el kit de PixelForge i el missatge de comiat.</p>
+        <img src="../gdu7_5.png" alt="Entrada d'en Quim amb el kit de benvinguda">
       </div>
 
       <h3>Nivell 7 · Les regles d'adduser</h3>
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>grep -v '^#' /etc/adduser.conf | grep -v '^$'</code></p>
-        <p><strong>Descripció:</strong> Es comproven les dues línies actives a <code>/etc/adduser.conf</code> (<code>EXTRA_GROUPS="pixelforge"</code> i <code>ADD_EXTRA_GROUPS=1</code>) perquè els usuaris nous s'afegeixin sols al grup de l'empresa.</p>
+        <p><strong>Descripció:</strong> Es comproven les dues línies actives a <code>/etc/adduser.conf</code> (<code>EXTRA_GROUPS="pixelforge"</code> i <code>ADD_EXTRA_GROUPS=1</code>).</p>
         <img src="../gdu8.png" alt="Línies actives de configuració a /etc/adduser.conf">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>sudo adduser biel</code></p>
-        <p><strong>Descripció:</strong> En crear l'usuari <code>biel</code> amb <code>adduser</code>, el sistema l'afegeix automàticament al grup <code>pixelforge</code>.</p>
-        <img src="../gdu8_2.png" alt="Creació d'en Biel amb assignació automàtica al grup pixelforge">
+        <p><strong>Descripció:</strong> En crear l'usuari <code>biel</code> amb <code>adduser</code>, la sortida mostra que s'afegeix automàticament al grup <code>pixelforge</code>.</p>
+        <img src="../gdu8_2.png" alt="Sortida d'adduser biel amb assignació al grup pixelforge">
       </div>
 
       <div class="bloc-imatge">
         <p><strong>Comandes executades:</strong> <code>id biel</code> i <code>id ona</code></p>
-        <p><strong>Descripció:</strong> Es comparen els grups d'en Biel (que ja pertany a <code>pixelforge</code>) i de l'Ona (que no hi era perquè es va crear abans del canvi), i es resol el Repte 7.</p>
-        <img src="../gdu8_3.png" alt="Comparació de grups entre biel i ona amb id">
+        <p><strong>Descripció:</strong> Es comparen els grups d'en Biel (que ja pertany a <code>pixelforge</code>) i de l'Ona (que no hi és perquè es va crear abans de canviar la regla).</p>
+        <img src="../gdu8_3.png" alt="Comparació dels grups d'en Biel i de l'Ona amb id">
       </div>
 
       <h3>Nivell 8 · Les normes de l'empresa</h3>
       <div class="bloc-imatge">
         <p><strong>Comanda executada:</strong> <code>grep '^PASS_' /etc/login.defs</code></p>
-        <p><strong>Descripció:</strong> Es comprova que la política de caducitat de contrasenyes a <code>/etc/login.defs</code> ha quedat configurada a 90 dies (<code>PASS_MAX_DAYS</code>) i 14 dies d'avís (<code>PASS_WARN_AGE</code>).</p>
-        <img src="../gdu9.png" alt="Verificació dels nous valors de caducitat a /etc/login.defs">
+        <p><strong>Descripció:</strong> Es comprova que els valors nous de caducitat a <code>/etc/login.defs</code> són 90 dies (<code>PASS_MAX_DAYS</code>) i 14 dies d'avís (<code>PASS_WARN_AGE</code>).</p>
+        <img src="../gdu9.png" alt="Verificació dels nous valors PASS_ a /etc/login.defs">
       </div>
 
       <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>sudo chage -l jana</code> i <code>sudo chage -l ona</code></p>
-        <p><strong>Descripció:</strong> Es verifica que la nova usuària <code>jana</code> té aplicada la caducitat de 90 dies i avís de 14, mentre que l'<code>ona</code> manté els valors anteriors (99999 i 7).</p>
-        <img src="../gdu9_2.png" alt="Comparació de la caducitat de contrasenyes entre jana i ona">
+        <p><strong>Comanda executada:</strong> <code>sudo chage -l jana</code></p>
+        <p><strong>Descripció:</strong> Es verifica que la nova usuària <code>jana</code> té aplicada la caducitat de 90 dies i l'avís de 14 dies.</p>
+        <img src="../gdu9_2.png" alt="Caducitat de contrasenya de jana amb 90 i 14 dies">
       </div>
 
       <div class="bloc-imatge">
-        <p><strong>Comandes executades:</strong> <code>sudo useradd prova</code> i <code>ls -ld /home/prova</code></p>
-        <p><strong>Descripció:</strong> Després d'afegir <code>CREATE_HOME yes</code> a <code>/etc/login.defs</code>, es demostra que <code>useradd</code> crea automàticament la carpeta personal sense necessitat d'indicar l'opció <code>-m</code> (Repte 8).</p>
-        <img src="../gdu9_3.png" alt="Creació automàtica de la carpeta /home/prova amb CREATE_HOME yes">
+        <p><strong>Comanda executada:</strong> <code>sudo chage -l ona</code></p>
+        <p><strong>Descripció:</strong> Es comprova que l'<code>ona</code> manté els valors anteriors (99999 i 7) perquè <code>login.defs</code> només afecta els comptes creats a partir del canvi.</p>
+        <img src="../gdu9_3.png" alt="Caducitat de contrasenya d'ona amb 99999 i 7 dies">
       </div>
 
       <h4>------------------------------------------------------------------------------------------------------------</h4>
@@ -747,9 +748,9 @@
       <p class="tornar-index"><a href="#index-apartats">↑ Tornar a l'índex</a></p>
     </article>
 
-    <!-- APARTAT 7 -->
-    <article class="apartat" id="apartat7">
-      <h2>7. Quotes de disc</h2>
+    <!-- APARTAT 8 -->
+    <article class="apartat" id="apartat8">
+      <h2>8. Quotes de disc</h2>
 
       <h4>------------------------------------------------------------------------------------------------------------</h4>
 
